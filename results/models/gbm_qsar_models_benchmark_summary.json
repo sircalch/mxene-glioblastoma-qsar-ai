@@ -1,0 +1,59 @@
+{
+    "Isolated_GBM_Drugs": {
+        "ExtraTrees": {
+            "R2": -0.6564,
+            "MAPE_pct": 8.3,
+            "RMSE": 0.627,
+            "MAE": 0.472
+        },
+        "XGBoost": {
+            "R2": -1.0127,
+            "MAPE_pct": 9.58,
+            "RMSE": 0.691,
+            "MAE": 0.534
+        },
+        "MLR": {
+            "R2": -0.0649,
+            "MAPE_pct": 7.19,
+            "Equation": "MLR_Isolated_GBM_Drugs = +5.3697 -4.1888*Electrophilicity_omega -1.6792*Fraction_Csp3 +1.1586*LogP -0.5369*HBA +0.3099*NOR -0.2783*E_HOMO -0.2550*E_LUMO +0.2485*Electronegativity_chi"
+        }
+    },
+    "Drug_Ti3C2O2_Pristine": {
+        "ExtraTrees": {
+            "R2": -0.0401,
+            "MAPE_pct": 4.29,
+            "RMSE": 0.635,
+            "MAE": 0.508
+        },
+        "XGBoost": {
+            "R2": -0.706,
+            "MAPE_pct": 5.65,
+            "RMSE": 0.813,
+            "MAE": 0.661
+        },
+        "MLR": {
+            "R2": 0.3481,
+            "MAPE_pct": 3.45,
+            "Equation": "MLR_Drug_Ti3C2O2_Pristine = +0.1079 -4.1888*Electrophilicity_omega -1.6792*Fraction_Csp3 +1.1601*LogP -0.5582*HBA +0.3099*NOR -0.2780*E_HOMO -0.2510*E_LUMO +0.2464*Electronegativity_chi"
+        }
+    },
+    "Drug_Ti3C2_Functionalized": {
+        "ExtraTrees": {
+            "R2": 0.0661,
+            "MAPE_pct": 3.95,
+            "RMSE": 0.667,
+            "MAE": 0.552
+        },
+        "XGBoost": {
+            "R2": -0.3638,
+            "MAPE_pct": 4.69,
+            "RMSE": 0.806,
+            "MAE": 0.645
+        },
+        "MLR": {
+            "R2": 0.4701,
+            "MAPE_pct": 2.92,
+            "Equation": "MLR_Drug_Ti3C2_Functionalized = -1.5971 -4.1888*Electrophilicity_omega -1.6792*Fraction_Csp3 +1.1596*LogP -0.5822*HBA +0.3099*NOR -0.2789*E_HOMO -0.2511*E_LUMO +0.2469*Electronegativity_chi"
+        }
+    }
+}
