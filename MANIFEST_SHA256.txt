@@ -1,0 +1,9 @@
+# GBM-MXene Package Integrity Manifest (SHA-256)
+
+c7c4ca172fa9be174034fcca8cead25a3da947bbf4fe7444869afa8d27851c55        7280 bytes  data/processed/dataset_drug_Ti3C2O2_pristine.csv
+b2056aeb5ef92055d3bb088682a8136f4be4ed855d2356f580c1bacb6098790c      404757 bytes  data/raw/4ZAU.pdb
+1acbd19abb989d61238d9f23b023dcda5dc56487139126eb3fcf6f8fe7a95592      260496 bytes  data/raw/2J6M.pdb
+d1b5c2f0789aeaa732abca588c14577fb86f9e99d6f4c3e4bd5550f57706bbe5      176337 bytes  data/raw/4ZAU_receptor.pdbqt
+6469e9fa047e19aa810e6413bcce43d58668a3eead79de8388fa0b127a85bd86     1589594 bytes  manuscript/GBM_MXene_Full_Q1_Research_Paper_Monreal_Hernandez_et_al.docx
+76b93fb1dfd5d7fc5fb559f834cf74f15b021a4cf02bd65aec0c729a9c051357      781318 bytes  figures/fig1_graphical_abstract.png
+2347bc30e0524a06a899e99b9f36fe280662290267b3369914369a1f43c5ceb5      777512 bytes  figures/fig9_gbm_3d_spatial_binding_modes.png
