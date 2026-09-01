@@ -1,0 +1,49 @@
+AutoDock Vina v1.2.7
+#################################################################
+# If you used AutoDock Vina in your work, please cite:          #
+#                                                               #
+# J. Eberhardt, D. Santos-Martins, A. F. Tillack, and S. Forli  #
+# AutoDock Vina 1.2.0: New Docking Methods, Expanded Force      #
+# Field, and Python Bindings, J. Chem. Inf. Model. (2021)       #
+# DOI 10.1021/acs.jcim.1c00203                                  #
+#                                                               #
+# O. Trott, A. J. Olson,                                        #
+# AutoDock Vina: improving the speed and accuracy of docking    #
+# with a new scoring function, efficient optimization and       #
+# multithreading, J. Comp. Chem. (2010)                         #
+# DOI 10.1002/jcc.21334                                         #
+#                                                               #
+# Please see https://github.com/ccsb-scripps/AutoDock-Vina for  #
+# more information.                                             #
+#################################################################
+
+Scoring function : vina
+Rigid receptor: c:\Users\Andre\Proyectos doctorado\mxene-glioblastoma-qsar-ai\data\raw\4ZAU_receptor.pdbqt
+Ligand: c:\Users\Andre\Proyectos doctorado\mxene-glioblastoma-qsar-ai\calculations\gbm\Procarbazine\Procarbazine_ligand.pdbqt
+Grid center: X -0.211 Y -50.287 Z 17.977
+Grid size  : X 22 Y 22 Z 22
+Grid space : 0.375
+Exhaustiveness: 8
+CPU: 0
+Verbosity: 1
+
+Computing Vina grid ... done.
+WARNING: At low exhaustiveness, it may be impossible to utilize all CPUs.
+Performing docking (random seed: 698238837) ... 
+0%   10   20   30   40   50   60   70   80   90   100%
+|----|----|----|----|----|----|----|----|----|----|
+***************************************************
+
+mode |   affinity | dist from best mode
+     | (kcal/mol) | rmsd l.b.| rmsd u.b.
+-----+------------+----------+----------
+   1        -6.25          0          0
+   2        -6.22     0.6103      1.353
+   3       -5.814      2.319      7.478
+   4       -5.772      1.689      2.089
+   5       -5.516       3.18      7.492
+   6       -5.339      1.998      2.408
+   7       -5.085      1.766      2.157
+   8       -5.072      4.923      6.291
+   9       -4.957      2.564      3.822
+# Command: c:\Users\Andre\Proyectos doctorado\mxene-glioblastoma-qsar-ai\src\docking\vina.exe --receptor c:\Users\Andre\Proyectos doctorado\mxene-glioblastoma-qsar-ai\data\raw\4ZAU_receptor.pdbqt --ligand c:\Users\Andre\Proyectos doctorado\mxene-glioblastoma-qsar-ai\calculations\gbm\Procarbazine\Procarbazine_ligand.pdbqt --center_x -0.211 --center_y -50.287 --center_z 17.977 --size_x 22.0 --size_y 22.0 --size_z 22.0 --num_modes 9 --exhaustiveness 8 --out c:\Users\Andre\Proyectos doctorado\mxene-glioblastoma-qsar-ai\calculations\gbm\Procarbazine\Procarbazine_4ZAU_out.pdbqt
