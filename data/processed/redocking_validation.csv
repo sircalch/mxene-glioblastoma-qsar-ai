@@ -1,0 +1,3 @@
+pdb_id,ligand_id,resolution_A,affinity_kcal_mol,n_heavy_atoms,rmsd_heavy_atom_A,mapping_method,pose_file
+4ZAU,YY3,2.8,-7.22,37,5.324,Hungarian symmetry-aware matching,calculations/gbm/redock_YY3_4ZAU_out.pdbqt
+2J6M,AEE,3.1,-7.15,22,4.192,Hungarian symmetry-aware matching,calculations/gbm/redock_AEE_2J6M_out.pdbqt
