@@ -1,0 +1,9 @@
+name,delta_Eint_SP_kcal_mol,delta_Eint_relaxed_kcal_mol,min_drug_carrier_dist_A,adsorption_regime
+Temozolomide,-13.353,-139.49908658721935,3.912,Strong Adsorption / Surface Polarization
+Osimertinib,-2.667,-45.409870636486495,6.095,Strong Adsorption / Surface Polarization
+Erlotinib,-8.643,-52.06294977083528,4.14,Strong Adsorption / Surface Polarization
+Gefitinib,-3.782,-65.3339379560565,4.873,Strong Adsorption / Surface Polarization
+Lapatinib,-8.717,-82.69920417949983,3.489,Strong Adsorption / Surface Polarization
+Afatinib,-2.791,-73.18502743642564,5.562,Strong Adsorption / Surface Polarization
+Cobimetinib,-8.812,-96.49440697768352,3.685,Strong Adsorption / Surface Polarization
+Paxalisib,-10.168,-103.98767573026848,3.432,Strong Adsorption / Surface Polarization

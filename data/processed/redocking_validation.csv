@@ -1,3 +1,3 @@
-pdb_id,ligand_id,resolution_A,affinity_kcal_mol,n_heavy_atoms,rmsd_heavy_atom_A,mapping_method,pose_file
-4ZAU,YY3,2.8,-7.22,37,5.324,Hungarian symmetry-aware matching,calculations/gbm/redock_YY3_4ZAU_out.pdbqt
-2J6M,AEE,3.1,-7.15,22,4.192,Hungarian symmetry-aware matching,calculations/gbm/redock_AEE_2J6M_out.pdbqt
+pdb_id,target_desc,resolution_A,probe_ligand,affinity_kcal_mol,n_heavy_atoms,rmsd_heavy_atom_A,docking_status,scientific_interpretation,mapping_method,pose_file
+4ZAU,EGFR Kinase Domain (X-ray),2.8,Osimertinib (YY3),-7.22,37,5.324,FAILED (RMSD > 2.0 A criterion),Crystallographic redocking did not reproduce experimental pose (RMSD=5.324 A > 2.0 A); docking scores treated as exploratory.,Hungarian symmetry-aware matching,calculations/gbm/redock_YY3_4ZAU_out.pdbqt
+2J6M,EGFR Kinase Domain (X-ray),3.1,AEE788 (AEE),-7.15,22,4.192,FAILED (RMSD > 2.0 A criterion),Crystallographic redocking did not reproduce experimental pose (RMSD=4.192 A > 2.0 A); docking scores treated as exploratory.,Hungarian symmetry-aware matching,calculations/gbm/redock_AEE_2J6M_out.pdbqt

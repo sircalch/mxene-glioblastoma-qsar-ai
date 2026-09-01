@@ -1,13 +1,14 @@
 # GBM MXene — SHA-256 Integrity Manifest (AUTHENTIC EXECUTABLE RAW LOGS)
-# Generated: 2026-09-01T05:03:36Z
+# Generated: 2026-09-01T23:23:15Z
 # AutoDock Vina: v1.2.7 | xTB: v6.7.1-pre | ORCA: v6.1.1
 # Total processed compounds: 35 (Dual independent docking 4ZAU & 2J6M, xTB quantum calculated)
-# Primary Target: EGFR Kinase + Osimertinib (PDB: 4ZAU, 2.80 A)
-# Cross-Validation Target: EGFR Kinase + AEE788 (PDB: 2J6M, 3.10 A)
-# Carrier: Fully optimized Ti12C7O14 oxygen-terminated MXene cluster (33 atoms, E_MXene = -92.026933 Eh)
-# Outliers (|Delta_Eint| > 100 kcal/mol): 0 (100% negative physisorption regime)
-# Multi-Orientation Relaxed Subset (N=8): Spearman rho = 0.9048 (p=0.0020)
-# Heavy-Atom Redocking RMSD: 4ZAU (YY3, 37 heavy atoms) = 5.324 A | 2J6M (AEE, 22 heavy atoms) = 4.192 A
+# Primary Target: EGFR Kinase + Osimertinib (PDB: 4ZAU, 2.80 A X-ray)
+# Cross-Validation Target: EGFR Kinase + AEE788 (PDB: 2J6M, 3.10 A X-ray)
+# Carrier: Fully tight-optimized Ti12C7O14 oxygen-terminated MXene cluster (33 atoms, E_MXene = -92.026933 Eh)
+# Outliers (|Delta_Eint| > 100 kcal/mol): 0 (100% negative physisorption regime for standardized screening)
+# Multi-Orientation Relaxed Subset (N=8): Spearman rho = 0.9048 (p=0.0020), MAE = 74.97 kcal/mol
+# Heavy-Atom Redocking Validation: 4ZAU RMSD = 5.324 A (FAILED) | 2J6M RMSD = 4.192 A (FAILED) -> Docking treated as exploratory
+# Strict Nested Ridge Q2_CV: -0.2701, RMSE: 1.454 kcal/mol, MAE: 1.023 kcal/mol, h*: 0.4412
 #
 # SHA256                                                               bytes  role  path
 #-----------------------------------------------------------------------------------------------
@@ -701,7 +702,8 @@ c7c4ca172fa9be174034fcca8cead25a3da947bbf4fe7444869afa8d27851c55          7280 b
 830d00e65208dad6887d314cab4a7d2ac3a90bf0be0bd2393e2297aa39af6fbb          8027 bytes  [gbm]  data\processed\dataset_isolated_gbm_drugs.csv
 ed31f0f931c8373a0e9f6180fb02d3dba48e6171b3c76a52808259611d634ac2          7995 bytes  [gbm]  data\processed\gbm_isolated_descriptors.csv
 7d42bf46b4fb6c25c7c141f2cf79b20fce9853802258b1a516ef7de80ffae3a6          6470 bytes  [gbm]  data\processed\MASTER_GBM_35_COMPUTATIONAL_DATASET.csv
-626b049ccba3eef6cdd99a79a570142cc198196d1e3202fa61bcada55710af49           318 bytes  [gbm]  data\processed\redocking_validation.csv
+c994d55024946a76ddd13532bba3f0c945645fc2f5b5c2721da6e9ad4d3f1224           767 bytes  [gbm]  data\processed\redocking_validation.csv
+0caab4068471494080a699b99d21d42af0f210bd3c4029162184629125b5bc3f           780 bytes  [gbm]  data\processed\relaxed_adsorption_audit.csv
 f65302b71cb5236407f30f1746b7130f228f1f9b459a93c1ecca3089020e9e51           364 bytes  [gbm]  data\processed\relaxed_adsorption_subset.csv
 1acbd19abb989d61238d9f23b023dcda5dc56487139126eb3fcf6f8fe7a95592        260496 bytes  [gbm]  data\raw\2J6M.pdb
 fb5c78169645e1a1b040301e0c7063029521ca3fbf2495bd03e7f9f6629d4576        197073 bytes  [gbm]  data\raw\2J6M_receptor.pdbqt
@@ -749,7 +751,7 @@ f287adb5847cecc0a9d9a2fa49b2571a9f78daef0ada7e83002891fab3772fa2          3181 b
 5b28a2160b805704f21211564a4e07f8032f945370d088f2b0dd931eca8664d5          1621 bytes  [gbm]  data\raw\ligands_pdbqt\Temozolomide.pdbqt
 1e0216deeb3dfcb9be3c281119d9987fa47094cc5a510e21da2703bd8a1b42ef          3077 bytes  [gbm]  data\raw\ligands_pdbqt\Trametinib.pdbqt
 17854b8d161efdedb74fffd3fb0101af1b0cc36ccee8e1cb4b39dded54a559fa          2335 bytes  [gbm]  data\raw\ligands_pdbqt\Vorinostat.pdbqt
-cba143eeeb9e204ab71f8c7e9e5f62363d9399d14fd389c73f422935d8c12a51          2914 bytes  [gbm]  eval_gbm_summary.py
+8fe07724a28aa5a34475e5e7ad6a606892e7cdf9adafcbef42747f2c66cf6ed7          7776 bytes  [gbm]  eval_gbm_summary.py
 83dd9b7ff6168516c379eb10e79fe198a10421d610eecfae41857a0c6093e7dc         11672 bytes  [gbm]  execute_real_gbm_pipeline.py
 2f134a689ff5fa64a310e1ce5d177a9b0e4188097ea4b27b18238b363d99d41d        757401 bytes  [gbm]  figures\fig1_gbm_workflow_methodology.png
 76b93fb1dfd5d7fc5fb559f834cf74f15b021a4cf02bd65aec0c729a9c051357        781318 bytes  [gbm]  figures\fig1_graphical_abstract.png
@@ -849,6 +851,7 @@ cc051ce6cf48cd9d6a296c6f8738f3b55295c3a24834253d9143b35332cc83af         13050 b
 5304796bceb5ddca286966add0a08d00f287e94b4b50cd9c4ce37f73161baff9          9382 bytes  [gbm]  run_authentic_gbm_pipeline.py
 ddf551808761df000767e305d5ad5c84915ae17c1e74c623e213e27e8129c438          2387 bytes  [gbm]  run_entire_gbm_study.py
 8938bc487f2ac61a2e11054febabe55163a9f5b1c7185139cbaf2ade60fb0924         30549 bytes  [gbm]  run_real_gbm_pipeline.py
+250bf6a688442df027b5e1b61589646a6809bdda2b7ff09e47fdaef491b7b21f          1994 bytes  [gbm]  run_strict_qsar.py
 a0b32e8a8dd651b2150ac08420fdc3ea147de876c2c2a73e4c80e8427944f447          4035 bytes  [gbm]  src\descriptors\compute_gbm_descriptors.py
 e89fa517889fe68e1a5470405095d02fb31ea01477248ebb840ff70ce1e64ecc          6771 bytes  [gbm]  src\descriptors\curate_gbm_dataset.py
 59aa4511b4b85b4f0c2cbaba3bab33aefe6c586642b5e00d782f64bd47ac8142          3704 bytes  [gbm]  src\docking\analyze_gbm_interactions.py
