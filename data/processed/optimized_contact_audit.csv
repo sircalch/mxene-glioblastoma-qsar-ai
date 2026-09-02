@@ -1,0 +1,9 @@
+compound,drug_atom_index,drug_element,surface_atom_index,surface_element,distance_A,estimated_wbo,formal_charge_before,charge_drug_in_complex,charge_transfer_to_surface_e,classification
+Temozolomide,11,N,6,Ti,1.868,0.35,0,11.42,-11.42,Short coordinative contact (N-Ti) with surface titanium
+Osimertinib,44,H,6,Ti,3.215,0.02,0,0.0,-0.0,Non-covalent / Van der Waals dispersion (H-Ti)
+Erlotinib,10,C,21,O,2.655,0.02,0,0.0,-0.0,Non-covalent / Van der Waals dispersion (C-O)
+Gefitinib,44,H,6,Ti,3.685,0.02,0,0.0,-0.0,Non-covalent / Van der Waals dispersion (H-Ti)
+Lapatinib,64,H,26,O,2.915,0.02,0,0.0,-0.0,Non-covalent / Van der Waals dispersion (H-O)
+Afatinib,8,O,6,Ti,2.995,0.02,0,0.0,-0.0,Non-covalent / Van der Waals dispersion (O-Ti)
+Cobimetinib,47,H,26,O,2.434,0.02,0,0.0,-0.0,Non-covalent / Van der Waals dispersion (H-O)
+Paxalisib,56,H,26,O,2.047,0.18,0,0.0,-0.0,Proximal dipolar/coordinative interaction (H-O)

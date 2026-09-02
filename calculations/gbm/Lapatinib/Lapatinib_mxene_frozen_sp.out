@@ -92,7 +92,7 @@
    J. Seibert, P. Shushkov, S. Spicher, M. Stahn, M. Steiner, T. Strunk,
    J. Stückrath, T. Rose, and J. Unsleber
    
- * started run on 2026/09/01 at 17:04:52.527     
+ * started run on 2026/09/01 at 20:32:02.503     
    ID    Z sym.   atoms
     1   22 Ti     1-12
     2    6 C      13-19
@@ -228,14 +228,14 @@ constraining FC (au)   :  0.0500
                   HL-Gap            0.0201745 Eh            0.5490 eV
              Fermi-level           -0.2985220 Eh           -8.1232 eV
 
- SCC (total)                   0 d,  0 h,  0 min,  3.387 sec
+ SCC (total)                   0 d,  0 h,  0 min,  0.443 sec
  SCC setup                      ...        0 min,  0.000 sec (  0.000%)
- Dispersion                     ...        0 min,  0.001 sec (  0.030%)
+ Dispersion                     ...        0 min,  0.001 sec (  0.226%)
  classical contributions        ...        0 min,  0.000 sec (  0.000%)
- integral evaluation            ...        0 min,  0.004 sec (  0.118%)
- iterations                     ...        0 min,  3.222 sec ( 95.128%)
- molecular gradient             ...        0 min,  0.150 sec (  4.429%)
- printout                       ...        0 min,  0.010 sec (  0.295%)
+ integral evaluation            ...        0 min,  0.003 sec (  0.677%)
+ iterations                     ...        0 min,  0.430 sec ( 97.066%)
+ molecular gradient             ...        0 min,  0.009 sec (  2.032%)
+ printout                       ...        0 min,  0.000 sec (  0.000%)
 
          :::::::::::::::::::::::::::::::::::::::::::::::::::::
          ::                     SUMMARY                     ::
@@ -419,14 +419,14 @@ molecular quadrupole (traceless):
            -------------------------------------------------
 
 ------------------------------------------------------------------------
- * finished run on 2026/09/01 at 17:04:55.974     
+ * finished run on 2026/09/01 at 20:32:02.999     
 ------------------------------------------------------------------------
  total:
- * wall-time:     0 d,  0 h,  0 min,  3.445 sec
- *  cpu-time:     0 d,  0 h,  0 min, 23.453 sec
- * ratio c/w:     6.808 speedup
+ * wall-time:     0 d,  0 h,  0 min,  0.493 sec
+ *  cpu-time:     0 d,  0 h,  0 min,  2.438 sec
+ * ratio c/w:     4.944 speedup
  SCF:
- * wall-time:     0 d,  0 h,  0 min,  3.387 sec
- *  cpu-time:     0 d,  0 h,  0 min, 23.156 sec
- * ratio c/w:     6.837 speedup
+ * wall-time:     0 d,  0 h,  0 min,  0.443 sec
+ *  cpu-time:     0 d,  0 h,  0 min,  2.203 sec
+ * ratio c/w:     4.973 speedup
 

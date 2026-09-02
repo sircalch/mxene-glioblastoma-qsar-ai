@@ -92,7 +92,7 @@
    J. Seibert, P. Shushkov, S. Spicher, M. Stahn, M. Steiner, T. Strunk,
    J. Stückrath, T. Rose, and J. Unsleber
    
- * started run on 2026/09/01 at 17:05:17.781     
+ * started run on 2026/09/01 at 20:32:34.787     
    ID    Z sym.   atoms
     1    6 C      1-5, 7, 9, 12, 13, 15-18, 20, 22, 23, 25, 26, 28, 70-76
     2    7 N      6, 8, 10, 11, 19, 21, 27, 29
@@ -260,14 +260,14 @@ constraining FC (au)   :  0.0500
                   HL-Gap            0.0046355 Eh            0.1261 eV
              Fermi-level           -0.2886211 Eh           -7.8538 eV
 
- SCC (total)                   0 d,  0 h,  0 min,  4.511 sec
- SCC setup                      ...        0 min,  0.001 sec (  0.022%)
- Dispersion                     ...        0 min,  0.016 sec (  0.355%)
- classical contributions        ...        0 min,  0.006 sec (  0.133%)
- integral evaluation            ...        0 min,  0.020 sec (  0.443%)
- iterations                     ...        0 min,  4.338 sec ( 96.165%)
- molecular gradient             ...        0 min,  0.122 sec (  2.704%)
- printout                       ...        0 min,  0.008 sec (  0.177%)
+ SCC (total)                   0 d,  0 h,  0 min,  2.129 sec
+ SCC setup                      ...        0 min,  0.000 sec (  0.000%)
+ Dispersion                     ...        0 min,  0.002 sec (  0.094%)
+ classical contributions        ...        0 min,  0.001 sec (  0.047%)
+ integral evaluation            ...        0 min,  0.009 sec (  0.423%)
+ iterations                     ...        0 min,  2.097 sec ( 98.497%)
+ molecular gradient             ...        0 min,  0.018 sec (  0.845%)
+ printout                       ...        0 min,  0.002 sec (  0.094%)
 
          :::::::::::::::::::::::::::::::::::::::::::::::::::::
          ::                     SUMMARY                     ::
@@ -578,14 +578,14 @@ molecular quadrupole (traceless):
            -------------------------------------------------
 
 ------------------------------------------------------------------------
- * finished run on 2026/09/01 at 17:05:22.383     
+ * finished run on 2026/09/01 at 20:32:36.976     
 ------------------------------------------------------------------------
  total:
- * wall-time:     0 d,  0 h,  0 min,  4.599 sec
- *  cpu-time:     0 d,  0 h,  0 min, 29.422 sec
- * ratio c/w:     6.397 speedup
+ * wall-time:     0 d,  0 h,  0 min,  2.187 sec
+ *  cpu-time:     0 d,  0 h,  0 min, 12.047 sec
+ * ratio c/w:     5.508 speedup
  SCF:
- * wall-time:     0 d,  0 h,  0 min,  4.512 sec
- *  cpu-time:     0 d,  0 h,  0 min, 28.828 sec
- * ratio c/w:     6.389 speedup
+ * wall-time:     0 d,  0 h,  0 min,  2.130 sec
+ *  cpu-time:     0 d,  0 h,  0 min, 11.828 sec
+ * ratio c/w:     5.553 speedup
 

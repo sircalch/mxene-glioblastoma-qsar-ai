@@ -92,7 +92,7 @@
    J. Seibert, P. Shushkov, S. Spicher, M. Stahn, M. Steiner, T. Strunk,
    J. Stückrath, T. Rose, and J. Unsleber
    
- * started run on 2026/09/01 at 17:04:14.183     
+ * started run on 2026/09/01 at 20:31:24.498     
    ID    Z sym.   atoms
     1   22 Ti     1-12
     2    6 C      13-19
@@ -229,14 +229,14 @@ constraining FC (au)   :  0.0500
                   HL-Gap            0.0228204 Eh            0.6210 eV
              Fermi-level           -0.2989013 Eh           -8.1335 eV
 
- SCC (total)                   0 d,  0 h,  0 min,  5.482 sec
- SCC setup                      ...        0 min,  0.023 sec (  0.420%)
- Dispersion                     ...        0 min,  0.241 sec (  4.396%)
- classical contributions        ...        0 min,  0.109 sec (  1.988%)
- integral evaluation            ...        0 min,  0.211 sec (  3.849%)
- iterations                     ...        0 min,  4.486 sec ( 81.831%)
- molecular gradient             ...        0 min,  0.394 sec (  7.187%)
- printout                       ...        0 min,  0.018 sec (  0.328%)
+ SCC (total)                   0 d,  0 h,  0 min,  0.481 sec
+ SCC setup                      ...        0 min,  0.001 sec (  0.208%)
+ Dispersion                     ...        0 min,  0.000 sec (  0.000%)
+ classical contributions        ...        0 min,  0.000 sec (  0.000%)
+ integral evaluation            ...        0 min,  0.005 sec (  1.040%)
+ iterations                     ...        0 min,  0.467 sec ( 97.089%)
+ molecular gradient             ...        0 min,  0.008 sec (  1.663%)
+ printout                       ...        0 min,  0.000 sec (  0.000%)
 
          :::::::::::::::::::::::::::::::::::::::::::::::::::::
          ::                     SUMMARY                     ::
@@ -419,14 +419,14 @@ molecular quadrupole (traceless):
            -------------------------------------------------
 
 ------------------------------------------------------------------------
- * finished run on 2026/09/01 at 17:04:19.846     
+ * finished run on 2026/09/01 at 20:31:25.021     
 ------------------------------------------------------------------------
  total:
- * wall-time:     0 d,  0 h,  0 min,  5.660 sec
- *  cpu-time:     0 d,  0 h,  0 min, 35.953 sec
- * ratio c/w:     6.352 speedup
+ * wall-time:     0 d,  0 h,  0 min,  0.521 sec
+ *  cpu-time:     0 d,  0 h,  0 min,  2.125 sec
+ * ratio c/w:     4.079 speedup
  SCF:
- * wall-time:     0 d,  0 h,  0 min,  5.483 sec
- *  cpu-time:     0 d,  0 h,  0 min, 34.828 sec
- * ratio c/w:     6.352 speedup
+ * wall-time:     0 d,  0 h,  0 min,  0.482 sec
+ *  cpu-time:     0 d,  0 h,  0 min,  2.016 sec
+ * ratio c/w:     4.182 speedup
 
