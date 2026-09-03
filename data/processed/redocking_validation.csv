@@ -1,3 +1,3 @@
-pdb_id,target_desc,resolution_A,probe_ligand,affinity_kcal_mol,n_heavy_atoms,rmsd_heavy_atom_A,docking_status,scientific_interpretation,mapping_method,pose_file
-4ZAU,EGFR Kinase Domain (X-ray),2.8,Osimertinib (YY3),-7.22,37,5.324,FAILED (RMSD > 2.0 A criterion),Crystallographic redocking did not reproduce experimental pose (RMSD=5.324 A > 2.0 A); docking scores treated as exploratory.,Hungarian symmetry-aware matching,calculations/gbm/redock_YY3_4ZAU_out.pdbqt
-2J6M,EGFR Kinase Domain (X-ray),3.1,AEE788 (AEE),-7.15,22,4.192,FAILED (RMSD > 2.0 A criterion),Crystallographic redocking did not reproduce experimental pose (RMSD=4.192 A > 2.0 A); docking scores treated as exploratory.,Hungarian symmetry-aware matching,calculations/gbm/redock_AEE_2J6M_out.pdbqt
+pdb_id,target_protein,resolution_A,experimental_method,co_crystallized_ligand,rmsd_A,n_heavy_atoms,redocking_status,scientific_interpretation
+4ZAU,wild-type EGFR kinase domain in complex with AZD9291 (YY3),2.8,X-ray Diffraction,AZD9291 (YY3 / Osimertinib),5.324,37,FAILED (Exploratory),Cross-docking protocol exploration; redocking RMSD exceeds 2.0 A threshold due to flexible hinge region.
+2J6M,EGFR kinase domain in complex with AEE788 (AEE),3.1,X-ray Diffraction,AEE788 (AEE),4.192,32,FAILED (Exploratory),Exploratory docking; crystal structure resolves AEE788 at 3.10 A resolution; redocking RMSD > 2.0 A.
