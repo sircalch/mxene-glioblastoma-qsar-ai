@@ -1,7 +1,7 @@
 import hashlib, time
 from pathlib import Path
 
-base = Path(r"c:\Users\Andre\Proyectos doctorado\mxene-glioblastoma-qsar-ai")
+base = Path(__file__).resolve().parent
 calc = base / "calculations" / "gbm"
 
 def sha256_file(fp):
@@ -19,8 +19,9 @@ manifest_lines = [
     "# Primary Target: EGFR Kinase + Osimertinib (PDB: 4ZAU, 2.80 A)",
     "# Cross-Validation Target: EGFR Kinase + AEE788 (PDB: 2J6M, 3.10 A)",
     "# Carrier: Fully optimized Ti12C7O14 oxygen-terminated MXene cluster (33 atoms, E_MXene = -92.026933 Eh)",
-    "# Outliers (|Delta_Eint| > 100 kcal/mol): 0 (100% negative physisorption regime)",
-    "# Multi-Orientation Relaxed Subset (N=8): Spearman rho = 0.9048 (p=0.0020)",
+    "# Multi-Orientation Relaxed Subset (N=8): 32 predefined orientations attempted; lowest-energy replay-confirmed minimum retained per candidate",
+    "# Interaction Classification: 5 coordination chemisorption (Temozolomide, Osimertinib, Erlotinib, Afatinib, Paxalisib), 2 hydrogen bonding (Gefitinib, Lapatinib), 1 reactive chemisorption (Cobimetinib surface-induced proton transfer)",
+    "# Single-Point Replay Audit: 8 of 8 selected minimums PASS clean replay (|Delta_E| < 1e-4 Eh, GradNorm <= 0.01 Eh/bohr)",
     "# Heavy-Atom Redocking RMSD: 4ZAU (YY3, 37 heavy atoms) = 5.324 A | 2J6M (AEE, 22 heavy atoms) = 4.192 A",
     "#",
     "# SHA256                                                               bytes  role  path",
@@ -31,8 +32,8 @@ seen_hashes = set()
 for p in sorted(base.rglob("*")):
     if p.is_file() and not p.name.startswith(".") and "MANIFEST" not in p.name and ".git" not in str(p):
         h = sha256_file(p)
-        if (h, p.name) not in seen_hashes:
-            seen_hashes.add((h, p.name))
+        if (h, str(p.relative_to(base))) not in seen_hashes:
+            seen_hashes.add((h, str(p.relative_to(base))))
             manifest_lines.append(f"{h}  {p.stat().st_size:>12} bytes  [gbm]  {p.relative_to(base)}")
 
 m_path = base / "MANIFEST_SHA256.txt"

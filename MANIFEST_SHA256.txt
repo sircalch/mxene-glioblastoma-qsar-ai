@@ -1,12 +1,14 @@
-# Glioblastoma MXene — SHA-256 Integrity Manifest (AUTHENTIC EXECUTABLE RAW LOGS)
-# Generated: 2026-09-03T03:13:36Z
-# AutoDock Vina: v1.2.7 | xTB: v6.7.1-pre
-# Total curated compounds: 35 (Dataset: data/processed/dataset_drug_mxene_pristine.csv)
-# Docking targets: wild-type EGFR Kinase Domain (PDB: 4ZAU, 2.80 A X-ray) & EGFR Kinase Domain + AEE788 (PDB: 2J6M, 3.10 A X-ray)
-# Carrier: Pristine Ti12C7O14 MXene cluster (33 atoms, 0 formal charge, E_carrier = -92.087007 Eh)
-# Multi-orientation Candidate Optimization: 8 oncology drugs x 4 orientations (0, 90, 180, 270 deg) = 32 genuine optimizations
-# Adsorption Energetics: True un-truncated deformation energies & isolated basin relaxations on minimum converged geometries
-# Charge conservation: sum(q_k) = formal charge (strictly verified on dedicated complex SP)
+# GBM MXene — SHA-256 Integrity Manifest (AUTHENTIC EXECUTABLE RAW LOGS)
+# Generated: 2026-09-03T04:13:40Z
+# AutoDock Vina: v1.2.7 | xTB: v6.7.1-pre | ORCA: v6.1.1
+# Total processed compounds: 35 (Dual independent docking 4ZAU & 2J6M, xTB quantum calculated)
+# Primary Target: EGFR Kinase + Osimertinib (PDB: 4ZAU, 2.80 A)
+# Cross-Validation Target: EGFR Kinase + AEE788 (PDB: 2J6M, 3.10 A)
+# Carrier: Fully optimized Ti12C7O14 oxygen-terminated MXene cluster (33 atoms, E_MXene = -92.026933 Eh)
+# Multi-Orientation Relaxed Subset (N=8): 32 predefined orientations attempted; lowest-energy replay-confirmed minimum retained per candidate
+# Interaction Classification: 5 coordination chemisorption (Temozolomide, Osimertinib, Erlotinib, Afatinib, Paxalisib), 2 hydrogen bonding (Gefitinib, Lapatinib), 1 reactive chemisorption (Cobimetinib surface-induced proton transfer)
+# Single-Point Replay Audit: 8 of 8 selected minimums PASS clean replay (|Delta_E| < 1e-4 Eh, GradNorm <= 0.01 Eh/bohr)
+# Heavy-Atom Redocking RMSD: 4ZAU (YY3, 37 heavy atoms) = 5.324 A | 2J6M (AEE, 22 heavy atoms) = 4.192 A
 #
 # SHA256                                                               bytes  role  path
 #-----------------------------------------------------------------------------------------------
@@ -30,26 +32,26 @@ e33c040d254aae713495be4827cef903a8d999a797838c5d68a108fce64df972         34866 b
 efbf324142067d1142bb5cdc0df5cd38dfd22711d54806bdcf06d9ba9851fbc7          2931 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_2J6M_vina.log
 d2a21de522f53a92eb799c20a24fb3cfbd078ba33e7b7a24d7f332e63badb3e0         34866 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_4ZAU_out.pdbqt
 21c66dccbe418cc73c6b06e5cf98e2b55bddff03ca81400f5b04181804f18244          2928 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_4ZAU_vina.log
-f5d145f3ae45a7200dca19b7b5642cb27083a033cc5b3fdca1d935f176648a55          1472 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_complex_charges.txt
+25dfa08b5e0341fda219e6da50bb3312995a0c3c20695c56e5549072a4f8daa4          1472 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_complex_charges.txt
 efdff038dc4b200cda9d2e4824d86458f2079f3a5178cc61b19cc048e49180f9         32345 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_complex_clean_sp.out
-b5dec822d4c70b3b56cd6866ba702c8c3b55bc395986067d7c55a517efe210fc          7346 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_complex_opt_final.xyz
-1c2ec85970696aca725f600b6fe70db5a8c89a265ee39b5b8b23b76816d6a9bc         33685 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_complex_opt_sp.out
+871262a66758cdf53a791f64d700b2ebce03d43002fe20b5ba51c7435c7be7ab          7346 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_complex_opt_final.xyz
+5dc5296f51440ec000cec93185f4be9a2c7d5a736aec425a8768041b0cb91286         32132 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_complex_opt_sp.out
 4cc88e8a8f836c784b6ab74afab2dffe1c5ebe578de6d224966cedc14fa7f9de         34410 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_complex_phys.out
 c39cb4cc6ec1bd41ee1cc9378140f33142ceca67a4e93a8b1a636fa291fc0555         35903 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_complex_sp.out
-d6e1045eed3e5d71ffce7691af1b0bb55db18beb43e3c22f74eb24a918e9a93b          6950 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_complex_wbo.txt
+108aa415f6e3119918b225c4ac32b917a06f6339cfa1dd8bc3cf588a2723c7b6          7000 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_complex_wbo.txt
 500c4d5649d2e49c70733510fcab42a8eca4fc3d03a29f1da0a76c085bc0314c          2680 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_drug.xyz
 07da711ca9734f5330c0c9f53c6079a71cbe2db72104d2b8ecd5ec76162c09c3          2693 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_drug_frozen.xyz
-09072122a5c9a5c33b7370ce36f521ff1a7266e3f25b348a361c2d92d2f2024a          2730 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_drug_frozen_from_opt.xyz
+1e376b7a9f7bed12f64e50f4428c5b45e8cc9583a481aba5b5f5397e7e1a1099          2596 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_drug_frozen_from_opt.xyz
 a8bce41c818d5bf5b3fc8fcf2c280ddb7c1178fd6ac9455fcba5b1ca47a25127         24076 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_drug_frozen_sp.out
 72c4d17b2800236ae76bfd756518886ec0c31c8aa50ce6285f3b42ef5807ddb1        157977 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_drug_isolated_relax.out
-5a7d4e169adfa9a9fdb5d4e97256a8eb1c675f1982a643c1365986d1951fe53c          4739 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_drug_relaxed_from_frozen.xyz
+935151922edec2182cb8fefebf97c3a2a3369aa80f458ef07a984819f731da1d          4739 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_drug_relaxed_from_frozen.xyz
 e0b0166ae5502260a970e20f228032a83897866ac9a8c19e70ec146a545e206b         24026 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_drug_sp.out
 f777241438aa66e473cb08b846e62ba058f1c3121795b709f36842781158abb3          3585 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_ligand.pdbqt
 ab73cb630c2014dfa52ccedc492ac866db6637d7e477a71295de84865cba93a6          1535 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_mxene_frozen.xyz
-770c32d2ef5b2e99329c4628b7d46db0aea81f53b86c3b32b7d5e15395d82283          1572 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_mxene_frozen_from_opt.xyz
+c9a22bb43dad7ec12de40ea90b1b3c4df876a6cff8de475a97f11bac05787983          1479 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_mxene_frozen_from_opt.xyz
 aac03464abefc6f2a7704c1efcd5045aa66461449436808a28c2c81382c76091         27180 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_mxene_frozen_sp.out
 dcfb7941be279d4baea1ae0d71a91ec7182ece230d160ba7a777925a2eb6a3b8        153412 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_mxene_isolated_relax.out
-eb0a3c8b94f42c769c54ae684705aaf0ade3a8ecc0827fb077914797bc2072a0          2684 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_mxene_relaxed_from_frozen.xyz
+838299c3ab3fc281bb8d4ed81b076e2d995eb360187a90a93115750fb0e0317e          2684 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_mxene_relaxed_from_frozen.xyz
 08a7ddc2ae0273b8febfc23bd94e4ff002ee9b22c6b2673cfc6146fc9f4911c5        132421 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_opt_orient_0deg.out
 97f6c65450a908890a6ce69ed08a95abb468b32b2800d50fd00be28c9d2e37d5          4185 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_opt_orient_0deg.xyz
 1323518a07dbcd3997475bf70b60ee0b15540f7c6fc6c1b7d14104db480d4074        139993 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_opt_orient_180deg.out
@@ -70,11 +72,11 @@ b5dec822d4c70b3b56cd6866ba702c8c3b55bc395986067d7c55a517efe210fc          7346 b
 aec0038a5401dd9954eb606b28e420d110e48fa70f57a862134cc0f758a18b50          4197 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_Ti12C7O14_phys_complex.xyz
 7ffcb35c22dfaec65c8a040adeec702c72c6b24ec35b8e963b4a3e095fdc1a4e          4179 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_Ti3C2O2_complex.xyz
 11c64ee6a0dc1808ab6346e7b60c2375838aeae1d13487080d4c2f58a6735ebd         24316 bytes  [gbm]  calculations\gbm\Afatinib\Afatinib_wbo.out
-f21cb71ef2bca316f840dfa1061d202c9f8e346740353887fa3c3eee09c48861           528 bytes  [gbm]  calculations\gbm\Afatinib\charges
-2795495a6881acdc0c37a5a642af15e40579cbe3a7ffd024626dbb2c50132523          3600 bytes  [gbm]  calculations\gbm\Afatinib\wbo
+f5d145f3ae45a7200dca19b7b5642cb27083a033cc5b3fdca1d935f176648a55          1472 bytes  [gbm]  calculations\gbm\Afatinib\charges
+d6e1045eed3e5d71ffce7691af1b0bb55db18beb43e3c22f74eb24a918e9a93b          6950 bytes  [gbm]  calculations\gbm\Afatinib\wbo
 2d4482c861ec4c60f649dabaedbf6758f5e2f5f0fb5b6afe303d03433d2d3354         77836 bytes  [gbm]  calculations\gbm\Afatinib\xtbopt.log
 eb0a3c8b94f42c769c54ae684705aaf0ade3a8ecc0827fb077914797bc2072a0          2684 bytes  [gbm]  calculations\gbm\Afatinib\xtbopt.xyz
-71583956abca4ce3e21d71af272378310a3cb7b31178066cb266a103f801a6b0          3364 bytes  [gbm]  calculations\gbm\Afatinib\xtbtopo.mol
+9550478a9e7eacdf83f84e462474e3f77a182339987d9fa57aa2b7bcc0d5c94a          9071 bytes  [gbm]  calculations\gbm\Afatinib\xtbtopo.mol
 0ea90295e065ed4d87a1257c2502ef2245bcd813957f40505ec6545c1c9cf7e5         28845 bytes  [gbm]  calculations\gbm\Axitinib\Axitinib_2J6M_out.pdbqt
 2c4da3389e2127b058f8a39e0e1000215132df41c0e0d01772ed597a139b7664          2929 bytes  [gbm]  calculations\gbm\Axitinib\Axitinib_2J6M_vina.log
 5002a2c72bea7cea72aca873d6977464066260f999a0fcd4876f3cd34e4a0a95         28845 bytes  [gbm]  calculations\gbm\Axitinib\Axitinib_4ZAU_out.pdbqt
@@ -538,31 +540,31 @@ d32124befd673b32e238894c44fa55c5b939f07250d3a4380c95804ae1aabeb7          2847 b
 0430f1a0068d639f5b0a271b70cf11b71e89a18fdc88e68b46a0a3a57c76d4a9          2829 bytes  [gbm]  calculations\gbm\Nimustine\Nimustine_Ti3C2O2_complex.xyz
 89cc893ef43df19b2e2279d8b98887bf782b5076b58dbad40924f737d044c59c          5500 bytes  [gbm]  calculations\gbm\Nimustine\wbo
 bb24dbe6d86df7cfe4523b29f97efb8589374001d021f4513943d3fb7f8821d0          6583 bytes  [gbm]  calculations\gbm\Nimustine\xtbtopo.mol
-ed64e539fb6da89588ce35271f51ad30a925555e9c8a7511071ab387944b9fc8           528 bytes  [gbm]  calculations\gbm\Osimertinib\charges
+6fc690075990406182f7b92b6da7c22d641a277acd9bda10bc8410a12c0af620          1648 bytes  [gbm]  calculations\gbm\Osimertinib\charges
 7faef4341690402600c1defe6843ce7a7c83aa7772f321d6d67c8a0e113d03a0         37953 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_2J6M_out.pdbqt
 e248ff7006af2ceeb829b34bf5d1c53aa89de9a53a0b83784dfb7f90ec917d90          2948 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_2J6M_vina.log
 88cabb4419e8dc4ddf8b789d99c10817f76e3e2df69009746096f4df9d66d6a3         37953 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_4ZAU_out.pdbqt
 def3716934defb3fe22f25242a2ff1007379d909edc2ca1a89713229a4c67809          2946 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_4ZAU_vina.log
-f96f01f19e31f2d249c8d4cbe68a147dd4a7dea8fd387290f8ef3d7630c1cb5e          1648 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_complex_charges.txt
+842e34a81dffb4534a5d5a31ef4aaedc69207c6fd331011508254de9b2b0aec5          1648 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_complex_charges.txt
 d6a00210640a2323d0abcd3366bfbeda4dba2cbd7a716548dc538fa20aa676b0         35810 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_complex_clean_sp.out
-0cb735bec90aa308a2cf673658edb57624a2ec84c9696c867d78a8f478b2afae          8216 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_complex_opt_final.xyz
-f9b4a22231d04432e7447b9ba125999883fd78352b9e83660b70275a81e91c07         35659 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_complex_opt_sp.out
+2fc83d0a97443266d7758287de6f1f449a6013b3f2e42623fce47c41324e7a2a          8216 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_complex_opt_final.xyz
+35faac370f7f7be7f94e7ca0636a6644d33c0adce843358b58c21f5b83ab8b5d         34519 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_complex_opt_sp.out
 eaa72a0437b4c441234d4bef8b1d61735f2cc8230533088cd6eecd66be883fb5         35530 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_complex_phys.out
 f0893beb8d213cb1dcda99f8e6fb959fb8bc9463f86b309a4fdd88da37d2cbd2         35471 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_complex_sp.out
-85fa70881e16e86ed10fb44e179ca2e68504c8c51986b7d975ee2f71602a6d0a          7300 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_complex_wbo.txt
+f6b69c72ac22c662f86956f1e2f6c2f55493939b43995fba91e867e15033c9e1          7750 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_complex_wbo.txt
 c5c3a560593358ac3cd076f6d08dc64dd5bfb3671c02aa00f048dbe72c7e56fb          3177 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_drug.xyz
 deb7de7b4cd53f06cc835797ec917bc4be0882524ccc90e85a9835adc2fc8345          3187 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_drug_frozen.xyz
-bc2f2de406774c38e07d77657f1f601af3ca59817c7cc605a983f496a3d0e882          3222 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_drug_frozen_from_opt.xyz
+20c62aa73d2d7c720639ea1db05c26ebfc2ca20b5b93cc180c388a66239ca792          3072 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_drug_frozen_from_opt.xyz
 8dd4e61a2517b603a5e74b5966dc6eb4ca02dd472b14a5ef4ad7e728472b0aa4         25021 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_drug_frozen_sp.out
 8efd6b1d89ae74a20fdb6c543c1520d732ac7897aa6b2b457d9fdc185cc5213f         96494 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_drug_isolated_relax.out
-cdf30b47eff432e3510989e58d68b38cec1c7db122c357b5cf059280b8a217f1          5608 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_drug_relaxed_from_frozen.xyz
+43ce1592bde5e3f59051f27ca37ad6838bd350ca3a322e1f2ea12492cd209efa          5608 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_drug_relaxed_from_frozen.xyz
 84427a4ed0ca54aa634745d7dd49f675f35c960f7e0eba1301fb3f7076fd77a2         25000 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_drug_sp.out
 68f3f8b8f1e8cdd61fcdef0e560faddc4cef9580dda39bb585e6bfcfb7e3ef3d          3921 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_ligand.pdbqt
 ab73cb630c2014dfa52ccedc492ac866db6637d7e477a71295de84865cba93a6          1535 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_mxene_frozen.xyz
-5f43a03fa983af90cd76f56958102e688c609d2e3a56ce47c6c90efec32d2acf          1570 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_mxene_frozen_from_opt.xyz
+05cc75b37dcfa48e23732adcb4ff80f719d4f0e7c6d26507f6a0f091d2dd5461          1482 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_mxene_frozen_from_opt.xyz
 e8a8a3e1def4b500d320fb2c346bf889ed2d6f9bf9c4a7723cc8de9303cb8c71         23601 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_mxene_frozen_sp.out
 c1ac554aa862c61177a353f100baf96f7656c553ae4dccff24cad91b7c964990        163975 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_mxene_isolated_relax.out
-c6c167a56ac2824d0321a31e37539d09a5caa6cb5790c074dfd0794059cde995          2684 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_mxene_relaxed_from_frozen.xyz
+fe58b89b10841ec4ad719f12f6c366699e3e028ca2cd27e34e49590373e22513          2684 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_mxene_relaxed_from_frozen.xyz
 bac8daeb1cea15f08469a3b8caf126fb035c312eaaf703387de043293e0f48a4        132800 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_opt_orient_0deg.out
 b06d73e73c3bd569fb2467474e7d32b5e3761036e3a762df503b580ad60761ad          4683 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_opt_orient_0deg.xyz
 ecd0080164bfb0eabe505403425e3846724ba7d21f8b84cfdcebc05e23428d10          8432 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_opt_orient_180deg.out
@@ -571,8 +573,8 @@ ecd0080164bfb0eabe505403425e3846724ba7d21f8b84cfdcebc05e23428d10          8432 b
 c0687dd9d2b640ae9aad6882581c0398ba3a343892b91ec120502b9054866f96          4685 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_opt_orient_270deg.xyz
 060c3a6b121beac1625193e61aa596750bb4df7b7b8a9db61c8f98eda0e630ef        132034 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_opt_orient_90deg.out
 f66bd80cc6c050796b1ca7a7c8900e6ff8c8168589450af3616b852f90cbb1de          4684 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_opt_orient_90deg.xyz
-0cb735bec90aa308a2cf673658edb57624a2ec84c9696c867d78a8f478b2afae          8216 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_orientation_0deg_final.xyz
-3faca80048b7b2cac85f1404dfde3f5ba5828c004823856a359ae7624dcd2554        340214 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_orientation_0deg_opt.out
+2fc83d0a97443266d7758287de6f1f449a6013b3f2e42623fce47c41324e7a2a          8216 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_orientation_0deg_final.xyz
+22dc8c68ebe39cc8fcb01bf986142fc648005529a4707971b17956138fe8bfa2        609455 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_orientation_0deg_opt.out
 d904d9af965bd8bbb586cccc37b17769892d3e13c46f3809e4ff397b48986545        527733 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_orientation_180deg_opt.out
 e69ef069c4a4810b693feaa18dee31f74299cca1bb3a563f87ad6397dedb2c82        641452 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_orientation_270deg_opt.out
 c3880eac2598bac82d39348e138d0b52f41a5d26d4a3be1a6688d7d24d3297f3          8216 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_orientation_90deg_final.xyz
@@ -581,11 +583,11 @@ b5cd15fbddfcda44d5122eb62ca60a91efaab3aab9e21aef107a419e8b0bad46          4682 b
 ea6173b13a4e5779dc6c743c2eccb7b494d28edb5e9d9c344b4fdc11e84847ac          4692 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_Ti12C7O14_phys_complex.xyz
 b31da0998e7798092e165dfa9d95a1163c3bd006f52d3342f6dc7c588661eed5          4674 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_Ti3C2O2_complex.xyz
 b5fe57710801388ba7ecd29bc21e9bd215374958a8ba8d924aeb8733da222b02         24255 bytes  [gbm]  calculations\gbm\Osimertinib\Osimertinib_wbo.out
-b7fc131353f8332d5a089a403520ce695c52cf851f89ff83adef9930efe6cc88          3550 bytes  [gbm]  calculations\gbm\Osimertinib\wbo
+59ab052b8550580bd7ddc5ca68c66f129b6f1c6561e4f792bc0ebbe31a9dff1e          7200 bytes  [gbm]  calculations\gbm\Osimertinib\wbo
 7f73d9dfb147bd70009ff93d4f9849a6b656fde4287e2ab40b4bc274b942433a          8216 bytes  [gbm]  calculations\gbm\Osimertinib\xtblast.xyz
-a31056840a53bf8492cb292c01479a0c5131d65796935f62b2c488fbd8df01b9        115412 bytes  [gbm]  calculations\gbm\Osimertinib\xtbopt.log
-c6c167a56ac2824d0321a31e37539d09a5caa6cb5790c074dfd0794059cde995          2684 bytes  [gbm]  calculations\gbm\Osimertinib\xtbopt.xyz
-e83408615a8c5ab51012e57c21ce16093fceb344a28a0899ce89723d9700f375          3364 bytes  [gbm]  calculations\gbm\Osimertinib\xtbtopo.mol
+ed9fd043b98f1a65bd567838b87b061e5bfd775ab29c451bd7df6268bcd48a5a        517608 bytes  [gbm]  calculations\gbm\Osimertinib\xtbopt.log
+d179909cc8011aa8ab38691ad3d5f378fe702110a389ec53d8792ff9a65e2795          8216 bytes  [gbm]  calculations\gbm\Osimertinib\xtbopt.xyz
+0850562429d1bb212786a657527784d0de916c60671dc1f1a0a90c7e8e729f0d          9990 bytes  [gbm]  calculations\gbm\Osimertinib\xtbtopo.mol
 3bc5274c8b4ee87a04d6d45a606aebae5dd521b8a9e88e7e91a7336b607aef0e          1488 bytes  [gbm]  calculations\gbm\Palbociclib\charges
 f5a454cc9b8bcf488a18e55fd474c5b16a7bc6c5da13289d1d704d97b338bd50         31257 bytes  [gbm]  calculations\gbm\Palbociclib\Palbociclib_2J6M_out.pdbqt
 8199e5ee299d15d8bbfcdea87a89075a81e611a2036251ab8a90fcecd1299015          2948 bytes  [gbm]  calculations\gbm\Palbociclib\Palbociclib_2J6M_vina.log
@@ -820,9 +822,8 @@ b4724ee056227a2a4e3607151507fbe89f77a54c7fddb1a7214a539d362361a0        131909 b
 debac9caa8d7a512921b8176f7ae8b0785a775b071e189ae37183bf1735460e6        365061 bytes  [gbm]  calculations\gbm\Temozolomide\Temozolomide_orientation_180deg_opt.out
 9bca93c1eedaa738b5bfd3f650e253d3771c3574aec19c91198f43908de9c1a4          4265 bytes  [gbm]  calculations\gbm\Temozolomide\Temozolomide_orientation_270deg_final.xyz
 2987cbfca9af794a777d198eae8495c4353e0adaaa95868797feb0d6883b0fe4        235680 bytes  [gbm]  calculations\gbm\Temozolomide\Temozolomide_orientation_270deg_opt.out
-f4eb389aa286afa3f6566e9227538fc75b1f4d892200d926a49336c98fee15c6          4265 bytes  [gbm]  calculations\gbm\Temozolomide\Temozolomide_orientation_90deg_final.xyz
-4bedfdabbee394ecbe2f1c2f7d68c5241b142b84028c063d89ea705a289e216c         57731 bytes  [gbm]  calculations\gbm\Temozolomide\Temozolomide_orientation_90deg_opt.out
-f2ded787e062fe52aa827665aaea778ea29fe5c415a866443ddcce829662f764        376460 bytes  [gbm]  calculations\gbm\Temozolomide\Temozolomide_test_opt_0deg.out
+480044ecce0050934232cb1bf5b988d1993938f6328c2448f67b2e489566aa53          4265 bytes  [gbm]  calculations\gbm\Temozolomide\Temozolomide_orientation_90deg_final.xyz
+62e139546e5d5798f168cde0cd0f9220e4cb02dd18dfae035050a066561f9fa6        298381 bytes  [gbm]  calculations\gbm\Temozolomide\Temozolomide_orientation_90deg_opt.out
 53f65b75f8033136cf7a9d6fd8652b2fdfd50ae9f8b09b42e7253a59601c4c04          2431 bytes  [gbm]  calculations\gbm\Temozolomide\Temozolomide_Ti12C7O14_clean_complex.xyz
 53e56b6029994c67545ce10cb2cfd70f272ae2cd0a5c05324594783d256ca369          2396 bytes  [gbm]  calculations\gbm\Temozolomide\Temozolomide_Ti12C7O14_phys_complex.xyz
 2cacf3c6ba99d8cf42738681650ea803f3bf540f9e90e2ba94128ec3a0f00e46          2378 bytes  [gbm]  calculations\gbm\Temozolomide\Temozolomide_Ti3C2O2_complex.xyz
@@ -872,18 +873,20 @@ a1dbad54c05c3ba5a26b4ca66919186f8cadde1a54ac39da98d5a2b007cbc51d          3550 b
 d59fa988d8b04a8ccb640f4a3a2d4b0c21c5d9d90eca93ddddde64e9a918f9bd          2684 bytes  [gbm]  calculations\gbm\xtbopt.xyz
 145bc1fb8fb1e1d7b169804d99892a66020aab443bc416a9cb4b111bbc2712bc          3080 bytes  [gbm]  calculations\gbm\xtbrestart
 68a2009cefc3a196a9d26d8b37415d70524af350facd996af9dc3403177dc20a          3387 bytes  [gbm]  calculations\gbm\xtbtopo.mol
-3b5ab9cc979a962fbe34b262661e549ae27ad9169ee90f043a1c6b5f38062c74          2917 bytes  [gbm]  data\processed\adsorption_energetics_audit.csv
+7f79aa763b2d32ea7de53a1d0c63c441fb4d8c3424fc26c57e85dbd1c85448f9          2972 bytes  [gbm]  data\processed\adsorption_energetics_audit.csv
+804cac51b1f82bf6fb2afa4b9924fcc5a9e06392127f9e90a8c61687c04b35b8          2261 bytes  [gbm]  data\processed\bond_change_audit.csv
 84870554574fd571c87b74b084436ca6480e9682584b82851beca25ad00705d6          8265 bytes  [gbm]  data\processed\calculation_provenance.csv
 a7ee43f7c46c83e4c3c5caabf33bfa977291827bdeb68103a6e8df7c045955b3          5681 bytes  [gbm]  data\processed\compound_identity_audit.csv
 ed89c2e1d826bf84e904279ba06559d01ed1fe7fd1a3af9b8da6033016fcc211          6547 bytes  [gbm]  data\processed\dataset_drug_mxene_pristine.csv
 649cb536a99b949cfa2d4c99db4a910e082b7ff4c50147031bf4f6dfe0c8924d          8776 bytes  [gbm]  data\processed\dataset_drug_Ti3C2_functionalized.csv
 c7c4ca172fa9be174034fcca8cead25a3da947bbf4fe7444869afa8d27851c55          7280 bytes  [gbm]  data\processed\dataset_drug_Ti3C2O2_pristine.csv
 830d00e65208dad6887d314cab4a7d2ac3a90bf0be0bd2393e2297aa39af6fbb          8027 bytes  [gbm]  data\processed\dataset_isolated_gbm_drugs.csv
+2bd77d84cad44116103331916d067501cf0bd8bb29b524f5cd9a8926b1af4771         10755 bytes  [gbm]  data\processed\gbm_final_geometry_replay_audit.csv
 ed31f0f931c8373a0e9f6180fb02d3dba48e6171b3c76a52808259611d634ac2          7995 bytes  [gbm]  data\processed\gbm_isolated_descriptors.csv
-7eaad86eae32a22b5e9729e6f48fdd0aad39949a1a87f0deff04b62f1a8056e8         12333 bytes  [gbm]  data\processed\gbm_relaxed_orientation_audit.csv
+8876133532a79998905e1b7ca3e85e1d3433953675a799ae789ea217fd9d2f93          8095 bytes  [gbm]  data\processed\gbm_relaxed_orientation_audit.csv
 7d42bf46b4fb6c25c7c141f2cf79b20fce9853802258b1a516ef7de80ffae3a6          6470 bytes  [gbm]  data\processed\MASTER_GBM_35_COMPUTATIONAL_DATASET.csv
 7a454f8eb0f5bd6ebff268052f779e18307bcc6d0dbc34501d348ea8a90132b4          1121 bytes  [gbm]  data\processed\nested_cv_oof_predictions.csv
-450054d471a1712288e34def719297817c5d7bab00daa00851bf429e83d9db40          2553 bytes  [gbm]  data\processed\optimized_contact_audit.csv
+b6732404e473eff48deac91ad86980d09d43bcc22be5e1df7aafa228d4d9b4db          2596 bytes  [gbm]  data\processed\optimized_contact_audit.csv
 750b23c5a76bb4bd577a9433f39c6d1f28d163db0411d00e25795c9badff5a9c           613 bytes  [gbm]  data\processed\redocking_validation.csv
 0caab4068471494080a699b99d21d42af0f210bd3c4029162184629125b5bc3f           780 bytes  [gbm]  data\processed\relaxed_adsorption_audit.csv
 f65302b71cb5236407f30f1746b7130f228f1f9b459a93c1ecca3089020e9e51           364 bytes  [gbm]  data\processed\relaxed_adsorption_subset.csv
@@ -949,7 +952,7 @@ ad6173aefeab6658bda54e93c215b3c2df546dcad270d6f2a4fddb5ad63888b2        977905 b
 503d3de56db7170a1664a6dc48b7166033ced7c0ea81259268c30f8a24e81269        427004 bytes  [gbm]  figures\fig8_gbm_williams_applicability_domain.png
 2347bc30e0524a06a899e99b9f36fe280662290267b3369914369a1f43c5ceb5        777512 bytes  [gbm]  figures\fig9_gbm_3d_spatial_binding_modes.png
 44c452d7da76f512cf75c63c984af314521970dc70df9d4eba7461303750e492          1143 bytes  [gbm]  LICENSE
-1381055b8b0a8c1c5ec977dcadbefca7d21fe87840960bf8152c770fe6b6140d          1913 bytes  [gbm]  make_gbm_manifest.py
+0340df3131270e42256ae2b89d11b0619527eb2675b5b2a2c1e7ba5dcab30fa5          2257 bytes  [gbm]  make_gbm_manifest.py
 6469e9fa047e19aa810e6413bcce43d58668a3eead79de8388fa0b127a85bd86       1589594 bytes  [gbm]  manuscript\Beilstein_Manuscript_GBM_MXene_Monreal_Hernandez_et_al.docx
 6469e9fa047e19aa810e6413bcce43d58668a3eead79de8388fa0b127a85bd86       1589594 bytes  [gbm]  manuscript\GBM_MXene_Full_Q1_Research_Paper_Monreal_Hernandez_et_al.docx
 63cbbcdacda2f42eac875599870ce206820dff814d1f440ed9403d41d0e23707         41747 bytes  [gbm]  manuscript\GBM_MXene_Supporting_Information.docx
@@ -1037,8 +1040,9 @@ cc051ce6cf48cd9d6a296c6f8738f3b55295c3a24834253d9143b35332cc83af         13050 b
 ddf551808761df000767e305d5ad5c84915ae17c1e74c623e213e27e8129c438          2387 bytes  [gbm]  run_entire_gbm_study.py
 8938bc487f2ac61a2e11054febabe55163a9f5b1c7185139cbaf2ade60fb0924         30549 bytes  [gbm]  run_real_gbm_pipeline.py
 250bf6a688442df027b5e1b61589646a6809bdda2b7ff09e47fdaef491b7b21f          1994 bytes  [gbm]  run_strict_qsar.py
+715d0cf1b74b54c4cf1c759ffb75533d0a5d057927a26db3a86fc20b0699c89f         25627 bytes  [gbm]  scripts\execute_gbm_replay_and_refinement.py
 755fa44b7f6036cdf6dbb73d09452033f6b406fe7b47165ba4fca3e619df99ce          5057 bytes  [gbm]  scripts\run_nested_cv_leakfree.py
-f6c7f4591b2d57b3607fea92d6642d16478b9bb93b8dbf311db8f4a33093815b          7896 bytes  [gbm]  scripts\verify_gbm_consistency.py
+995a55c1e4a4e96f6af25320a585f6b587fe0231def31b2f8b3a14d89d534a04         11255 bytes  [gbm]  scripts\verify_gbm_consistency.py
 a0b32e8a8dd651b2150ac08420fdc3ea147de876c2c2a73e4c80e8427944f447          4035 bytes  [gbm]  src\descriptors\compute_gbm_descriptors.py
 e89fa517889fe68e1a5470405095d02fb31ea01477248ebb840ff70ce1e64ecc          6771 bytes  [gbm]  src\descriptors\curate_gbm_dataset.py
 59aa4511b4b85b4f0c2cbaba3bab33aefe6c586642b5e00d782f64bd47ac8142          3704 bytes  [gbm]  src\docking\analyze_gbm_interactions.py

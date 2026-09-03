@@ -3,13 +3,13 @@ scripts/verify_gbm_consistency.py
 =================================
 Strict methodology and consistency audit for the GBM MXene project.
 Verifies:
-1. No complex_opt_final.xyz matches the SHA256 of any input orientation geometry.
-2. gbm_relaxed_orientation_audit.csv contains exactly 32 rows (8 compounds x 4 angles).
-3. Every selected orientation corresponds strictly to the minimum-energy CONVERGED pose.
-4. optimized_contact_audit.csv and adsorption_energetics_audit.csv contain exactly 8 compounds.
-5. Charge conservation sum(q_k) = q_formal is satisfied for all 8 candidates (|sum - q| < 0.01 e).
-6. WBO values are genuinely parsed from xTB WBO matrices (no heuristic values).
-7. Deformation energies Delta_E_def are un-truncated quantum differences.
+1. gbm_final_geometry_replay_audit.csv exists and has 32 rows.
+2. All 8 selected minimum complex geometries pass clean independent single-point replay (|Delta_E| < 1e-4 Eh and GradNorm <= 0.01 Eh/bohr).
+3. No selected complex_opt_final.xyz matches the SHA256 of any input orientation geometry.
+4. gbm_relaxed_orientation_audit.csv contains exactly 32 attempted orientations; every CONVERGED row has valid numeric energy and gradient norm.
+5. Every selected orientation corresponds strictly to the lowest-energy replay-confirmed pose.
+6. bond_change_audit.csv documents all 8 candidates, explicitly identifying Cobimetinib as surface-induced proton transfer / reactive chemisorption.
+7. optimized_contact_audit.csv and adsorption_energetics_audit.csv contain exactly 8 compounds with un-truncated deformation energies and Mulliken charge conservation.
 8. Subsystems (drug and MXene) have authentic parsed convergence status and cycle counts.
 9. PDB metadata is exact: 4ZAU = 2.80 A (wild-type EGFR / AZD9291), 2J6M = 3.10 A (EGFR kinase domain / AEE788).
 10. Zero references to legacy incorrect metadata (e.g. EphA2, 1.65 A).
@@ -18,6 +18,7 @@ Verifies:
 
 import hashlib, sys
 import pandas as pd
+import numpy as np
 from pathlib import Path
 
 base = Path(r"c:\Users\Andre\Proyectos doctorado\nano-qsar-ai-papers\mxene-glioblastoma-qsar-ai")
@@ -41,7 +42,37 @@ print("="*80)
 print("GBM REPOSITORY STRICT METHODOLOGY & CONSISTENCY AUDIT")
 print("="*80)
 
-# 1. Check gbm_relaxed_orientation_audit.csv
+# 1. Check gbm_final_geometry_replay_audit.csv
+replay_csv = proc / "gbm_final_geometry_replay_audit.csv"
+if not replay_csv.exists():
+    errors.append("gbm_final_geometry_replay_audit.csv missing")
+else:
+    df_rep = pd.read_csv(replay_csv)
+    if len(df_rep) != 32:
+        errors.append(f"gbm_final_geometry_replay_audit.csv has {len(df_rep)} rows, expected 32")
+    
+    selected_rep = df_rep[df_rep["is_selected_minimum"] == True]
+    if len(selected_rep) != 8:
+        errors.append(f"Expected 8 selected minimum poses in replay audit, found {len(selected_rep)}")
+        
+    for idx, r in selected_rep.iterrows():
+        comp = r["compound"]
+        ang = r["angle_deg"]
+        status = r["replay_status"]
+        delta_kcal = abs(r["Delta_E_kcal_mol"])
+        delta_eh = abs(r["Delta_E_Eh"])
+        gn = r["GradNorm_replay_SP"]
+        
+        if status != "PASS":
+            errors.append(f"Selected candidate {comp} ({ang} deg) FAILED replay audit: status={status}")
+        if delta_eh >= 1e-4:
+            errors.append(f"Selected candidate {comp} ({ang} deg) Delta_E ({delta_eh:.6e} Eh, {delta_kcal:.4f} kcal/mol) exceeds tolerance 1e-4 Eh")
+        if gn is not None and gn > 0.01:
+            errors.append(f"Selected candidate {comp} ({ang} deg) replay gradient norm ({gn:.6f} Eh/bohr) exceeds 0.01 threshold")
+            
+    print(f"[PASS] gbm_final_geometry_replay_audit.csv: All 8 selected minimums PASS clean replay (|Delta_E| < 1e-4 Eh, gn <= 0.01).")
+
+# 2. Check gbm_relaxed_orientation_audit.csv
 orient_csv = proc / "gbm_relaxed_orientation_audit.csv"
 if not orient_csv.exists():
     errors.append("gbm_relaxed_orientation_audit.csv missing")
@@ -57,13 +88,45 @@ else:
         if conv_cnt == 0:
             errors.append(f"Compound {c} has 0 converged orientations")
         for idx, r in sub.iterrows():
-            in_sha = r["input_sha256"]
-            out_sha = r["final_sha256"]
-            if in_sha == out_sha and r["convergence_status"] == "CONVERGED":
-                errors.append(f"Orientation {c} {r['angle_deg']} deg input and final SHA are identical ({in_sha})")
-    print(f"[PASS] gbm_relaxed_orientation_audit.csv: 32 orientations verified across 8 compounds.")
+            if r["convergence_status"] == "CONVERGED":
+                if pd.isna(r["energy_Eh"]) or pd.isna(r["gradient_norm"]):
+                    errors.append(f"Orientation {c} {r['angle_deg']} deg is CONVERGED but has NaN energy or gradient")
+                in_sha = sha256_file(calc / c / f"{c}_opt_orient_{r['angle_deg']}deg.xyz")
+                out_sha = r["final_sha256"]
+                if in_sha == out_sha:
+                    errors.append(f"Orientation {c} {r['angle_deg']} deg input and final SHA are identical ({in_sha})")
+    print(f"[PASS] gbm_relaxed_orientation_audit.csv: 32 orientations verified across 8 compounds (no NaN values in converged rows).")
 
-# 2. Check that complex_opt_final.xyz is NOT identical to any input orientation
+# 3. Check bond_change_audit.csv
+bond_csv = proc / "bond_change_audit.csv"
+if not bond_csv.exists():
+    errors.append("bond_change_audit.csv missing")
+else:
+    df_b = pd.read_csv(bond_csv)
+    if len(df_b) != 8:
+        errors.append(f"bond_change_audit.csv has {len(df_b)} rows, expected 8")
+    
+    # Cobimetinib explicit check
+    cobi_row = df_b[df_b["compound"] == "Cobimetinib"]
+    if len(cobi_row) == 0:
+        errors.append("Cobimetinib missing in bond_change_audit.csv")
+    else:
+        r = cobi_row.iloc[0]
+        if not r["proton_transfer_flag"]:
+            errors.append("Cobimetinib proton_transfer_flag is not True!")
+        if "surface-induced proton transfer" not in r["interaction_classification"]:
+            errors.append(f"Cobimetinib classification unexpected: {r['interaction_classification']}")
+        if "O(1)-H(36)" not in str(r["broken_drug_bonds"]):
+            errors.append(f"Cobimetinib broken drug bonds unexpected: {r['broken_drug_bonds']}")
+            
+    # Non-Cobimetinib proton transfer flag check
+    other_pt = df_b[df_b["compound"] != "Cobimetinib"]["proton_transfer_flag"]
+    if any(other_pt):
+        errors.append("Unexpected proton transfer flagged in non-Cobimetinib compound")
+        
+    print(f"[PASS] bond_change_audit.csv: All 8 candidates audited; Cobimetinib confirmed as surface-induced proton transfer / reactive chemisorption.")
+
+# 4. Check that complex_opt_final.xyz is NOT identical to any input orientation
 for c in CANDIDATES:
     dir_name = c.replace(" ", "_").replace("-", "_")
     mol_dir = calc / dir_name
@@ -73,16 +136,15 @@ for c in CANDIDATES:
         continue
     final_sha = sha256_file(comp_final)
     
-    # Check against all 4 input files
     for angle in [0, 90, 180, 270]:
         in_xyz = mol_dir / f"{dir_name}_opt_orient_{angle}deg.xyz"
         if in_xyz.exists():
             in_sha = sha256_file(in_xyz)
             if final_sha == in_sha:
                 errors.append(f"{c}_complex_opt_final.xyz matches input {in_xyz.name} (SHA: {final_sha})! Input geometry was mistakenly used!")
-print(f"[PASS] complex_opt_final.xyz: All 8 candidates verified as genuine optimized products (0 matches with inputs).")
+print(f"[PASS] complex_opt_final.xyz: All 8 candidates verified as genuine relaxed products (0 matches with inputs).")
 
-# 3. Check optimized_contact_audit.csv
+# 5. Check optimized_contact_audit.csv
 cont_csv = proc / "optimized_contact_audit.csv"
 if not cont_csv.exists():
     errors.append("optimized_contact_audit.csv missing")
@@ -104,7 +166,7 @@ else:
             errors.append(f"{comp} SHA256 mismatch in contact audit")
     print(f"[PASS] optimized_contact_audit.csv: All 8 compounds verified (charge conserved, WBO source linked, SHA valid).")
 
-# 4. Check adsorption_energetics_audit.csv
+# 6. Check adsorption_energetics_audit.csv
 nrg_csv = proc / "adsorption_energetics_audit.csv"
 if not nrg_csv.exists():
     errors.append("adsorption_energetics_audit.csv missing")
@@ -118,7 +180,6 @@ else:
             errors.append(f"{name} drug relaxation not CONVERGED: {r['drug_relax_convergence']}")
         if r["mxene_relax_convergence"] != "CONVERGED":
             errors.append(f"{name} MXene relaxation not CONVERGED: {r['mxene_relax_convergence']}")
-        # Check that deformation is un-truncated
         def_d = r["Delta_E_def_drug_kcal_mol"]
         def_m = r["Delta_E_def_mxene_kcal_mol"]
         e_froz_d = r["E_drug_frozen_Eh"]
@@ -128,7 +189,7 @@ else:
             errors.append(f"{name} Delta_E_def_drug discrepancy: {def_d} vs expected {expected_def_d:.3f}")
     print(f"[PASS] adsorption_energetics_audit.csv: All 8 compounds verified (subsystems CONVERGED, deformation un-truncated).")
 
-# 5. Check PDB metadata in redocking_validation.csv
+# 7. Check PDB metadata in redocking_validation.csv
 redock_csv = proc / "redocking_validation.csv"
 if not redock_csv.exists():
     errors.append("redocking_validation.csv missing")
@@ -144,7 +205,7 @@ else:
         errors.append("redocking_validation.csv contains legacy EphA2 reference!")
     print(f"[PASS] redocking_validation.csv: PDB metadata verified (4ZAU: 2.80 A, 2J6M: 3.10 A).")
 
-# 6. Check MANIFEST_SHA256.txt
+# 8. Check MANIFEST_SHA256.txt
 man_f = base / "MANIFEST_SHA256.txt"
 if not man_f.exists():
     errors.append("MANIFEST_SHA256.txt missing")
