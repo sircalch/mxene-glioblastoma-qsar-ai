@@ -15,6 +15,30 @@ for Glioblastoma & 2D Titanium Carbide MXenes (Ti3C2Tx) with:
 import os
 import sys
 from pathlib import Path
+
+
+def _project_root(marker="MANIFEST_SHA256.txt"):
+    from pathlib import Path as _P
+    here = _P(__file__).resolve()
+    for anc in [here.parent, *here.parents]:
+        if (anc / marker).exists() or ((anc / "data").is_dir() and (anc / "README.md").exists()):
+            return anc
+    return here.parent
+
+
+def _find_xtb():
+    import shutil
+    from pathlib import Path as _P
+    w = shutil.which("xtb") or shutil.which("xtb.exe")
+    if w:
+        return _P(w)
+    for anc in [_P(__file__).resolve().parent, *_P(__file__).resolve().parents]:
+        hits = list(anc.glob("**/xtb-*/bin/xtb.exe")) or list(anc.glob("**/xtb-*/bin/xtb"))
+        if hits:
+            return hits[0]
+    return _P("xtb")
+
+
 import pandas as pd
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
@@ -23,7 +47,7 @@ from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.oxml import OxmlElement, parse_xml
 from docx.oxml.ns import nsdecls, qn
 
-base_dir = Path(r"c:\Users\Andre\Proyectos doctorado\mxene-glioblastoma-qsar-ai")
+base_dir = _project_root()
 sys.path.append(str(base_dir / "src" / "visualization"))
 from build_gbm_verified_references import GBM_VERIFIED_REFERENCES
 

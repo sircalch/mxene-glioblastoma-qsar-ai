@@ -18,6 +18,30 @@ import os, sys, subprocess, shutil, hashlib, time, re, math
 import numpy as np
 import pandas as pd
 from pathlib import Path
+
+
+def _project_root(marker="MANIFEST_SHA256.txt"):
+    from pathlib import Path as _P
+    here = _P(__file__).resolve()
+    for anc in [here.parent, *here.parents]:
+        if (anc / marker).exists() or ((anc / "data").is_dir() and (anc / "README.md").exists()):
+            return anc
+    return here.parent
+
+
+def _find_xtb():
+    import shutil
+    from pathlib import Path as _P
+    w = shutil.which("xtb") or shutil.which("xtb.exe")
+    if w:
+        return _P(w)
+    for anc in [_P(__file__).resolve().parent, *_P(__file__).resolve().parents]:
+        hits = list(anc.glob("**/xtb-*/bin/xtb.exe")) or list(anc.glob("**/xtb-*/bin/xtb"))
+        if hits:
+            return hits[0]
+    return _P("xtb")
+
+
 from rdkit import Chem
 from rdkit.Chem import AllChem, Descriptors, Crippen
 from meeko import MoleculePreparation, PDBQTWriterLegacy
@@ -29,14 +53,13 @@ from sklearn.model_selection import KFold, GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 
-BASE = Path(r"c:\Users\Andre\Proyectos doctorado\mxene-glioblastoma-qsar-ai")
+BASE = _project_root()
 RAW = BASE / "data" / "raw"
 PROC = BASE / "data" / "processed"
 CALC = BASE / "calculations" / "gbm"
 
 VINA = BASE / "src" / "docking" / "vina.exe"
-XTB = Path(r"c:\Users\Andre\Proyectos doctorado\kras-pancreatic-gC3N4-ai\tools\xtb\xtb-6.7.1\bin\xtb.exe")
-
+XTB = _find_xtb()
 RECEPTOR_4ZAU_PDBQT = RAW / "4ZAU_receptor.pdbqt"
 RECEPTOR_4ZAU_PDB   = RAW / "4ZAU.pdb"
 RECEPTOR_2J6M_PDBQT = RAW / "2J6M_receptor.pdbqt"

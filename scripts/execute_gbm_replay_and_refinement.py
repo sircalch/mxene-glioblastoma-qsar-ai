@@ -1,14 +1,38 @@
 import os, sys, shutil, subprocess, re, hashlib
 from pathlib import Path
+
+
+def _project_root(marker="MANIFEST_SHA256.txt"):
+    from pathlib import Path as _P
+    here = _P(__file__).resolve()
+    for anc in [here.parent, *here.parents]:
+        if (anc / marker).exists() or ((anc / "data").is_dir() and (anc / "README.md").exists()):
+            return anc
+    return here.parent
+
+
+def _find_xtb():
+    import shutil
+    from pathlib import Path as _P
+    w = shutil.which("xtb") or shutil.which("xtb.exe")
+    if w:
+        return _P(w)
+    for anc in [_P(__file__).resolve().parent, *_P(__file__).resolve().parents]:
+        hits = list(anc.glob("**/xtb-*/bin/xtb.exe")) or list(anc.glob("**/xtb-*/bin/xtb"))
+        if hits:
+            return hits[0]
+    return _P("xtb")
+
+
 import pandas as pd
 import numpy as np
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-base = Path(r"c:\Users\Andre\Proyectos doctorado\nano-qsar-ai-papers\mxene-glioblastoma-qsar-ai")
+base = _project_root()
 calc = base / "calculations" / "gbm"
 data_proc = base / "data" / "processed"
-xtb = Path(r"c:\Users\Andre\Proyectos doctorado\nano-qsar-ai-papers\kras-pancreatic-gC3N4-ai\tools\xtb\xtb-6.7.1\bin\xtb.exe")
+xtb = _find_xtb()
 env = dict(**os.environ, OMP_NUM_THREADS="4", MKL_NUM_THREADS="4")
 
 def sha256_file(filepath):
