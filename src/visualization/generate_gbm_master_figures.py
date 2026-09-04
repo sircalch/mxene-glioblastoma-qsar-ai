@@ -131,42 +131,49 @@ def make_fig2_quantum(base_dir, fig_dir):
     print(f"Generated Figure 2: {out_p}")
 
 def make_fig3_docking_profiles(base_dir, fig_dir):
-    vina_csv = os.path.join(base_dir, "results", "docking", "real_vina_docking_summary.csv")
-    if not os.path.exists(vina_csv):
+    # Uses the validated primary target (PDB 4ZAU, 2.80 A) from the QSAR master
+    # dataset -- NOT the deprecated results/docking/real_vina_docking_summary.csv,
+    # which was docked against the superseded 4UV7 receptor and is inconsistent
+    # with redocking_validation.csv / the QSAR features used everywhere else in
+    # this project (vina_4ZAU_kcal_mol, vina_2J6M_kcal_mol).
+    data_csv = os.path.join(base_dir, "data", "processed", "dataset_drug_mxene_pristine.csv")
+    if not os.path.exists(data_csv):
         return
-    df = pd.read_csv(vina_csv)
-    
+    df = pd.read_csv(data_csv).rename(columns={"vina_4ZAU_kcal_mol": "Real_Vina_Docking_Score_kcal_mol"})
+
     fig, axes = plt.subplots(1, 2, figsize=(14, 5.8), dpi=300)
     plt.subplots_adjust(top=0.86, wspace=0.30, bottom=0.15)
-    
+
     # Panel A: Distribution of Real Vina Scores
     ax0 = axes[0]
     sns.histplot(df['Real_Vina_Docking_Score_kcal_mol'], kde=True, color='#1565C0', bins=12, ax=ax0, edgecolor='k')
-    ax0.axvline(df['Real_Vina_Docking_Score_kcal_mol'].mean(), color='r', linestyle='--', lw=2.0, 
+    ax0.axvline(df['Real_Vina_Docking_Score_kcal_mol'].mean(), color='r', linestyle='--', lw=2.0,
                 label=f"Mean Delta_G = {df['Real_Vina_Docking_Score_kcal_mol'].mean():.2f} kcal/mol")
     ax0.set_xlabel("AutoDock Vina Real Binding Energy (kcal/mol)", fontsize=10.5, fontweight='bold')
     ax0.set_ylabel("Therapeutic Compound Count", fontsize=10.5, fontweight='bold')
-    ax0.set_title("(a) Binding Affinity Distribution on EGFR (PDB: 4UV7)", fontsize=11.5, fontweight='bold', pad=10)
+    ax0.set_title("(a) Binding Affinity Distribution on EGFR (PDB: 4ZAU, 2.80 Å)", fontsize=11.5, fontweight='bold', pad=10)
     ax0.legend(loc='upper left', frameon=True)
     ax0.grid(True, linestyle=':', alpha=0.6)
-    
+
     # Panel B: Top 10 Best Docked GBM Therapeutics
     ax1 = axes[1]
     df_sorted = df.sort_values(by='Real_Vina_Docking_Score_kcal_mol', ascending=True).head(10)
     colors = sns.color_palette("viridis_r", n_colors=10)
     bars = ax1.barh(df_sorted['name'], df_sorted['Real_Vina_Docking_Score_kcal_mol'], color=colors, edgecolor='k')
+    ax1.set_xlim(right=0)
+    ax1.tick_params(axis='y', pad=8)
     ax1.set_xlabel("Real AutoDock Vina Score (kcal/mol)", fontsize=10.5, fontweight='bold')
     ax1.set_ylabel("GBM / CNS Therapeutic", fontsize=10.5, fontweight='bold')
-    ax1.set_title("(b) Top 10 High-Affinity EGFR/EGFRvIII Inhibitors", fontsize=11.5, fontweight='bold', pad=10)
+    ax1.set_title("(b) Top 10 High-Affinity EGFR Inhibitors (PDB 4ZAU)", fontsize=11.5, fontweight='bold', pad=10)
     ax1.invert_yaxis()
     ax1.grid(True, linestyle=':', alpha=0.6)
-    
+
     for bar in bars:
         w = bar.get_width()
-        ax1.text(w - 0.25, bar.get_y() + bar.get_height()/2, f"{w:.2f}", 
+        ax1.text(w - 0.1, bar.get_y() + bar.get_height()/2, f"{w:.2f}",
                  va='center', ha='right', fontsize=9, fontweight='bold', color='white')
-                 
-    plt.suptitle("Figure 3: Physical Molecular Docking Statistical Profiles on Human EGFR Kinase", fontsize=13, fontweight='bold', y=0.96)
+
+    plt.suptitle("Figure 3: Molecular Docking Statistical Profiles on Human EGFR Kinase (PDB 4ZAU, exploratory: redocking RMSD 5.32 Å)", fontsize=12.5, fontweight='bold', y=0.98)
     out_p = os.path.join(fig_dir, "fig3_gbm_docking_vina_statistical_profiles.png")
     plt.savefig(out_p, bbox_inches='tight')
     plt.close()
