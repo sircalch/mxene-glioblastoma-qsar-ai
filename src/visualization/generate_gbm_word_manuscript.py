@@ -333,7 +333,7 @@ def generate_gbm_word_manuscript():
     doc.add_paragraph("The authors declare no competing financial or non-financial interests.")
     
     add_heading_styled(doc, "References", level=1)
-    from build_comprehensive_verified_references import VERIFIED_REFERENCES
+    from build_gbm_verified_references import GBM_VERIFIED_REFERENCES as VERIFIED_REFERENCES
     for idx, ref in enumerate(VERIFIED_REFERENCES, 1):
         p_ref = doc.add_paragraph()
         p_ref.paragraph_format.left_indent = Inches(0.4)
@@ -341,10 +341,11 @@ def generate_gbm_word_manuscript():
         r_num = p_ref.add_run(f"{idx}. ")
         r_num.font.bold = True
         p_ref.add_run(ref['citation'] + " ")
-        r_doi = p_ref.add_run(f"doi:{ref['doi']}")
-        r_doi.font.italic = True
-        r_doi.font.size = Pt(9.0)
-        r_doi.font.color.rgb = RGBColor(21, 101, 192)
+        if ref.get('doi'):
+            r_doi = p_ref.add_run(f"doi:{ref['doi']}")
+            r_doi.font.italic = True
+            r_doi.font.size = Pt(9.0)
+            r_doi.font.color.rgb = RGBColor(21, 101, 192)
         
     out_docx = os.path.join(base_dir, "manuscript", "Beilstein_Manuscript_GBM_MXene_Monreal_Hernandez_et_al.docx")
     doc.save(out_docx)

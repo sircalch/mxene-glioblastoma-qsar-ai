@@ -50,7 +50,7 @@ def compute_williams_domain():
             H = X_design @ np.linalg.pinv(X_design.T @ X_design) @ X_design.T
             h_diag = np.diag(H)
         except Exception:
-            h_diag = np.random.uniform(0.08, 0.35, n)
+            raise  # a design-matrix failure must surface, not be masked with random leverages
             
         h_star = 3.0 * p_eff / n
         
