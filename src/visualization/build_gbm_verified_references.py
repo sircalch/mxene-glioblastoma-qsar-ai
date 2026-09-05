@@ -26,9 +26,8 @@ GBM_VERIFIED_REFERENCES = [
         "doi": "10.1016/j.cell.2013.09.034",
     },
     {
-        "citation": "Yarden, Y.; Pines, G. The ERBB network: at the crossroads of cell, development, and cancer. Nat. Rev. Cancer 2012, 12 (8), 553–563.",
-        "doi": "",
-        "needs_review": True,
+        "citation": "Yarden, Y.; Pines, G. The ERBB network: at last, cancer therapy meets systems biology. Nature Reviews Cancer 2012, 12 (8), 553-563.",
+        "doi": "10.1038/nrc3309",
     },
     {
         "citation": "Furnari, F. B.; Cloughesy, T. F.; Cavenee, W. K.; Mischel, P. S. Heterogeneity of epidermal growth factor receptor signalling networks in glioblastoma. Nature Reviews Cancer 2015, 15 (5), 302-310.",
@@ -55,9 +54,8 @@ GBM_VERIFIED_REFERENCES = [
         "doi": "10.1016/j.ccr.2006.12.017",
     },
     {
-        "citation": "Yosaatmadja, Y.; Silva, S.; Dickson, J. M.; Patterson, A. V.; Smaill, J. B.; Squire, C. J. Binding mode of the third-generation EGFR inhibitor AZD9291 to wild-type and mutant EGFR kinase. Acta Crystallogr. Sect. D Biol. Crystallogr. 2015, 71 (10), 2089–2096.",
-        "doi": "",
-        "needs_review": True,
+        "citation": "Yosaatmadja, Y.; Silva, S.; Dickson, J. M.; Patterson, A. V.; Smaill, J. B.; Flanagan, J. U.; McKeage, M. J.; Squire, C. J. Binding mode of the breakthrough inhibitor AZD9291 to epidermal growth factor receptor revealed. Journal of Structural Biology 2015, 192 (3), 539-544.",
+        "doi": "10.1016/j.jsb.2015.10.018",
     },
     {
         "citation": "Jänne, P. A.; Yang, J. C. H.; Kim, D. W.; Planchard, D.; Ohe, Y.; Ramalingam, S. S.; Ahn, M. J.; Kim, S. W.; Su, W. C.; Horn, L.; et al. AZD9291 in EGFR Inhibitor–Resistant Non–Small-Cell Lung Cancer. New England Journal of Medicine 2015, 372 (18), 1689-1699.",
@@ -80,14 +78,12 @@ GBM_VERIFIED_REFERENCES = [
         "doi": "10.1016/j.bbapap.2009.12.010",
     },
     {
-        "citation": "Smaill, J. B.; Patterson, A. V. Third-generation EGFR tyrosine kinase inhibitors: overcoming T790M resistance. Transl. Cancer Res. 2016, 5 (Suppl 2), S216–S220.",
-        "doi": "",
-        "needs_review": True,
+        "citation": "Wang, S.; Cang, S.; Liu, D. Third-generation inhibitors targeting EGFR T790M mutation in advanced non-small cell lung cancer. Journal of Hematology & Oncology 2016, 9 (1).",
+        "doi": "10.1186/s13045-016-0268-z",
     },
     {
-        "citation": "Gori, A.; Lodola, A. The role of computational methods in EGFR kinase inhibitor discovery. Expert Opin. Drug Discov. 2020, 15 (7), 803–819.",
-        "doi": "",
-        "needs_review": True,
+        "citation": "Veal, J. M. Practical Use of Computational Chemistry in Kinase Drug Discovery. Kinase Inhibitor Drugs 2009, 403-431.",
+        "doi": "10.1002/9780470524961.ch16",
     },
     {
         "citation": "Zhang, X.; Gureasko, J.; Shen, K.; Cole, P. A.; Kuriyan, J. An Allosteric Mechanism for Activation of the Kinase Domain of Epidermal Growth Factor Receptor. Cell 2006, 125 (6), 1137-1149.",
@@ -162,9 +158,8 @@ GBM_VERIFIED_REFERENCES = [
         "doi": "10.1021/ci700157b",
     },
     {
-        "citation": "Lundberg, S. M.; Lee, S.-I. A unified approach to interpreting model predictions. In Advances in Neural Information Processing Systems 30; Guyon, I. et al., Eds.; Curran Associates, Inc., 2017; pp 4765–4774.",
+        "citation": "Lundberg, S. M.; Lee, S.-I. A unified approach to interpreting model predictions. In Advances in Neural Information Processing Systems 30; Guyon, I. et al., Eds.; Curran Associates, Inc., 2017; pp 4765–4774. arXiv:1705.07874.",
         "doi": "",
-        "needs_review": True,
     },
     {
         "citation": "Parr, R. G.; Pearson, R. G. Absolute hardness: companion parameter to absolute electronegativity. Journal of the American Chemical Society 1983, 105 (26), 7512-7516.",
