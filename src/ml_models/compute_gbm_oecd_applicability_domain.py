@@ -10,32 +10,36 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def compute_williams_domain():
+    # Panels for the pristine and functionalized MXene systems were fit on
+    # FABRICATED Target_DeltaG_bind (see generate_gbm_master_figures.py). No
+    # real structural/quantum data exists at all for the Ti3C2-Angiopep-2
+    # functionalized carrier, so that panel is omitted rather than left
+    # fabricated. The pristine panel now uses the real GFN2-xTB
+    # delta_Eint_SP_kcal_mol for all 35 compounds.
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    files = {
-        "Isolated GBM Therapeutics": os.path.join(base_dir, "data", "processed", "dataset_isolated_gbm_drugs.csv"),
-        "Drug + Ti3C2O2 Pristine MXene": os.path.join(base_dir, "data", "processed", "dataset_drug_Ti3C2O2_pristine.csv"),
-        "Drug + Ti3C2(OH)2 Functionalized MXene": os.path.join(base_dir, "data", "processed", "dataset_drug_Ti3C2_functionalized.csv")
-    }
-    
-    feature_cols = [
-        "MW", "LogP", "LogS", "WS_mg_mL", "HBA", "HBD", "PSA", "RBC", "NOR",
-        "AromRings", "Polarizability_alpha", "Fraction_Csp3",
-        "E_HOMO", "E_LUMO", "Gap_eV", "Hardness_eta", "Softness_S",
-        "Electronegativity_chi", "Chemical_Potential_mu", "Electrophilicity_omega"
+    systems = [
+        ("Isolated GBM Therapeutics", os.path.join(base_dir, "data", "processed", "dataset_isolated_gbm_drugs.csv"),
+         ["MW", "LogP", "LogS", "WS_mg_mL", "HBA", "HBD", "PSA", "RBC", "NOR", "AromRings",
+          "Polarizability_alpha", "Fraction_Csp3", "E_HOMO", "E_LUMO", "Gap_eV", "Hardness_eta",
+          "Softness_S", "Electronegativity_chi", "Chemical_Potential_mu", "Electrophilicity_omega"],
+         "Real_Vina_Docking_Score_kcal_mol"),
+        ("Drug + Ti3C2O2 Pristine MXene (real xTB)", os.path.join(base_dir, "data", "processed", "dataset_drug_mxene_pristine.csv"),
+         ["MolWt", "MolMR", "E_HOMO_eV", "E_LUMO_eV", "Gap_eV", "Eta_eV", "Mu_eV", "Omega_eV"],
+         "delta_Eint_SP_kcal_mol"),
     ]
-    
-    fig, axes = plt.subplots(1, 3, figsize=(18, 5.5), dpi=300)
-    plt.subplots_adjust(top=0.82, wspace=0.25, bottom=0.15)
-    
-    colors = ["#1565C0", "#2E7D32", "#E65100"]
-    
-    for ax_idx, (sys_name, f_path) in enumerate(files.items()):
+
+    fig, axes = plt.subplots(1, 2, figsize=(12.5, 5.5), dpi=300)
+    plt.subplots_adjust(top=0.80, wspace=0.28, bottom=0.15)
+
+    colors = ["#1565C0", "#2E7D32"]
+
+    for ax_idx, (sys_name, f_path, feature_cols, target_col) in enumerate(systems):
         if not os.path.exists(f_path):
             continue
-        df = pd.read_csv(f_path)
+        df = pd.read_csv(f_path).dropna(subset=feature_cols + [target_col])
         X = df[feature_cols].values
-        y = df['Target_DeltaG_bind'].values
-        
+        y = df[target_col].values
+
         n, p = X.shape
         # Add intercept column
         X_design = np.hstack([np.ones((n, 1)), X])
@@ -74,7 +78,7 @@ def compute_williams_domain():
         ax.grid(True, linestyle=':', alpha=0.6)
         ax.legend(loc='lower left', fontsize=8.5, frameon=True)
         
-    plt.suptitle("OECD Principle 3: Williams Plots Defining the Applicability Domain for Glioblastoma Therapeutics on 2D MXene", fontsize=13, fontweight='bold', y=0.96)
+    plt.suptitle("OECD Principle 3: Williams Plots Defining the Applicability Domain for Glioblastoma Therapeutics on 2D MXene (real data only)", fontsize=12, fontweight='bold', y=0.98)
     out_fig = os.path.join(base_dir, "figures", "fig8_gbm_williams_applicability_domain.png")
     plt.savefig(out_fig, bbox_inches='tight')
     plt.close()

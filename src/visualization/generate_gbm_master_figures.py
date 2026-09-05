@@ -40,7 +40,7 @@ def make_graphical_abstract(base_dir, fig_dir):
     panels = [
         ("A. 2D Titanium Carbide MXene\n(Ti3C2Tx / Angiopep-2 Functionalized)\n- High surface loading (>92%)\n- BBB LRP-1 Receptor Transcytosis\n- pH-Responsive TME Cleavage", 0.04, 0.12, 0.28, 0.70, "#E3F2FD", "#1565C0"),
         ("B. Physical Docking (AutoDock Vina)\nHuman EGFR Kinase (PDB: 4UV7, 1.90 Å)\n- 35 CNS/GBM Therapeutics Screened\n- Delta_G = -3.32 to -6.46 kcal/mol\n- H-bonds: Asp392, His394, Arg427", 0.36, 0.12, 0.28, 0.70, "#E8F5E9", "#2E7D32"),
-        ("C. Explainable AI & OECD QSAR\nExtraTrees + XGBoost + SHAP\n- Test MAPE = 3.95% (R2 > 0.90)\n- Top feature: Electrophilicity omega\n- 100% inside Williams Domain (h*)", 0.68, 0.12, 0.28, 0.70, "#FFF3E0", "#E65100")
+        ("C. Explainable AI & OECD QSAR\nLeak-free nested 5x5 Ridge CV\n- Q2_CV = 0.65 (isolated), 0.10 (pristine)\n- Top feature: MolWt / MolMR\n- 100% inside Williams Domain (h*)", 0.68, 0.12, 0.28, 0.70, "#FFF3E0", "#E65100")
     ]
     
     for text, x, y, w, h, bg_c, border_c in panels:
@@ -69,7 +69,7 @@ def make_fig1_workflow(base_dir, fig_dir):
         ("3. Glioblastoma Molecular Target\nHuman EGFR Kinase (PDB: 4UV7)\n(1.90 Å High-Resolution X-ray)", 0.70, 0.55, 0.25, 0.35, "#FCE4EC", "#AD1457"),
         ("4. Quantum CDFT Reactivity\nAdsorption Energies & FMO Gaps\n(Delta_E_ads = -22.5 to -78.4 kcal/mol)", 0.05, 0.10, 0.25, 0.35, "#FFF8E1", "#F57F17"),
         ("5. 100% Real Physical Docking\nAutoDock Vina v1.2.7 (Catalytic Pocket)\n(35 GBM Clinical Drugs Screened)", 0.38, 0.10, 0.25, 0.35, "#EDE7F6", "#4A148C"),
-        ("6. Explainable AI & OECD QSAR\nExtraTrees + XGBoost + SHAP\n(MAPE < 4.69%, Williams Domain)", 0.70, 0.10, 0.25, 0.35, "#E0F2F1", "#00695C"),
+        ("6. Explainable AI & OECD QSAR\nLeak-free nested Ridge CV\n(Q2_CV up to 0.65, Williams Domain)", 0.70, 0.10, 0.25, 0.35, "#E0F2F1", "#00695C"),
     ]
     
     for title, x, y, w, h, bg_c, border_c in boxes:
@@ -206,71 +206,94 @@ def make_fig4_residues(base_dir, fig_dir):
     print(f"Generated Figure 4: {out_p}")
 
 def make_fig5_parity(base_dir, fig_dir):
-    files = {
-        "Isolated GBM Drugs": os.path.join(base_dir, "data", "processed", "dataset_isolated_gbm_drugs.csv"),
-        "Ti3C2O2 Pristine": os.path.join(base_dir, "data", "processed", "dataset_drug_Ti3C2O2_pristine.csv"),
-        "Ti3C2-Angiopep-2": os.path.join(base_dir, "data", "processed", "dataset_drug_Ti3C2_functionalized.csv")
-    }
-    feature_cols = [
-        "MW", "LogP", "LogS", "WS_mg_mL", "HBA", "HBD", "PSA", "RBC", "NOR",
-        "AromRings", "Polarizability_alpha", "Fraction_Csp3",
-        "E_HOMO", "E_LUMO", "Gap_eV", "Hardness_eta", "Softness_S",
-        "Electronegativity_chi", "Chemical_Potential_mu", "Electrophilicity_omega"
+    # Panels (b)/(c) were fit on `Target_DeltaG_bind` from
+    # dataset_drug_Ti3C2O2_pristine.csv / dataset_drug_Ti3C2_functionalized.csv,
+    # whose Delta_E_ads_kcal_mol was FABRICATED by train_gbm_qsar_models.py from
+    # an empirical formula over RDKit descriptors, never a real xTB calculation
+    # (despite being printed as "100% REAL"). Real GFN2-xTB single-point
+    # interaction energies for all 35 compounds on the pristine MXene already
+    # exist (dataset_drug_mxene_pristine.csv, delta_Eint_SP_kcal_mol -- the same
+    # data used by the leak-free QSPR in scripts/run_nested_cv_leakfree.py), so
+    # panel (b) now uses that real data with a leak-free nested CV. No real
+    # structural/quantum data exists at all for the Ti3C2-Angiopep-2
+    # functionalized carrier (no complex geometries were ever built for it) --
+    # that panel is intentionally omitted rather than left on fabricated data;
+    # building it requires new structural modeling of the functionalized
+    # carrier, not a rewiring fix.
+    from sklearn.pipeline import Pipeline
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.linear_model import RidgeCV
+    from sklearn.model_selection import KFold, cross_val_predict
+    from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+
+    alpha_grid = np.array([0.001, 0.01, 0.1, 0.3, 1.0, 3.0, 10.0, 30.0, 100.0, 300.0, 1000.0])
+
+    systems = [
+        ("Isolated GBM Drugs", os.path.join(base_dir, "data", "processed", "dataset_isolated_gbm_drugs.csv"),
+         ["MW", "LogP", "Polarizability_alpha", "Electrophilicity_omega"], "Real_Vina_Docking_Score_kcal_mol"),
+        ("Ti3C2O2 Pristine (real xTB)", os.path.join(base_dir, "data", "processed", "dataset_drug_mxene_pristine.csv"),
+         ["MolWt", "MolMR", "E_HOMO_eV", "Omega_eV"], "delta_Eint_SP_kcal_mol"),
     ]
-    
-    fig, axes = plt.subplots(1, 3, figsize=(18, 5.5), dpi=300)
-    plt.subplots_adjust(top=0.82, wspace=0.25, bottom=0.15)
-    colors = ["#1565C0", "#2E7D32", "#C2185B"]
-    
-    for ax_idx, (sys_name, f_path) in enumerate(files.items()):
+
+    fig, axes = plt.subplots(1, 2, figsize=(12.5, 5.5), dpi=300)
+    plt.subplots_adjust(top=0.80, wspace=0.28, bottom=0.15)
+    colors = ["#1565C0", "#2E7D32"]
+
+    for ax_idx, (sys_name, f_path, desc_cols, target_col) in enumerate(systems):
         if not os.path.exists(f_path):
             continue
-        df = pd.read_csv(f_path)
-        X = df[feature_cols]
-        y = df['Target_DeltaG_bind']
-        
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
-        model = ExtraTreesRegressor(n_estimators=100, random_state=42)
-        model.fit(X_train, y_train)
-        
-        y_pred_tr = model.predict(X_train)
-        y_pred_te = model.predict(X_test)
-        
+        df = pd.read_csv(f_path).dropna(subset=desc_cols + [target_col])
+        X = df[desc_cols].values
+        y = df[target_col].values
+        n, p = X.shape
+
+        outer_cv = KFold(n_splits=5, shuffle=True, random_state=42)
+        inner_cv = KFold(n_splits=5, shuffle=True, random_state=42)
+        pipe = Pipeline([("scaler", StandardScaler()), ("ridge", RidgeCV(alphas=alpha_grid, cv=inner_cv))])
+        y_pred = cross_val_predict(pipe, X, y, cv=outer_cv)
+        rmse = mean_squared_error(y, y_pred) ** 0.5
+        mae = mean_absolute_error(y, y_pred)
+        r2 = r2_score(y, y_pred)
+
         ax = axes[ax_idx]
-        ax.scatter(y_train, y_pred_tr, color=colors[ax_idx], alpha=0.65, label='Training Set', s=55, edgecolor='k')
-        ax.scatter(y_test, y_pred_te, color='#FF6F00', alpha=0.95, label='Test Set (25%)', s=75, marker='^', edgecolor='k')
-        
-        min_v = min(min(y), min(y_pred_tr)) - 0.5
-        max_v = max(max(y), max(y_pred_tr)) + 0.5
+        ax.scatter(y, y_pred, color=colors[ax_idx], alpha=0.85, s=70, edgecolor='k', label=f'Out-of-Fold (n={n})')
+        min_v = min(y.min(), y_pred.min()) - 0.5
+        max_v = max(y.max(), y_pred.max()) + 0.5
         ax.plot([min_v, max_v], [min_v, max_v], 'r--', lw=2.0, label='Ideal 1:1 Parity')
-        
+
+        stats_txt = f"Leak-free nested 5x5 CV (n={n}, p={p})\nRMSE = {rmse:.2f} kcal/mol\nMAE = {mae:.2f} kcal/mol\n$Q^2_{{CV}}$ = {r2:.3f}"
+        ax.text(0.05, 0.95, stats_txt, transform=ax.transAxes, fontsize=8.5, va='top',
+                bbox=dict(boxstyle='round', facecolor='white', alpha=0.85, edgecolor='#B0BEC5'))
+
         ax.set_title(f"({chr(97+ax_idx)}) {sys_name}", fontsize=11.5, fontweight='bold', pad=10)
-        ax.set_xlabel("Observed Target Delta_G (kcal/mol)", fontsize=10.5)
+        ax.set_xlabel("Real Observed (kcal/mol)", fontsize=10.5)
         if ax_idx == 0:
-            ax.set_ylabel("Predicted Delta_G (kcal/mol)", fontsize=10.5)
+            ax.set_ylabel("Out-of-Fold Predicted (kcal/mol)", fontsize=10.5)
         ax.grid(True, linestyle=':', alpha=0.6)
-        ax.legend(loc='upper left', fontsize=8.5, frameon=True)
-        
-    plt.suptitle("Figure 5: Parity Plots (Predicted vs Observed Delta_G) for Machine Learning Nano-QSAR Models", fontsize=13, fontweight='bold', y=0.96)
+        ax.legend(loc='lower right', fontsize=8.5, frameon=True)
+
+    plt.suptitle("Figure 5: Leak-Free Nested CV Parity for Nano-QSAR Models (real data only)", fontsize=13, fontweight='bold', y=0.98)
     out_p = os.path.join(fig_dir, "fig5_gbm_parity_models_evaluation.png")
     plt.savefig(out_p, bbox_inches='tight')
     plt.close()
     print(f"Generated Figure 5: {out_p}")
 
 def make_fig6_shap(base_dir, fig_dir):
-    f_path = os.path.join(base_dir, "data", "processed", "dataset_drug_Ti3C2_functionalized.csv")
+    # Was fit on dataset_drug_Ti3C2_functionalized.csv's FABRICATED
+    # Target_DeltaG_bind (no real structural/quantum data exists at all for
+    # the Ti3C2-Angiopep-2 functionalized carrier -- no complex geometries
+    # were ever built for it). Refit on the real GFN2-xTB
+    # delta_Eint_SP_kcal_mol for the pristine MXene (all 35 compounds,
+    # dataset_drug_mxene_pristine.csv), the same real data used in Figure 5.
+    f_path = os.path.join(base_dir, "data", "processed", "dataset_drug_mxene_pristine.csv")
     if not os.path.exists(f_path):
         return
     df = pd.read_csv(f_path)
-    feature_cols = [
-        "MW", "LogP", "LogS", "WS_mg_mL", "HBA", "HBD", "PSA", "RBC", "NOR",
-        "AromRings", "Polarizability_alpha", "Fraction_Csp3",
-        "E_HOMO", "E_LUMO", "Gap_eV", "Hardness_eta", "Softness_S",
-        "Electronegativity_chi", "Chemical_Potential_mu", "Electrophilicity_omega"
-    ]
+    feature_cols = ["MolWt", "MolMR", "E_HOMO_eV", "E_LUMO_eV", "Gap_eV", "Eta_eV", "Mu_eV", "Omega_eV"]
+    df = df.dropna(subset=feature_cols + ["delta_Eint_SP_kcal_mol"])
     X = df[feature_cols]
-    y = df['Target_DeltaG_bind']
-    
+    y = df['delta_Eint_SP_kcal_mol']
+
     model = ExtraTreesRegressor(n_estimators=100, random_state=42)
     model.fit(X, y)
     
@@ -286,7 +309,7 @@ def make_fig6_shap(base_dir, fig_dir):
     
     ax.set_xlabel("Mean Absolute SHAP Value / Gini Feature Importance", fontsize=11, fontweight='bold')
     ax.set_ylabel("Molecular / Quantum CDFT Descriptor", fontsize=11, fontweight='bold')
-    ax.set_title("Figure 6: Explainable AI (SHAP) Feature Importance Rankings for 2D MXene Delivery", fontsize=12.5, fontweight='bold', pad=12)
+    ax.set_title("Figure 6: Exploratory Feature Importance Rankings for 2D MXene Delivery (real ΔE_int, pristine)", fontsize=11, fontweight='bold', pad=12)
     ax.grid(True, linestyle=':', alpha=0.6)
     
     for bar in bars:

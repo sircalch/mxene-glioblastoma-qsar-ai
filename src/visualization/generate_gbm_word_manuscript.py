@@ -135,10 +135,11 @@ def generate_gbm_word_manuscript():
         "multi-scale quantum chemical (DFTB3-D4), physical molecular docking (AutoDock Vina v1.2.7 against the crystal structure of human EGFR kinase domain, "
         "PDB ID: 4UV7, 1.90 Å), and Explainable Machine Learning Nano-QSAR architecture evaluating 2D Titanium Carbide MXene (Ti3C2Tx) nanosheets engineered "
         "with Angiopep-2 functionalization for LRP-1 receptor-mediated transcytosis. A library of 35 clinical CNS and GBM therapeutics was systematically curated. "
-        "Quantum adsorption modeling demonstrated high thermodynamic stability (Delta_E_ads = -22.5 to -78.4 kcal/mol) on Ti3C2O2 and Ti3C2(OH)2-Angiopep-2 "
-        "interfaces. Physical molecular docking revealed robust binding (-3.32 to -6.46 kcal/mol) with critical catalytic residues (Asp392, His394, Arg427, Thr391). "
-        "Machine Learning algorithms (ExtraTrees and XGBoost) achieved remarkable generalization accuracy (test MAPE = 3.95%–4.69%, R2 > 0.90), "
-        "corroborated by SHAP explainability and OECD Principle 3 Williams domain leverage validation. This work establishes a quantitative blueprint for "
+        "Real GFN2-xTB single-point adsorption calculations on the pristine Ti3C2O2 MXene (all 35 compounds) showed interaction energies from "
+        "-0.9 to -15.5 kcal/mol; no real structural or quantum data exists yet for the Ti3C2(OH)2-Angiopep-2 functionalized variant, which would require "
+        "new complex-geometry modeling beyond the present scope. Physical molecular docking revealed robust binding (-3.32 to -6.46 kcal/mol) with critical catalytic residues (Asp392, His394, Arg427, Thr391). "
+        "A leak-free nested 5x5 cross-validated Ridge surrogate achieved modest, non-overfit predictive accuracy on the real adsorption data (Q2_CV = 0.10-0.65), "
+        "corroborated by exploratory feature-importance ranking and OECD Principle 3 Williams domain leverage validation. This work establishes a quantitative blueprint for "
         "2D MXene-based nanovehicles surmounting neuro-oncological barriers."
     )
     
@@ -176,7 +177,7 @@ def generate_gbm_word_manuscript():
     add_heading_styled(doc, "2. Computational and Experimental Section", level=1)
     doc.add_paragraph(
         "2.1 Quantum Chemical DFTB3-D4 and Conceptual DFT (CDFT) Framework: "
-        "Quantum adsorption calculations of therapeutics on Ti3C2O2 and Ti3C2(OH)2 monolayer supercells were performed utilizing third-order Density Functional "
+        "Quantum adsorption calculations of therapeutics on the Ti3C2O2 pristine monolayer supercell were performed utilizing third-order Density Functional "
         "Tight-Binding with D4 dispersion corrections (DFTB3-D4). Frontier molecular orbitals (E_HOMO, E_LUMO) and global reactivity indices—including chemical "
         "hardness (eta), electronic softness (S), electronegativity (chi), and electrophilicity index (omega)—were derived under Conceptual Density Functional Theory."
     )
@@ -201,9 +202,9 @@ def generate_gbm_word_manuscript():
     
     add_heading_styled(doc, "3.1 Quantum Adsorption Energetics & MXene Surface Chemistry", level=2)
     doc.add_paragraph(
-        "Adsorption energies (Delta_E_ads) calculated across the 35 GBM therapeutics ranged from -22.5 kcal/mol for small polar compounds to -78.4 kcal/mol for "
-        "fused aromatic multikinase inhibitors. The strong thermodynamic stabilization on Ti3C2Tx arises from synergistic pi-d orbital hybridization between the "
-        "drug aromatic pi-systems and the titanium 3d conduction band, supplemented by extensive hydrogen bonding with surface hydroxyl terminations."
+        "Real GFN2-xTB single-point interaction energies (delta_Eint_SP) calculated across all 35 GBM therapeutics on the pristine Ti3C2O2 monolayer ranged from "
+        "-0.9 kcal/mol for weakly interacting compounds to -15.5 kcal/mol for the most strongly stabilized aromatic multikinase inhibitors, consistent with "
+        "pi-d orbital hybridization between the drug aromatic pi-systems and the titanium 3d conduction band."
     )
     
     add_heading_styled(doc, "3.2 Physical Molecular Docking against Human EGFR Kinase", level=2)
@@ -255,20 +256,21 @@ def generate_gbm_word_manuscript():
                 for r in row_cells[c_idx].paragraphs[0].runs:
                     r.font.size = Pt(8.5)
                     
-    add_heading_styled(doc, "3.3 Machine Learning Nano-QSAR Benchmark & SHAP Interpretability", level=2)
+    add_heading_styled(doc, "3.3 Machine Learning Nano-QSAR Benchmark & Feature Importance", level=2)
     doc.add_paragraph(
-        "Supervised machine learning algorithms demonstrated superior performance in capturing non-linear interactions across the MXene-drug-receptor "
-        "interfacial systems. ExtraTrees regression achieved a Mean Absolute Percentage Error (MAPE) of 3.95% on the test set for functionalized Ti3C2-Angiopep-2 MXenes, "
-        "outperforming linear multivariable models. SHAP feature attribution revealed that electrophilicity (omega), aromatic ring density, and topological polar surface "
-        "area (PSA) are the primary descriptors governing drug loading stability and subsequent release."
+        "A regularized Ridge surrogate model, evaluated by fully leak-free nested 5x5 cross-validation on the real observed data "
+        "(Real_Vina_Docking_Score_kcal_mol for isolated drugs; the real GFN2-xTB delta_Eint_SP_kcal_mol for the pristine Ti3C2O2 MXene complex), "
+        "achieved Q2_CV = 0.651 (isolated) and 0.095 (pristine MXene), RMSE 0.54 and 3.95 kcal/mol respectively (n=35, p=4 both systems). "
+        "Exploratory ExtraTrees feature-importance ranking on the real pristine-MXene interaction energies identified molecular weight (MolWt) and molar "
+        "refractivity (MolMR) as the leading descriptors, followed by the CDFT reactivity indices (chemical potential mu, HOMO-LUMO gap, hardness)."
     )
-    
+
     # ML Parity and SHAP Figures 5 and 6
     add_image_if_exists(doc, os.path.join(fig_dir, "fig5_gbm_parity_models_evaluation.png"),
-                        "Figure 5: Parity Plots (Predicted vs Observed Delta_G) for Machine Learning Nano-QSAR Models across Isolated, Pristine, and Functionalized MXene Delivery Systems.")
-    
+                        "Figure 5: Leak-free nested 5x5 CV parity plots (real observed vs out-of-fold predicted) for Isolated and Pristine-MXene systems. No real structural/quantum data exists for the functionalized Ti3C2-Angiopep-2 system, so it is not shown.")
+
     add_image_if_exists(doc, os.path.join(fig_dir, "fig6_gbm_shap_xai_importance_rankings.png"),
-                        "Figure 6: Explainable AI (SHAP) Feature Importance Rankings: Demonstrating the dominant role of electronic electrophilicity (omega), aromaticity, and topological polar surface area in governing MXene nanocarrier affinity.")
+                        "Figure 6: Exploratory Feature Importance Rankings on the real GFN2-xTB pristine-MXene interaction energy, identifying molecular weight and molar refractivity as the leading descriptors.")
     
     # Inter-descriptor Correlation Figure 7
     add_image_if_exists(doc, os.path.join(fig_dir, "fig7_gbm_descriptor_correlation_matrix.png"),
@@ -277,13 +279,14 @@ def generate_gbm_word_manuscript():
     add_heading_styled(doc, "3.4 OECD Validation Principles and Applicability Domain", level=2)
     doc.add_paragraph(
         "To satisfy international regulatory standards for QSAR modeling set forth by the Organization for Economic Co-operation and Development (OECD), "
-        "the applicability domain was established via hat-matrix leverage calculation. The warning leverage threshold (h* = 1.80) and standard residual limits (±3sigma) "
-        "confirmed that 100% of test compounds fall securely within the reliable prediction domain without leverage outliers."
+        "the applicability domain was established via hat-matrix leverage calculation on the real observed data. The warning leverage thresholds "
+        "(h* = 1.80 isolated drugs, 0.77 pristine MXene) and standard residual limits (±3sigma) confirmed that 100% of compounds in both real-data systems "
+        "(35/35 each) fall securely within the reliable prediction domain without leverage outliers."
     )
-    
+
     # Williams Domain Figure 8
     add_image_if_exists(doc, os.path.join(fig_dir, "fig8_gbm_williams_applicability_domain.png"),
-                        "Figure 8: OECD Principle 3: Williams Plots Defining the Applicability Domain for GBM Therapeutics on Ti3C2Tx MXene Nanosheets.")
+                        "Figure 8: OECD Principle 3: Williams Plots Defining the Applicability Domain for GBM Therapeutics on Ti3C2Tx MXene Nanosheets (real data only; Isolated and Pristine-MXene systems).")
     
     add_heading_styled(doc, "3.5 Atomistic 3D Spatial Binding Modes", level=2)
     doc.add_paragraph(
@@ -300,9 +303,10 @@ def generate_gbm_word_manuscript():
     doc.add_paragraph(
         "This investigation provides the first comprehensive, quantum-informed, and Explainable AI framework validating 2D Titanium Carbide MXene (Ti3C2Tx) "
         "nanosheets as targeted delivery platforms for Glioblastoma Multiforme. By combining DFTB3-D4 quantum chemisorption, physical AutoDock Vina v1.2.7 "
-        "molecular docking against human EGFR kinase (PDB ID: 4UV7), and robust machine learning models validated under OECD guidelines, we demonstrate that "
-        "Angiopep-2 functionalized MXenes offer an optimal thermodynamic and structural platform to cross the BBB and deliver potent kinase inhibitors directly "
-        "to the tumor bed."
+        "molecular docking against human EGFR kinase (PDB ID: 4UV7), and a leak-free machine learning surrogate validated under OECD guidelines on real "
+        "GFN2-xTB adsorption data, we demonstrate that the pristine Ti3C2O2 MXene offers a thermodynamically favorable platform for kinase-inhibitor loading; "
+        "extending this to an Angiopep-2 functionalized carrier for BBB transcytosis will require new structural modeling and quantum calculations beyond "
+        "the present real-data scope."
     )
     
     # 7. Statements & References
