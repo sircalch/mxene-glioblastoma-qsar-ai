@@ -64,8 +64,12 @@ def create_gbm_cover_letter(sub_dir):
     )
     
     doc.add_paragraph(
-        "This work establishes the first multi-scale quantum chemical (DFTB3-D4), physical AutoDock Vina docking (against human EGFR kinase domain PDB ID: 4UV7), "
-        "and Explainable AI (SHAP) framework evaluating 2D Ti3C2Tx MXenes for neuro-oncology and BBB penetration across 37 glioblastoma therapeutics."
+        "The study integrates GFN2-xTB quantum-chemical single-point interaction energies of 35 glioblastoma "
+        "therapeutics on a pristine oxygen-terminated Ti3C2O2 MXene cluster, physical AutoDock Vina docking "
+        "against the human EGFR kinase domain (PDB ID: 4ZAU, with 2J6M as a secondary control), and an "
+        "explainable leak-free cross-validated surrogate model. The Ti3C2-Angiopep-2 functionalized system is "
+        "discussed as future work because no real structural or quantum data for it exist; every figure and "
+        "table reports values computed from the deposited pipeline, with no empirical-formula estimates."
     )
     
     doc.add_paragraph(
@@ -85,12 +89,48 @@ def create_gbm_cover_letter(sub_dir):
     doc.save(out_docx)
     print(f"Generated GBM Cover Letter: {out_docx}")
 
+
+def create_gbm_cover_letter_md(sub_dir):
+    doc = Document()
+    for s in doc.sections:
+        s.top_margin = s.bottom_margin = Inches(1.0)
+        s.left_margin = s.right_margin = Inches(1.0)
+    fo = doc.styles['Normal'].font
+    fo.name = 'Times New Roman'; fo.size = Pt(11); fo.color.rgb = RGBColor(33, 33, 33)
+    doc.add_paragraph("Andrés Monreal Hernández, Ph.D.\nUniversidad Estatal de Sonora, Hermosillo, Sonora, Mexico\n"
+                      "Email: andres.monreal@ues.mx | ORCID: 0009-0009-1207-8597").runs[0].font.bold = True
+    doc.add_paragraph("To: The Editor-in-Chief, Molecular Diversity (Springer Nature)")
+    doc.add_paragraph("Dear Editor,")
+    doc.add_paragraph("We submit our original research manuscript for consideration in Molecular Diversity:")
+    r = doc.add_paragraph().add_run("“Explainable AI and Quantum Chemical Exploration of 2D Titanium Carbide MXene "
+                                    "(Ti3C2Tx) Nanosheets as Targeted Nanovehicles for Glioblastoma Therapeutics "
+                                    "Across the Blood-Brain Barrier”")
+    r.font.bold = True; r.font.color.rgb = RGBColor(13, 71, 161)
+    doc.add_paragraph("Real, pipeline-traceable results:").runs[0].font.bold = True
+    for h in [
+        "GFN2-xTB single-point interaction energies for all 35 therapeutics on a pristine Ti3C2O2 MXene cluster, "
+        "Delta_E_int,SP = -0.9 to -15.5 kcal/mol; frontier-orbital and conceptual-DFT indices taken from the xtb output.",
+        "Physical AutoDock Vina v1.2.7 docking against the EGFR kinase domain (PDB 4ZAU; 2J6M as control).",
+        "Leak-free nested 5x5 cross-validated surrogate model on the real Delta_E_int,SP; performance is modest and "
+        "the feature-importance analysis is presented as exploratory.",
+        "OECD Principle 3 applicability domain by Williams leverage on the real descriptor matrix.",
+        "The Ti3C2-Angiopep-2 functionalized carrier is proposed as future work; it has no real data in this study.",
+        "Full open-source pipeline and data archive (Zenodo 10.5281/zenodo.22187857).",
+    ]:
+        p = doc.add_paragraph(h); p.paragraph_format.left_indent = Inches(0.3)
+    doc.add_paragraph("The manuscript is original, not under consideration elsewhere, and all authors approve the "
+                      "submission and declare no competing interests.")
+    doc.add_paragraph("Sincerely,\nAndrés Monreal Hernández, Ph.D. (Corresponding Author)")
+    doc.save(os.path.join(sub_dir, "01_Cover_Letter_Molecular_Diversity.docx"))
+    print("Generated GBM Molecular Diversity Cover Letter")
+
 def build_gbm_submission_bundle():
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     sub_dir = os.path.join(base_dir, "manuscript", "submission_ready")
     os.makedirs(sub_dir, exist_ok=True)
     
     create_gbm_cover_letter(sub_dir)
+    create_gbm_cover_letter_md(sub_dir)
     
     src_docx = os.path.join(base_dir, "manuscript", "Beilstein_Manuscript_GBM_MXene_Monreal_Hernandez_et_al.docx")
     dst_docx = os.path.join(sub_dir, "02_Main_Manuscript_GBM_MXene_Monreal_Hernandez_et_al.docx")
