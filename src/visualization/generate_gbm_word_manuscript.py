@@ -195,7 +195,7 @@ def generate_gbm_word_manuscript():
     
     # Quantum Figure 2
     add_image_if_exists(doc, os.path.join(fig_dir, "fig2_gbm_quantum_cdft_architecture.png"),
-                        "Figure 2: Quantum CDFT Architecture & Electronic Reactivity: (a) Frontier Molecular Orbital (HOMO/LUMO) alignment across isolated and MXene-complexed systems; (b) Global chemical hardness and electrophilicity index.")
+                        "Figure 2: Real Quantum CDFT Electronic Reactivity of the Isolated GBM Therapeutics (real GFN2-xTB single points, n=35): (a) Frontier Molecular Orbital (HOMO/LUMO) distribution; (b) Chemical hardness vs. electrophilicity index. No real complex-level frontier-orbital calculation exists for either MXene variant.")
     
     # 5. Section 3: Results and Discussion
     add_heading_styled(doc, "3. Results and Discussion", level=1)
@@ -222,9 +222,22 @@ def generate_gbm_word_manuscript():
                         "Figure 4: Residue-Level Contact Fingerprints on Human EGFR Kinase: Frequency of atomic contacts (d <= 3.8 Å) with catalytic residues Asp392, His394, Arg427, Thr391, and Arg390.")
     
     # Embed Table 1: Descriptors Summary
+    # MW/LogP/PSA are real RDKit descriptors (always computed from SMILES).
+    # E_HOMO/omega previously came from gbm_isolated_descriptors.csv, whose
+    # E_HOMO was an empirical-formula placeholder ("-5.10 - 0.22*LogP - ...")
+    # never overwritten with real data; merged here with real GFN2-xTB
+    # frontier orbitals parsed from calculations/gbm/*/*_drug_sp.out.
     desc_csv = os.path.join(base_dir, "data", "processed", "gbm_isolated_descriptors.csv")
+    homo_lumo_csv = os.path.join(base_dir, "data", "processed", "gbm_isolated_real_homo_lumo.csv")
     if os.path.exists(desc_csv):
         df_desc = pd.read_csv(desc_csv)
+        if os.path.exists(homo_lumo_csv):
+            df_real = pd.read_csv(homo_lumo_csv)
+            df_desc = df_desc.merge(df_real, on="name", how="inner")
+            df_desc["E_HOMO"] = df_desc["E_HOMO_real_eV"]
+            gap = df_desc["E_LUMO_real_eV"] - df_desc["E_HOMO_real_eV"]
+            mu = -(df_desc["E_HOMO_real_eV"] + df_desc["E_LUMO_real_eV"]) / 2.0
+            df_desc["Electrophilicity_omega"] = mu ** 2 / (2.0 * (gap / 2.0))
         doc.add_paragraph()
         p_t1 = doc.add_paragraph()
         r_t1 = p_t1.add_run("Table 1: Physicochemical, Topological, and Quantum CDFT Descriptors for Representative GBM Therapeutics.")

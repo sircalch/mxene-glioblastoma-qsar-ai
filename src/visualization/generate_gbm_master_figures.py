@@ -67,7 +67,7 @@ def make_fig1_workflow(base_dir, fig_dir):
         ("1. 2D Titanium Carbide MXene\n(Ti3C2O2 Pristine & Ti3C2-Angiopep-2)", 0.05, 0.55, 0.25, 0.35, "#E3F2FD", "#1565C0"),
         ("2. Blood-Brain Barrier (BBB)\nLRP-1 Mediated Transcytosis\n(Tumor Penetration & pH-Release)", 0.38, 0.55, 0.25, 0.35, "#E8F5E9", "#2E7D32"),
         ("3. Glioblastoma Molecular Target\nHuman EGFR Kinase (PDB: 4UV7)\n(1.90 Å High-Resolution X-ray)", 0.70, 0.55, 0.25, 0.35, "#FCE4EC", "#AD1457"),
-        ("4. Quantum CDFT Reactivity\nAdsorption Energies & FMO Gaps\n(Delta_E_ads = -22.5 to -78.4 kcal/mol)", 0.05, 0.10, 0.25, 0.35, "#FFF8E1", "#F57F17"),
+        ("4. Quantum CDFT Reactivity\nReal GFN2-xTB Interaction Energies (Pristine)\n(Delta_E_int,SP = -0.9 to -15.5 kcal/mol)", 0.05, 0.10, 0.25, 0.35, "#FFF8E1", "#F57F17"),
         ("5. 100% Real Physical Docking\nAutoDock Vina v1.2.7 (Catalytic Pocket)\n(35 GBM Clinical Drugs Screened)", 0.38, 0.10, 0.25, 0.35, "#EDE7F6", "#4A148C"),
         ("6. Explainable AI & OECD QSAR\nLeak-free nested Ridge CV\n(Q2_CV up to 0.65, Williams Domain)", 0.70, 0.10, 0.25, 0.35, "#E0F2F1", "#00695C"),
     ]
@@ -91,40 +91,44 @@ def make_fig1_workflow(base_dir, fig_dir):
     print(f"Generated Figure 1: {out_p}")
 
 def make_fig2_quantum(base_dir, fig_dir):
+    # Was entirely hardcoded arrays (homo/lumo/eta/omega for 3 "systems"),
+    # never computed from any real xTB output -- and no real complex-level
+    # FMO calculation exists at all for either MXene variant (the pristine
+    # dataset's E_HOMO_eV/E_LUMO_eV are the isolated-drug orbitals, reused,
+    # not a distinct complex electronic structure; the Angiopep-2
+    # functionalized carrier has no real data whatsoever). Now shows the
+    # real per-compound distribution of GFN2-xTB frontier orbitals and CDFT
+    # indices for the 35-compound isolated cohort (real *_drug_sp.out
+    # single points), with no fabricated "complex" comparison implied.
+    homo_lumo_csv = os.path.join(base_dir, "data", "processed", "gbm_isolated_real_homo_lumo.csv")
+    df = pd.read_csv(homo_lumo_csv)
+    homo = df["E_HOMO_real_eV"].values
+    lumo = df["E_LUMO_real_eV"].values
+    gap = lumo - homo
+    mu = -(homo + lumo) / 2.0
+    eta = gap / 2.0
+    omega = mu ** 2 / (2.0 * eta)
+
     fig, axes = plt.subplots(1, 2, figsize=(14, 6), dpi=300)
     plt.subplots_adjust(top=0.86, wspace=0.28)
-    
+
     ax0 = axes[0]
-    systems = ["Isolated Drugs", "Ti3C2O2 Pristine", "Ti3C2-Angiopep-2"]
-    homo = [-5.68, -6.35, -6.12]
-    lumo = [-1.88, -2.62, -2.38]
-    
-    x = np.arange(len(systems))
-    ax0.bar(x - 0.15, homo, width=0.28, color='#1565C0', label='E_HOMO (eV)', edgecolor='k')
-    ax0.bar(x + 0.15, lumo, width=0.28, color='#D84315', label='E_LUMO (eV)', edgecolor='k')
-    ax0.set_xticks(x)
-    ax0.set_xticklabels(systems, fontweight='bold')
-    ax0.set_ylabel("Electronic Energy (eV)", fontsize=11)
-    ax0.set_title("(a) Frontier Molecular Orbital (FMO) Alignment", fontsize=11.5, fontweight='bold', pad=10)
+    ax0.hist(homo, bins=12, color='#1565C0', alpha=0.75, edgecolor='k', label=f'E_HOMO (mean={homo.mean():.2f} eV)')
+    ax0.hist(lumo, bins=12, color='#D84315', alpha=0.75, edgecolor='k', label=f'E_LUMO (mean={lumo.mean():.2f} eV)')
+    ax0.set_xlabel("Electronic Energy (eV)", fontsize=11)
+    ax0.set_ylabel("Compound Count", fontsize=11)
+    ax0.set_title(f"(a) Real GFN2-xTB Frontier Molecular Orbitals (n={len(df)})", fontsize=11.5, fontweight='bold', pad=10)
     ax0.grid(True, linestyle=':', alpha=0.6)
-    ax0.legend(loc='lower right', frameon=True)
-    
+    ax0.legend(loc='upper left', frameon=True, fontsize=9)
+
     ax1 = axes[1]
-    eta = [1.90, 1.86, 1.87]
-    omega = [3.78, 5.25, 4.80]
-    
-    ax1_twin = ax1.twinx()
-    b1 = ax1.bar(x - 0.15, eta, width=0.28, color='#2E7D32', label=r'Chemical Hardness $\eta$ (eV)', edgecolor='k')
-    b2 = ax1_twin.bar(x + 0.15, omega, width=0.28, color='#6A1B9A', label=r'Electrophilicity $\omega$ (eV)', edgecolor='k')
-    
-    ax1.set_xticks(x)
-    ax1.set_xticklabels(systems, fontweight='bold')
-    ax1.set_ylabel(r"Chemical Hardness $\eta$ (eV)", color='#2E7D32', fontsize=11)
-    ax1_twin.set_ylabel(r"Electrophilicity Index $\omega$ (eV)", color='#6A1B9A', fontsize=11)
-    ax1.set_title("(b) Conceptual DFT Global Reactivity Indices", fontsize=11.5, fontweight='bold', pad=10)
+    ax1.scatter(eta, omega, color='#2E7D32', s=70, edgecolor='k', alpha=0.85)
+    ax1.set_xlabel(r"Chemical Hardness $\eta$ (eV)", fontsize=11)
+    ax1.set_ylabel(r"Electrophilicity Index $\omega$ (eV)", fontsize=11)
+    ax1.set_title("(b) Real Conceptual DFT Global Reactivity Indices", fontsize=11.5, fontweight='bold', pad=10)
     ax1.grid(True, linestyle=':', alpha=0.6)
-    
-    plt.suptitle("Figure 2: Quantum CDFT Architecture & Electronic Reactivity for 2D Ti3C2Tx MXene Systems", fontsize=13, fontweight='bold', y=0.96)
+
+    plt.suptitle("Figure 2: Real Quantum CDFT Electronic Reactivity of the Isolated GBM Therapeutics Cohort", fontsize=12.5, fontweight='bold', y=0.98)
     out_p = os.path.join(fig_dir, "fig2_gbm_quantum_cdft_architecture.png")
     plt.savefig(out_p, bbox_inches='tight')
     plt.close()
@@ -330,7 +334,7 @@ def make_fig9_3d_spatial(base_dir, fig_dir):
     modes = [
         ("Osimertinib @ EGFR Kinase", "-5.89 kcal/mol", "#1565C0", "Key contacts: Met793, Thr790, Cys797"),
         ("Sorafenib @ EGFR Kinase", "-6.39 kcal/mol", "#2E7D32", "Key contacts: Asp392, His394, Arg427"),
-        ("Abemaciclib @ Ti3C2Tx MXene", "-6.46 kcal/mol", "#C2185B", "Key contacts: Pi-d coordination, Delta_E = -68.4 kcal/mol")
+        ("Abemaciclib @ Ti3C2Tx MXene", "-6.46 kcal/mol", "#C2185B", "Key contacts: Pi-d coordination, real GFN2-xTB Delta_E_int,SP = -3.21 kcal/mol")
     ]
     
     for ax_idx, (title, score, col, contacts) in enumerate(modes):
