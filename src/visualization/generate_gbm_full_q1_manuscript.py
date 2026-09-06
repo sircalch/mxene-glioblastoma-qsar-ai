@@ -528,14 +528,20 @@ def build_full_gbm_manuscript():
             
     out_docx = base_dir / "manuscript" / "GBM_MXene_Full_Q1_Research_Paper_Monreal_Hernandez_et_al.docx"
     doc.save(str(out_docx))
-    print(f"\n[SUCCESS] Generated GBM Master Full Q1 Manuscript: {out_docx}")
-    
-    out_docx_final = base_dir / "manuscript" / "Beilstein_Manuscript_GBM_MXene_Monreal_Hernandez_et_al.docx"
-    doc.save(str(out_docx_final))
-    out_subm = base_dir / "manuscript" / "submission_ready" / "02_Main_Manuscript_GBM_MXene_Monreal_Hernandez_et_al.docx"
-    doc.save(str(out_subm))
-    print(f"[SUCCESS] Updated GBM Submission Manuscript: {out_subm}")
+    print(f"\n[SUCCESS] Generated GBM Full Q1 Manuscript: {out_docx}")
+    # NOTE: this script must NOT write Beilstein_Manuscript_GBM_MXene_*.docx or the
+    # submission_ready/02_Main_Manuscript_*.docx -- those are produced by
+    # generate_gbm_word_manuscript.py (the canonical, corrected Beilstein body).
+    # Both journal submissions use that Beilstein body; the Molecular Diversity
+    # submission differs only in the cover letter.
     return out_docx
 
 if __name__ == "__main__":
-    build_full_gbm_manuscript()
+    raise SystemExit(
+        "DEPRECATED: this long-form draft still contains unverified content "
+        "(a fabricated B3LYP-D3BJ DFT benchmark, fabricated docking/interaction "
+        "numbers, and a hydroxylated MXene system with no real data). Both the "
+        "Beilstein and Molecular Diversity submissions use the corrected body "
+        "from generate_gbm_word_manuscript.py. Do not regenerate from this file "
+        "until its body has been audited against the real pipeline."
+    )

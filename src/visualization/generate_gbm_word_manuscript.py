@@ -132,7 +132,7 @@ def generate_gbm_word_manuscript():
     p_abs.add_run(
         "Glioblastoma multiforme (GBM) is the most lethal primary malignant central nervous system neoplasm in adults, with a median survival below 15 months, "
         "driven by therapeutic resistance and the restrictive physiology of the blood-brain barrier (BBB) [1,3]. Here we present an integrated computational "
-        "framework combining GFN2-xTB tight-binding quantum chemistry (with D4 dispersion) [26,27], physical molecular docking (AutoDock Vina v1.2.7 [31,32] "
+        "framework combining GFN2-xTB tight-binding quantum chemistry (with D4 dispersion) [26,27], physical molecular docking (AutoDock Vina v1.2.7 [28,29] "
         "against the human EGFR kinase domain, PDB ID: 4ZAU, 2.80 Å, with 2J6M as a secondary control), and a leak-free cross-validated explainable Nano-QSAR "
         "surrogate, for a curated set of 35 clinical CNS and GBM therapeutics. Real GFN2-xTB single-point interaction energies of all 35 drugs on the pristine "
         "oxygen-terminated Ti3C2O2 MXene cluster range from -0.9 to -15.5 kcal/mol. An Angiopep-2-functionalized MXene for LRP-1-mediated transcytosis is "
@@ -184,20 +184,20 @@ def generate_gbm_word_manuscript():
         "point with GFN2-xTB (xtb v6.7.1) including the D4 dispersion correction [26,27]. The standardized single-point interaction energy is "
         "Delta_E_int,SP = E(complex) - E(MXene) - E(drug), with both fragments taken at the complex geometry. Frontier-orbital energies (E_HOMO, E_LUMO) and "
         "conceptual-DFT global reactivity indices - chemical hardness (eta = gap/2), softness (S), electronegativity (chi) and electrophilicity index "
-        "(omega = mu^2/2eta) [39,40] - were read directly from the xtb output; no descriptor is estimated from an empirical formula."
+        "(omega = mu^2/2eta) [36,37] - were read directly from the xtb output; no descriptor is estimated from an empirical formula."
     )
     doc.add_paragraph(
         "2.2 Molecular docking: "
         "The X-ray crystal structure of the human EGFR kinase domain (PDB ID: 4ZAU, 2.80 Å) was used as the primary receptor, with 2J6M as a secondary control. "
-        "Receptor and ligands were protonated at pH 7.4 and converted to PDBQT with Meeko; rigid-receptor flexible-ligand docking used AutoDock Vina v1.2.7 [31,32] "
+        "Receptor and ligands were protonated at pH 7.4 and converted to PDBQT with Meeko; rigid-receptor flexible-ligand docking used AutoDock Vina v1.2.7 [28,29] "
         "over a 22 x 22 x 22 Å grid centred on the ATP pocket. Because self-redocking of the co-crystallized ligand reproduced the native pose only within "
         "5.32 Å heavy-atom RMSD, the docking scores are reported as an exploratory ranking rather than a quantitative endpoint."
     )
     doc.add_paragraph(
         "2.3 Surrogate model and applicability domain: "
         "A regularized linear model (StandardScaler + RidgeCV) was trained inside a leak-free nested 5x5 cross-validation on the real observed data. Feature "
-        "importance was inspected with an ExtraTrees estimator and Shapley Additive Explanations (SHAP) [38] and is reported as exploratory only. The "
-        "applicability domain follows OECD Principle 3 [34-36] via hat-matrix leverage (Williams plot) with warning leverage h* = 3(p+1)/n and +/-3sigma "
+        "importance was inspected with an ExtraTrees estimator and Shapley Additive Explanations (SHAP) [35] and is reported as exploratory only. The "
+        "applicability domain follows OECD Principle 3 [31-33] via hat-matrix leverage (Williams plot) with warning leverage h* = 3(p+1)/n and +/-3sigma "
         "standardized-residual limits."
     )
     
@@ -283,7 +283,7 @@ def generate_gbm_word_manuscript():
         "GFN2-xTB Delta_E_int,SP on the pristine Ti3C2O2 MXene) reached Q2_CV = 0.65 for the isolated-descriptor model and 0.10 for the pristine-MXene "
         "interaction-energy model, with RMSE of 0.54 and 3.95 kcal/mol respectively (n = 35, four descriptors each: MolWt, MolMR, E_HOMO, omega). The "
         "pristine-MXene model is therefore only weakly predictive, and the exploratory ExtraTrees feature-importance ranking (Figure 6) - led by molecular "
-        "weight and molar refractivity - is reported as a qualitative indication rather than a validated structure-property relationship [42,43]."
+        "weight and molar refractivity - is reported as a qualitative indication rather than a validated structure-property relationship [39,40]."
     )
 
     # ML Parity and SHAP Figures 5 and 6
@@ -299,7 +299,7 @@ def generate_gbm_word_manuscript():
     
     add_heading_styled(doc, "3.4 Applicability domain (OECD Principle 3)", level=2)
     doc.add_paragraph(
-        "The applicability domain was assessed by hat-matrix leverage on the real descriptor matrix (Williams plot) [34-36]. With the full descriptor set the "
+        "The applicability domain was assessed by hat-matrix leverage on the real descriptor matrix (Williams plot) [31-33]. With the full descriptor set the "
         "warning leverage is h* = 1.80 for the isolated-drug system (20 descriptors) and h* = 0.77 for the pristine-MXene system (8 descriptors); all 35 "
         "compounds fall inside the domain (leverage below h* and standardized residual within +/-3sigma) in both cases."
     )
