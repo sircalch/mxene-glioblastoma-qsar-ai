@@ -38,8 +38,8 @@ def make_graphical_abstract(base_dir, fig_dir):
     
     # 3 Main Pillars
     panels = [
-        ("A. 2D Titanium Carbide MXene\n(Ti3C2Tx / Angiopep-2 Functionalized)\n- High surface loading (>92%)\n- BBB LRP-1 Receptor Transcytosis\n- pH-Responsive TME Cleavage", 0.04, 0.12, 0.28, 0.70, "#E3F2FD", "#1565C0"),
-        ("B. Physical Docking (AutoDock Vina)\nHuman EGFR Kinase (PDB: 4UV7, 1.90 Å)\n- 35 CNS/GBM Therapeutics Screened\n- Delta_G = -3.32 to -6.46 kcal/mol\n- H-bonds: Asp392, His394, Arg427", 0.36, 0.12, 0.28, 0.70, "#E8F5E9", "#2E7D32"),
+        ("A. 2D Titanium Carbide MXene\n(pristine Ti3C2O2 cluster)\n- Real GFN2-xTB adsorption\n- Angiopep-2 / LRP-1 route: future work\n- (no real data for functionalized carrier)", 0.04, 0.12, 0.28, 0.70, "#E3F2FD", "#1565C0"),
+        ("B. Physical Docking (AutoDock Vina)\nHuman EGFR Kinase (PDB 4ZAU, 2.80 Å; 2J6M control)\n- 35 CNS/GBM Therapeutics Screened\n- Real Vina -4.0 to -8.9 kcal/mol (exploratory)\n- Contacts: Asp392, His394, Arg427, Thr391", 0.36, 0.12, 0.28, 0.70, "#E8F5E9", "#2E7D32"),
         ("C. Explainable AI & OECD QSAR\nLeak-free nested 5x5 Ridge CV\n- Q2_CV = 0.65 (isolated), 0.10 (pristine)\n- Top feature: MolWt / MolMR\n- 100% inside Williams Domain (h*)", 0.68, 0.12, 0.28, 0.70, "#FFF3E0", "#E65100")
     ]
     
@@ -64,9 +64,9 @@ def make_fig1_workflow(base_dir, fig_dir):
     ax.axis('off')
     
     boxes = [
-        ("1. 2D Titanium Carbide MXene\n(Ti3C2O2 Pristine & Ti3C2-Angiopep-2)", 0.05, 0.55, 0.25, 0.35, "#E3F2FD", "#1565C0"),
-        ("2. Blood-Brain Barrier (BBB)\nLRP-1 Mediated Transcytosis\n(Tumor Penetration & pH-Release)", 0.38, 0.55, 0.25, 0.35, "#E8F5E9", "#2E7D32"),
-        ("3. Glioblastoma Molecular Target\nHuman EGFR Kinase (PDB: 4UV7)\n(1.90 Å High-Resolution X-ray)", 0.70, 0.55, 0.25, 0.35, "#FCE4EC", "#AD1457"),
+        ("1. 2D Titanium Carbide MXene\n(pristine Ti3C2O2 cluster)", 0.05, 0.55, 0.25, 0.35, "#E3F2FD", "#1565C0"),
+        ("2. Blood-Brain Barrier (BBB)\nLRP-1 transcytosis route\n(proposed; not modelled here)", 0.38, 0.55, 0.25, 0.35, "#E8F5E9", "#2E7D32"),
+        ("3. Glioblastoma Molecular Target\nHuman EGFR Kinase\n(PDB 4ZAU, 2.80 A; 2J6M control)", 0.70, 0.55, 0.25, 0.35, "#FCE4EC", "#AD1457"),
         ("4. Quantum CDFT Reactivity\nReal GFN2-xTB Interaction Energies (Pristine)\n(Delta_E_int,SP = -0.9 to -15.5 kcal/mol)", 0.05, 0.10, 0.25, 0.35, "#FFF8E1", "#F57F17"),
         ("5. 100% Real Physical Docking\nAutoDock Vina v1.2.7 (Catalytic Pocket)\n(35 GBM Clinical Drugs Screened)", 0.38, 0.10, 0.25, 0.35, "#EDE7F6", "#4A148C"),
         ("6. Explainable AI & OECD QSAR\nLeak-free nested Ridge CV\n(Q2_CV up to 0.65, Williams Domain)", 0.70, 0.10, 0.25, 0.35, "#E0F2F1", "#00695C"),
@@ -193,7 +193,7 @@ def make_fig4_residues(base_dir, fig_dir):
     colors = sns.color_palette("rocket", n_colors=len(df))
     bars = ax.bar(df['Residue'], df['Contact_Frequency'], color=colors, edgecolor='k', lw=1.2)
     
-    ax.set_xlabel("Human EGFR Catalytic Pocket Residue (PDB ID: 4UV7)", fontsize=11, fontweight='bold')
+    ax.set_xlabel("Human EGFR Catalytic Pocket Residue (PDB 4ZAU)", fontsize=11, fontweight='bold')
     ax.set_ylabel("Atomic Contact Frequency (d <= 3.8 Å)", fontsize=11, fontweight='bold')
     ax.set_title("Figure 4: Residue-Level Interaction Fingerprints & Engagement Frequencies on EGFR Kinase", fontsize=12.5, fontweight='bold', pad=12)
     ax.grid(True, linestyle=':', alpha=0.6)
@@ -331,10 +331,18 @@ def make_fig9_3d_spatial(base_dir, fig_dir):
     fig, axes = plt.subplots(1, 3, figsize=(18, 5.5), dpi=300)
     plt.subplots_adjust(top=0.82, wspace=0.25, bottom=0.15)
     
+    vina = pd.read_csv(os.path.join(base_dir, "data", "processed", "dataset_drug_mxene_pristine.csv")).set_index("name")
+    ads = vina["delta_Eint_SP_kcal_mol"]
+    v4z = vina["vina_4ZAU_kcal_mol"]
+    top = v4z.nsmallest(2).index.tolist()
+    strong_ads = ads.nsmallest(1).index[0]
     modes = [
-        ("Osimertinib @ EGFR Kinase", "-5.89 kcal/mol", "#1565C0", "Key contacts: Met793, Thr790, Cys797"),
-        ("Sorafenib @ EGFR Kinase", "-6.39 kcal/mol", "#2E7D32", "Key contacts: Asp392, His394, Arg427"),
-        ("Abemaciclib @ Ti3C2Tx MXene", "-6.46 kcal/mol", "#C2185B", "Key contacts: Pi-d coordination, real GFN2-xTB Delta_E_int,SP = -3.21 kcal/mol")
+        (f"{top[0]} @ EGFR (PDB 4ZAU)", f"real Vina {v4z[top[0]]:.2f} kcal/mol", "#1565C0",
+         "ATP-cleft contacts: Asp392, His394, Arg427, Thr391"),
+        (f"{top[1]} @ EGFR (PDB 4ZAU)", f"real Vina {v4z[top[1]]:.2f} kcal/mol", "#2E7D32",
+         "ATP-cleft contacts: Asp392, His394, Arg427, Thr391"),
+        (f"{strong_ads} @ pristine Ti3C2O2 MXene", f"real GFN2-xTB Delta_E_int,SP = {ads[strong_ads]:.2f} kcal/mol", "#C2185B",
+         "flat physisorption on the oxygen termination"),
     ]
     
     for ax_idx, (title, score, col, contacts) in enumerate(modes):
@@ -348,7 +356,7 @@ def make_fig9_3d_spatial(base_dir, fig_dir):
         ax.text(0.5, 0.85, title, ha='center', va='center', fontsize=12, fontweight='bold', color=col, transform=ax.transAxes)
         ax.text(0.5, 0.70, f"Affinity / Adsorption: {score}", ha='center', va='center', fontsize=11, fontweight='bold', color='#212121', transform=ax.transAxes)
         ax.text(0.5, 0.45, f"Spatial Interaction Mode:\n{contacts}", ha='center', va='center', fontsize=10, color='#424242', transform=ax.transAxes)
-        ax.text(0.5, 0.20, "[High-Resolution 3D Atomistic Coordinate Rendering\nAutoDock Vina Pose mapped to PDB 4UV7]", ha='center', va='center', fontsize=8.5, style='italic', color='#757575', transform=ax.transAxes)
+        ax.text(0.5, 0.20, "[Schematic binding-mode rendering; AutoDock Vina pose on PDB 4ZAU]", ha='center', va='center', fontsize=8.5, style='italic', color='#757575', transform=ax.transAxes)
         
     plt.suptitle("Figure 9: Atomistic 3D Spatial Binding Modes & Interfacial Geometries for Top Glioblastoma Therapeutics", fontsize=13, fontweight='bold', y=0.96)
     out_p = os.path.join(fig_dir, "fig9_gbm_3d_spatial_binding_modes.png")

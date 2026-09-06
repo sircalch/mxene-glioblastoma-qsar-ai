@@ -130,17 +130,18 @@ def generate_gbm_word_manuscript():
     p_abs.paragraph_format.space_after = Pt(8)
     p_abs.paragraph_format.line_spacing = 1.15
     p_abs.add_run(
-        "Glioblastoma Multiforme (GBM) is the most lethal primary malignant central nervous system neoplasm in adults, characterized by median survival "
-        "below 15 months due to severe therapeutic resistance and the restrictive physiology of the blood-brain barrier (BBB). Here, we establish an integrated "
-        "multi-scale quantum chemical (DFTB3-D4), physical molecular docking (AutoDock Vina v1.2.7 against the crystal structure of human EGFR kinase domain, "
-        "PDB ID: 4UV7, 1.90 Å), and Explainable Machine Learning Nano-QSAR architecture evaluating 2D Titanium Carbide MXene (Ti3C2Tx) nanosheets engineered "
-        "with Angiopep-2 functionalization for LRP-1 receptor-mediated transcytosis. A library of 35 clinical CNS and GBM therapeutics was systematically curated. "
-        "Real GFN2-xTB single-point adsorption calculations on the pristine Ti3C2O2 MXene (all 35 compounds) showed interaction energies from "
-        "-0.9 to -15.5 kcal/mol; no real structural or quantum data exists yet for the Ti3C2(OH)2-Angiopep-2 functionalized variant, which would require "
-        "new complex-geometry modeling beyond the present scope. Physical molecular docking revealed robust binding (-3.32 to -6.46 kcal/mol) with critical catalytic residues (Asp392, His394, Arg427, Thr391). "
-        "A leak-free nested 5x5 cross-validated Ridge surrogate achieved modest, non-overfit predictive accuracy on the real adsorption data (Q2_CV = 0.10-0.65), "
-        "corroborated by exploratory feature-importance ranking and OECD Principle 3 Williams domain leverage validation. This work establishes a quantitative blueprint for "
-        "2D MXene-based nanovehicles surmounting neuro-oncological barriers."
+        "Glioblastoma multiforme (GBM) is the most lethal primary malignant central nervous system neoplasm in adults, with a median survival below 15 months, "
+        "driven by therapeutic resistance and the restrictive physiology of the blood-brain barrier (BBB) [1,3]. Here we present an integrated computational "
+        "framework combining GFN2-xTB tight-binding quantum chemistry (with D4 dispersion) [26,27], physical molecular docking (AutoDock Vina v1.2.7 [31,32] "
+        "against the human EGFR kinase domain, PDB ID: 4ZAU, 2.80 Å, with 2J6M as a secondary control), and a leak-free cross-validated explainable Nano-QSAR "
+        "surrogate, for a curated set of 35 clinical CNS and GBM therapeutics. Real GFN2-xTB single-point interaction energies of all 35 drugs on the pristine "
+        "oxygen-terminated Ti3C2O2 MXene cluster range from -0.9 to -15.5 kcal/mol. An Angiopep-2-functionalized MXene for LRP-1-mediated transcytosis is "
+        "discussed only as future work, since no real structural or quantum data for it exist in this study. Docking against EGFR (exploratory; redocking "
+        "heavy-atom RMSD 5.32 Å) gave Vina scores of -3.96 to -8.94 kcal/mol (mean -7.16), with recurrent contacts at Asp392, His394, Arg427 and Thr391. "
+        "A leak-free nested 5x5 cross-validated RidgeCV surrogate on the real data reached Q2_CV = 0.65 (isolated descriptors) and 0.10 (pristine-MXene "
+        "interaction energy); the feature-importance analysis is reported as exploratory. OECD Principle 3 applicability-domain analysis (Williams leverage) "
+        "places all 35 compounds inside the domain in both real-data systems. Every value reported is computed from the deposited pipeline; no descriptor "
+        "or energy is estimated from an empirical formula."
     )
     
     p_kw = doc.add_paragraph()
@@ -152,45 +153,52 @@ def generate_gbm_word_manuscript():
     # 3. Section 1: Introduction
     add_heading_styled(doc, "1. Introduction", level=1)
     doc.add_paragraph(
-        "Glioblastoma (GBM, WHO grade IV astrocytoma) represents the most aggressive and pervasive primary brain tumor in human adults. "
-        "Standard-of-care protocols combining maximal surgical resection, temozolomide (TMZ) chemotherapy, and radiotherapy invariably yield recurrence. "
-        "A foundational barrier to clinical efficacy is the blood-brain barrier (BBB), formed by brain capillary endothelial cells, astrocyte end-feet, and tight "
-        "junction proteins that exclude over 98% of small-molecule therapeutics and nearly 100% of large biologics from the brain parenchyma."
+        "Glioblastoma (GBM, WHO grade IV astrocytoma) is the most aggressive primary brain tumor in adults. "
+        "Standard-of-care - maximal surgical resection, temozolomide chemotherapy and radiotherapy [1,2] - is almost invariably followed by recurrence, and "
+        "MGMT-promoter methylation status modulates the temozolomide benefit [8]. "
+        "A foundational barrier to clinical efficacy is the blood-brain barrier (BBB), which excludes the large majority of small-molecule therapeutics and "
+        "nearly all large biologics from the brain parenchyma [9,10]."
     )
     doc.add_paragraph(
-        "Overexpression and genomic amplification of the Epidermal Growth Factor Receptor (EGFR) and its constitutively active deletion mutant EGFRvIII "
-        "occur in >60% of GBM patients, driving unchecked cellular proliferation, invasion, and neo-angiogenesis. However, systemic administration of EGFR tyrosine "
-        "kinase inhibitors (TKIs) such as Osimertinib, Gefitinib, and Erlotinib is severely compromised by poor BBB penetration and rapid systemic clearance."
+        "Overexpression and genomic amplification of the epidermal growth factor receptor (EGFR) and its constitutively active deletion mutant EGFRvIII "
+        "occur in a large fraction of GBM patients and drive proliferation, invasion and neo-angiogenesis [4,6,7]. Systemic administration of EGFR tyrosine "
+        "kinase inhibitors (TKIs) such as osimertinib, gefitinib and erlotinib is compromised by poor BBB penetration and rapid systemic clearance [10,13]."
     )
     doc.add_paragraph(
-        "Two-dimensional transition metal carbides and nitrides (MXenes), represented by titanium carbide (Ti3C2Tx), have emerged as paradigm-shifting nanomaterials. "
-        "Their metallic electrical conductivity, hydrophilic surface terminations (-O, -OH, -F), rich d-orbital transition metal coordination chemistry, and intrinsic "
-        "near-infrared photothermal conversion make them exceptional candidates for nanomedicine. Surface modification with Angiopep-2 peptides targeting Low-Density "
-        "Lipoprotein Receptor-Related Protein 1 (LRP-1) enables efficient transcytosis across the intact BBB."
+        "Two-dimensional transition-metal carbides and nitrides (MXenes), represented by titanium carbide (Ti3C2Tx) [21,22], combine metallic conductivity, "
+        "hydrophilic surface terminations (-O, -OH, -F) and rich transition-metal coordination chemistry, and have been explored for nanomedicine [23-25]. "
+        "Surface modification with Angiopep-2 peptides targeting low-density lipoprotein receptor-related protein 1 (LRP-1) has been proposed to promote "
+        "transcytosis across the BBB; in the present study this functionalized carrier is treated only as a prospective extension (see Conclusions), and all "
+        "quantum and docking results refer to the pristine Ti3C2O2 surface."
     )
     
     # Workflow Figure 1
     add_image_if_exists(doc, os.path.join(fig_dir, "fig1_gbm_workflow_methodology.png"),
-                        "Figure 1: Multi-Scale Computational Workflow: Integrating Quantum Chemical CDFT, Real AutoDock Vina Docking (PDB 4UV7), and Explainable Machine Learning for 2D Ti3C2Tx MXene Glioblastoma Delivery.")
+                        "Figure 1: Multi-scale computational workflow: GFN2-xTB quantum-chemical adsorption on pristine Ti3C2O2, real AutoDock Vina docking (PDB 4ZAU / 2J6M), and a leak-free cross-validated explainable Nano-QSAR surrogate for 2D Ti3C2Tx MXene glioblastoma delivery.")
     
     # 4. Section 2: Computational and Experimental Methodology
     add_heading_styled(doc, "2. Computational and Experimental Section", level=1)
     doc.add_paragraph(
-        "2.1 Quantum Chemical DFTB3-D4 and Conceptual DFT (CDFT) Framework: "
-        "Quantum adsorption calculations of therapeutics on the Ti3C2O2 pristine monolayer supercell were performed utilizing third-order Density Functional "
-        "Tight-Binding with D4 dispersion corrections (DFTB3-D4). Frontier molecular orbitals (E_HOMO, E_LUMO) and global reactivity indices—including chemical "
-        "hardness (eta), electronic softness (S), electronegativity (chi), and electrophilicity index (omega)—were derived under Conceptual Density Functional Theory."
+        "2.1 Quantum-chemical framework: "
+        "Each isolated drug, the pristine oxygen-terminated Ti3C2O2 MXene cluster, and every drug-MXene complex were geometry-optimized and evaluated at single "
+        "point with GFN2-xTB (xtb v6.7.1) including the D4 dispersion correction [26,27]. The standardized single-point interaction energy is "
+        "Delta_E_int,SP = E(complex) - E(MXene) - E(drug), with both fragments taken at the complex geometry. Frontier-orbital energies (E_HOMO, E_LUMO) and "
+        "conceptual-DFT global reactivity indices - chemical hardness (eta = gap/2), softness (S), electronegativity (chi) and electrophilicity index "
+        "(omega = mu^2/2eta) [39,40] - were read directly from the xtb output; no descriptor is estimated from an empirical formula."
     )
     doc.add_paragraph(
-        "2.2 Physical Molecular Docking Parameterization: "
-        "The high-resolution X-ray crystal structure of the human EGFR kinase catalytic domain was retrieved from the Protein Data Bank (PDB ID: 4UV7, 1.90 Å resolution). "
-        "Receptor and ligand structures were protonated at physiological pH (7.4) and converted to PDBQT format with Meeko. Rigid-receptor flexible-ligand docking was "
-        "executed with AutoDock Vina v1.2.7 across a 22 x 22 x 22 Å search grid centered on the ATP-binding pocket (X = -14.655, Y = -1.207, Z = 33.327 Å)."
+        "2.2 Molecular docking: "
+        "The X-ray crystal structure of the human EGFR kinase domain (PDB ID: 4ZAU, 2.80 Å) was used as the primary receptor, with 2J6M as a secondary control. "
+        "Receptor and ligands were protonated at pH 7.4 and converted to PDBQT with Meeko; rigid-receptor flexible-ligand docking used AutoDock Vina v1.2.7 [31,32] "
+        "over a 22 x 22 x 22 Å grid centred on the ATP pocket. Because self-redocking of the co-crystallized ligand reproduced the native pose only within "
+        "5.32 Å heavy-atom RMSD, the docking scores are reported as an exploratory ranking rather than a quantitative endpoint."
     )
     doc.add_paragraph(
-        "2.3 Machine Learning Architecture & OECD Validation Principles: "
-        "Non-linear ensemble learning was implemented with ExtraTrees and XGBoost regressors under 5-fold cross-validation. Model interpretability was established via "
-        "Shapley Additive Explanations (SHAP). The applicability domain was strictly defined according to OECD Principle 3 using hat-matrix leverage analysis (Williams plot)."
+        "2.3 Surrogate model and applicability domain: "
+        "A regularized linear model (StandardScaler + RidgeCV) was trained inside a leak-free nested 5x5 cross-validation on the real observed data. Feature "
+        "importance was inspected with an ExtraTrees estimator and Shapley Additive Explanations (SHAP) [38] and is reported as exploratory only. The "
+        "applicability domain follows OECD Principle 3 [34-36] via hat-matrix leverage (Williams plot) with warning leverage h* = 3(p+1)/n and +/-3sigma "
+        "standardized-residual limits."
     )
     
     # Quantum Figure 2
@@ -202,24 +210,24 @@ def generate_gbm_word_manuscript():
     
     add_heading_styled(doc, "3.1 Quantum Adsorption Energetics & MXene Surface Chemistry", level=2)
     doc.add_paragraph(
-        "Real GFN2-xTB single-point interaction energies (delta_Eint_SP) calculated across all 35 GBM therapeutics on the pristine Ti3C2O2 monolayer ranged from "
-        "-0.9 kcal/mol for weakly interacting compounds to -15.5 kcal/mol for the most strongly stabilized aromatic multikinase inhibitors, consistent with "
-        "pi-d orbital hybridization between the drug aromatic pi-systems and the titanium 3d conduction band."
+        "Real GFN2-xTB single-point interaction energies (Delta_E_int,SP) across all 35 therapeutics on the pristine Ti3C2O2 cluster range from -0.9 kcal/mol "
+        "for the most weakly interacting compounds to -15.5 kcal/mol for the most strongly stabilized (larotrectinib -15.5; temozolomide -13.4; lomustine "
+        "-12.8 kcal/mol), consistent with dispersion-dominated physisorption of the drug pi-systems on the oxygen-terminated titanium-carbide surface."
     )
-    
-    add_heading_styled(doc, "3.2 Physical Molecular Docking against Human EGFR Kinase", level=2)
+
+    add_heading_styled(doc, "3.2 Molecular docking against the EGFR kinase domain", level=2)
     doc.add_paragraph(
-        "The 100% physical AutoDock Vina v1.2.7 screening across the 35 GBM therapeutics demonstrated robust macromolecular binding with binding free energies "
-        "spanning -3.32 to -6.46 kcal/mol (mean: -5.29 kcal/mol). The highest affinities were observed for Abemaciclib (-6.46 kcal/mol), Palbociclib (-6.41 kcal/mol), "
-        "Sorafenib (-6.39 kcal/mol), and Regorafenib (-6.21 kcal/mol)."
+        "AutoDock Vina v1.2.7 screening of the 35 therapeutics against EGFR (PDB 4ZAU) gave scores from -3.96 to -8.94 kcal/mol (mean -7.16 kcal/mol). "
+        "The highest-ranked compounds were entrectinib (-8.94), sorafenib (-8.66), trametinib (-8.50), cobimetinib (-8.49) and cabozantinib (-8.29 kcal/mol). "
+        "Because self-redocking reproduced the native pose only within 5.32 Å RMSD, this ranking is treated as exploratory and is not used as a QSAR endpoint."
     )
-    
+
     # Docking Figures 3 and 4
     add_image_if_exists(doc, os.path.join(fig_dir, "fig3_gbm_docking_vina_statistical_profiles.png"),
-                        "Figure 3: Physical Molecular Docking Statistical Profiles on Human EGFR Kinase: (a) Distribution of real Vina binding energies; (b) Ranking of top 10 high-affinity GBM therapeutics.")
-    
+                        "Figure 3: Molecular docking statistical profiles on the EGFR kinase domain (PDB 4ZAU; exploratory, redocking RMSD 5.32 Å): (a) distribution of real Vina scores; (b) ranking of the top-10 compounds.")
+
     add_image_if_exists(doc, os.path.join(fig_dir, "fig4_gbm_residue_contact_frequency.png"),
-                        "Figure 4: Residue-Level Contact Fingerprints on Human EGFR Kinase: Frequency of atomic contacts (d <= 3.8 Å) with catalytic residues Asp392, His394, Arg427, Thr391, and Arg390.")
+                        "Figure 4: Residue-level contact frequencies on the EGFR kinase domain (real Vina poses, contact distance <= 3.8 Å): most frequent contacts are Asp392, His394, Arg427, Thr391 and Arg390.")
     
     # Embed Table 1: Descriptors Summary
     # MW/LogP/PSA are real RDKit descriptors (always computed from SMILES).
@@ -269,13 +277,13 @@ def generate_gbm_word_manuscript():
                 for r in row_cells[c_idx].paragraphs[0].runs:
                     r.font.size = Pt(8.5)
                     
-    add_heading_styled(doc, "3.3 Machine Learning Nano-QSAR Benchmark & Feature Importance", level=2)
+    add_heading_styled(doc, "3.3 Nano-QSAR surrogate model and feature importance", level=2)
     doc.add_paragraph(
-        "A regularized Ridge surrogate model, evaluated by fully leak-free nested 5x5 cross-validation on the real observed data "
-        "(Real_Vina_Docking_Score_kcal_mol for isolated drugs; the real GFN2-xTB delta_Eint_SP_kcal_mol for the pristine Ti3C2O2 MXene complex), "
-        "achieved Q2_CV = 0.651 (isolated) and 0.095 (pristine MXene), RMSE 0.54 and 3.95 kcal/mol respectively (n=35, p=4 both systems). "
-        "Exploratory ExtraTrees feature-importance ranking on the real pristine-MXene interaction energies identified molecular weight (MolWt) and molar "
-        "refractivity (MolMR) as the leading descriptors, followed by the CDFT reactivity indices (chemical potential mu, HOMO-LUMO gap, hardness)."
+        "A StandardScaler + RidgeCV surrogate evaluated by leak-free nested 5x5 cross-validation on the real observed data (isolated Vina scores; and the real "
+        "GFN2-xTB Delta_E_int,SP on the pristine Ti3C2O2 MXene) reached Q2_CV = 0.65 for the isolated-descriptor model and 0.10 for the pristine-MXene "
+        "interaction-energy model, with RMSE of 0.54 and 3.95 kcal/mol respectively (n = 35, four descriptors each: MolWt, MolMR, E_HOMO, omega). The "
+        "pristine-MXene model is therefore only weakly predictive, and the exploratory ExtraTrees feature-importance ranking (Figure 6) - led by molecular "
+        "weight and molar refractivity - is reported as a qualitative indication rather than a validated structure-property relationship [42,43]."
     )
 
     # ML Parity and SHAP Figures 5 and 6
@@ -287,39 +295,40 @@ def generate_gbm_word_manuscript():
     
     # Inter-descriptor Correlation Figure 7
     add_image_if_exists(doc, os.path.join(fig_dir, "fig7_gbm_descriptor_correlation_matrix.png"),
-                        "Figure 7: Pearson Inter-Descriptor Correlation Heatmap (20 Descriptors across 35 GBM Therapeutics).")
+                        "Figure 7: Pearson inter-descriptor correlation heatmap (real descriptor matrix, 35 GBM therapeutics).")
     
-    add_heading_styled(doc, "3.4 OECD Validation Principles and Applicability Domain", level=2)
+    add_heading_styled(doc, "3.4 Applicability domain (OECD Principle 3)", level=2)
     doc.add_paragraph(
-        "To satisfy international regulatory standards for QSAR modeling set forth by the Organization for Economic Co-operation and Development (OECD), "
-        "the applicability domain was established via hat-matrix leverage calculation on the real observed data. The warning leverage thresholds "
-        "(h* = 1.80 isolated drugs, 0.77 pristine MXene) and standard residual limits (±3sigma) confirmed that 100% of compounds in both real-data systems "
-        "(35/35 each) fall securely within the reliable prediction domain without leverage outliers."
+        "The applicability domain was assessed by hat-matrix leverage on the real descriptor matrix (Williams plot) [34-36]. With the full descriptor set the "
+        "warning leverage is h* = 1.80 for the isolated-drug system (20 descriptors) and h* = 0.77 for the pristine-MXene system (8 descriptors); all 35 "
+        "compounds fall inside the domain (leverage below h* and standardized residual within +/-3sigma) in both cases."
     )
 
     # Williams Domain Figure 8
     add_image_if_exists(doc, os.path.join(fig_dir, "fig8_gbm_williams_applicability_domain.png"),
                         "Figure 8: OECD Principle 3: Williams Plots Defining the Applicability Domain for GBM Therapeutics on Ti3C2Tx MXene Nanosheets (real data only; Isolated and Pristine-MXene systems).")
     
-    add_heading_styled(doc, "3.5 Atomistic 3D Spatial Binding Modes", level=2)
+    add_heading_styled(doc, "3.5 Representative binding modes", level=2)
     doc.add_paragraph(
-        "Atomistic inspection of top docked poses (Osimertinib, Sorafenib, and Abemaciclib) highlighted deep spatial insertion into the hydrophobic catalytic "
-        "cleft of EGFR (PDB ID: 4UV7), coordinated by double hydrogen bonds to the hinge region backbone and stabilized by pi-stacking interactions."
+        "Inspection of the top-ranked docked poses on EGFR (PDB 4ZAU) shows the inhibitors occupying the ATP cleft with contacts to the residues in Figure 4 "
+        "(Asp392, His394, Arg427, Thr391). On the pristine Ti3C2O2 surface the strongest-binding drugs lie flat against the oxygen termination, consistent with "
+        "the dispersion-dominated interaction energies of Section 3.1."
     )
-    
+
     # 3D Spatial Figure 9
     add_image_if_exists(doc, os.path.join(fig_dir, "fig9_gbm_3d_spatial_binding_modes.png"),
-                        "Figure 9: Atomistic 3D Spatial Binding Modes & Interfacial Geometries: (a) Osimertinib in EGFR catalytic pocket; (b) Sorafenib hydrogen-bonding network; (c) Abemaciclib interfacial coordination on 2D Ti3C2Tx MXene monolayer.")
+                        "Figure 9: Representative binding modes (schematic): (a-b) top-ranked inhibitors in the EGFR ATP cleft (PDB 4ZAU); (c) a drug on the pristine Ti3C2O2 MXene surface with its real GFN2-xTB Delta_E_int,SP.")
     
     # 6. Section 4: Conclusions
     add_heading_styled(doc, "4. Conclusions", level=1)
     doc.add_paragraph(
-        "This investigation provides the first comprehensive, quantum-informed, and Explainable AI framework validating 2D Titanium Carbide MXene (Ti3C2Tx) "
-        "nanosheets as targeted delivery platforms for Glioblastoma Multiforme. By combining DFTB3-D4 quantum chemisorption, physical AutoDock Vina v1.2.7 "
-        "molecular docking against human EGFR kinase (PDB ID: 4UV7), and a leak-free machine learning surrogate validated under OECD guidelines on real "
-        "GFN2-xTB adsorption data, we demonstrate that the pristine Ti3C2O2 MXene offers a thermodynamically favorable platform for kinase-inhibitor loading; "
-        "extending this to an Angiopep-2 functionalized carrier for BBB transcytosis will require new structural modeling and quantum calculations beyond "
-        "the present real-data scope."
+        "We report a quantum-informed, explainable Nano-QSAR analysis of 2D Ti3C2Tx MXene as a candidate delivery scaffold for glioblastoma therapeutics. "
+        "Combining real GFN2-xTB single-point interaction energies, exploratory AutoDock Vina docking against the EGFR kinase domain (PDB 4ZAU), and a "
+        "leak-free cross-validated RidgeCV surrogate assessed under OECD guidelines, we find that the pristine Ti3C2O2 surface binds all 35 screened "
+        "therapeutics by dispersion-dominated physisorption (Delta_E_int,SP = -0.9 to -15.5 kcal/mol). The surrogate is only weakly predictive for the "
+        "MXene interaction energy, so the descriptor rankings are presented as exploratory. An Angiopep-2-functionalized MXene for LRP-1-mediated BBB "
+        "transcytosis is a natural extension but is outside the present scope: it has no real structural or quantum data here and would require dedicated "
+        "complex-geometry modeling."
     )
     
     # 7. Statements & References
