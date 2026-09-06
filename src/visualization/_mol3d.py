@@ -216,35 +216,142 @@ def _add_ball_stick(pl, sym, xyz, ball=0.30, stick=0.105, bond_scale=1.18,
 
 
 def _add_surface(pl, sym, xyz, color="#c9d3e0", opacity=0.42,
-                 probe=1.4, grid=0.6):
-    """Blobby solvent-excluded-ish surface via a Gaussian density isosurface."""
+                 probe=1.3, grid=0.45, iso=2.4):
+    """Smooth Gaussian-blur molecular surface (Blinn-style), heavily relaxed so
+    it reads as a clean SES rather than a lumpy blob."""
     if len(sym) < 4:
         return
-    r = np.array([VDW.get(s, 1.6) for s in sym])
-    lo = xyz.min(0) - (r.max() + probe + 2)
-    hi = xyz.max(0) + (r.max() + probe + 2)
-    nx, ny, nz = np.maximum(((hi - lo) / grid).astype(int), 8)
+    r = np.array([VDW.get(s, 1.7) for s in sym])
+    pad = r.max() + probe + 2.5
+    lo = xyz.min(0) - pad
+    hi = xyz.max(0) + pad
+    dims = np.maximum(((hi - lo) / grid).astype(int), 12)
+    nx, ny, nz = dims
     gx = np.linspace(lo[0], hi[0], nx)
     gy = np.linspace(lo[1], hi[1], ny)
     gz = np.linspace(lo[2], hi[2], nz)
     X, Y, Z = np.meshgrid(gx, gy, gz, indexing="ij")
     dens = np.zeros_like(X)
     for k in range(len(sym)):
-        s = (r[k] + probe * 0.5)
+        s = r[k] + probe
         d2 = (X - xyz[k, 0])**2 + (Y - xyz[k, 1])**2 + (Z - xyz[k, 2])**2
-        dens += np.exp(-d2 / (2.0 * (s * 0.62)**2))
-    grid_obj = pv.ImageData(dimensions=(nx, ny, nz),
-                            spacing=(gx[1]-gx[0], gy[1]-gy[0], gz[1]-gz[0]),
-                            origin=(lo[0], lo[1], lo[2]))
-    grid_obj["d"] = dens.flatten(order="F")
+        dens += np.exp(-1.8 * d2 / (s * s))
+    g = pv.ImageData(dimensions=(nx, ny, nz),
+                     spacing=(gx[1]-gx[0], gy[1]-gy[0], gz[1]-gz[0]),
+                     origin=tuple(lo))
+    g["d"] = dens.flatten(order="F")
     try:
-        surf = grid_obj.contour([0.62], scalars="d")
-        surf = surf.smooth(n_iter=40, relaxation_factor=0.1)
-        pl.add_mesh(surf, color=color, opacity=opacity, pbr=True,
-                    metallic=0.0, roughness=0.55, smooth_shading=True,
-                    specular=0.15)
+        surf = g.contour([iso], scalars="d")
+        surf = surf.smooth_taubin(n_iter=60, pass_band=0.05)
+        surf = surf.compute_normals(auto_orient_normals=True, split_vertices=False)
+        pl.add_mesh(surf, color=color, opacity=opacity, pbr=True, metallic=0.0,
+                    roughness=0.6, smooth_shading=True, specular=0.12,
+                    diffuse=0.9)
     except Exception:
         pass
+
+
+# ------------------------------------------------------ protein cartoon ribbon
+def _pdb_with_ss(pdb_path):
+    """Rewrite a PDB with proper HELIX/SHEET records (secondary structure from
+    biotite's P-SEA) so vtkPDBReader/vtkProteinRibbonFilter draw real
+    helices and arrows. Returns (tmp_path, ca_xyz)."""
+    import tempfile
+    import biotite.structure.io.pdb as _pdb
+    import biotite.structure as _st
+    arr = _pdb.PDBFile.read(pdb_path).get_structure(model=1)
+    arr = arr[_st.filter_amino_acids(arr)]
+    recs = []
+    hn = sn = 0
+    for ch in sorted(set(arr.chain_id)):
+        c = arr[arr.chain_id == ch]
+        try:
+            sse = _st.annotate_sse(c)
+        except Exception:
+            sse = np.array(["c"] * len(np.unique(c.res_id)))
+        res = np.unique(c.res_id)
+        rn = {int(a.res_id): a.res_name for a in c[c.atom_name == "CA"]}
+        i = 0
+        while i < len(sse):
+            j = i
+            while j < len(sse) and sse[j] == sse[i]:
+                j += 1
+            a, b = int(res[i]), int(res[j-1])
+            ra = rn.get(a, "ALA")[:3].rjust(3)
+            rb = rn.get(b, "ALA")[:3].rjust(3)
+            if sse[i] == "a" and j - i >= 4:
+                hn += 1
+                recs.append(f"HELIX  {hn:3d} {hn:3d} {ra} {ch} {a:4d}  {rb} {ch} {b:4d}  1"
+                            .ljust(76))
+            elif sse[i] == "b" and j - i >= 2:
+                sn += 1
+                recs.append(f"SHEET  {sn:3d} S{ch}{1:2d} {ra} {ch}{a:4d}  {rb} {ch}{b:4d}  0"
+                            .ljust(70))
+            i = j
+    lines = _pdb.PDBFile()
+    lines.set_structure(arr)
+    atom_lines = [ln for ln in lines.lines if ln[:6] in ("ATOM  ", "HETATM", "TER   ")]
+    tmp = os.path.join(tempfile.gettempdir(),
+                       "_ss_" + os.path.basename(pdb_path))
+    with open(tmp, "w") as fh:
+        fh.write("\n".join(recs) + "\n")
+        fh.write("\n".join(atom_lines) + "\nEND\n")
+    ca = arr[arr.atom_name == "CA"].coord
+    return tmp, np.asarray(ca, float)
+
+
+def load_protein(pdb_path, chain=None):
+    """Return a dict for add_cartoon: {'ss_pdb': path, 'ca': xyz}."""
+    ss_pdb, ca = _pdb_with_ss(pdb_path)
+    return {"ss_pdb": ss_pdb, "ca": ca, "src": pdb_path}
+
+
+def _hex(c):
+    c = c.lstrip("#")
+    return np.array([int(c[i:i+2], 16) for i in (0, 2, 4)], dtype=np.uint8)
+
+
+def add_cartoon(pl, prot, color_by="ss", helix="#E8776B", sheet="#E8C15A",
+                loop="#F2F2F2"):
+    """Secondary-structure cartoon via vtkProteinRibbonFilter (real helices,
+    arrow strands, coil tube), recoloured to a clean journal palette.
+
+    color_by: 'ss' (helix/sheet/loop palette) or a hex string (uniform)."""
+    import vtk
+    rd = vtk.vtkPDBReader()
+    rd.SetFileName(prot["ss_pdb"])
+    rd.Update()
+    rib = vtk.vtkProteinRibbonFilter()
+    rib.SetInputConnection(rd.GetOutputPort())
+    try:
+        rib.SetDrawSmallMoleculesAsSpheres(False)
+    except Exception:
+        pass
+    rib.Update()
+    mesh = pv.wrap(rib.GetOutput())
+    if mesh.n_points == 0:
+        return
+    rgb = np.asarray(mesh.point_data.get("RGB"))
+    if rgb is None or color_by != "ss":
+        col = _hex(color_by) if isinstance(color_by, str) and color_by.startswith("#") else _hex(helix)
+        pl.add_mesh(mesh, color=(col/255.0), pbr=True, metallic=0.0,
+                    roughness=0.42, smooth_shading=True, specular=0.25,
+                    specular_power=15)
+        return
+    # vtkProteinRibbonFilter marks helix ~ magenta/red, sheet ~ yellow, loop ~ white/grey.
+    out = rgb.copy()
+    r, g, bl = rgb[:, 0].astype(int), rgb[:, 1].astype(int), rgb[:, 2].astype(int)
+    is_loop = (r > 190) & (g > 190) & (bl > 190)
+    is_sheet = (r > 150) & (g > 120) & (bl < 130) & ~is_loop
+    is_helix = ~is_loop & ~is_sheet
+    out[is_helix] = _hex(helix)
+    out[is_sheet] = _hex(sheet)
+    out[is_loop] = _hex(loop)
+    mesh.point_data["cartoon_rgb"] = out
+    pl.add_mesh(mesh, scalars="cartoon_rgb", rgb=True, pbr=True, metallic=0.0,
+                roughness=0.42, smooth_shading=True, specular=0.28,
+                specular_power=15)
+
 
 
 def _auto_view(all_xyz, view="face", roll=0.0):
@@ -286,23 +393,19 @@ def _autocrop(img, pad=12, bg=250):
     return img[y0:y1, x0:x1]
 
 
-def render_array(specs, size=(1600, 1200), zoom=1.15, bg="white", ssaa=True,
-                 orthographic=False, view="face", roll=0.0, ssao=True,
-                 crop=True):
-    """Render and return an (H, W, 3) uint8 RGB array (for ax.imshow).
-
-    specs: list of dicts {"sym", "xyz", optional: ball, stick, bond_scale,
-    carbon, opacity, surface(bool), surf_color, surf_opacity, style('none')}."""
-    if pv is None:  # pragma: no cover
-        raise RuntimeError(f"pyvista unavailable: {_IMPORT_ERROR}")
-    pl = pv.Plotter(off_screen=True, window_size=size, lighting="none")
-    pl.set_background(bg)
-    allxyz = []
-    for sp in specs:
-        sym, xyz = sp["sym"], np.asarray(sp["xyz"], float)
-        if len(sym) == 0:
-            continue
-        allxyz.append(xyz)
+def _draw_spec(pl, sp, offset=None):
+    """Render one spec dict into a plotter. Returns its xyz (for framing)."""
+    off = np.zeros(3) if offset is None else np.asarray(offset, float)
+    got = []
+    if sp.get("cartoon"):
+        add_cartoon(pl, sp["cartoon"], color_by=sp.get("cartoon_color", "ss"),
+                    tube_r=sp.get("tube_r", 0.28))
+        for seg in sp["cartoon"]["segments"]:
+            got.append(seg["ca"])
+    sym = sp.get("sym")
+    if sym is not None and len(sym):
+        xyz = np.asarray(sp["xyz"], float) + off
+        got.append(xyz)
         if sp.get("surface"):
             _add_surface(pl, sym, xyz, color=sp.get("surf_color", "#c9d3e0"),
                          opacity=sp.get("surf_opacity", 0.42))
@@ -312,7 +415,10 @@ def render_array(specs, size=(1600, 1200), zoom=1.15, bg="white", ssaa=True,
                             bond_scale=sp.get("bond_scale", 1.12),
                             carbon=sp.get("carbon"),
                             opacity=sp.get("opacity", 1.0))
-    allxyz = np.vstack(allxyz)
+    return np.vstack(got) if got else np.zeros((0, 3))
+
+
+def _finish(pl, allxyz, view, roll, zoom, ssao, ssaa, orthographic):
     _light_rig(pl)
     try:
         pl.enable_depth_peeling(12)
@@ -332,6 +438,24 @@ def render_array(specs, size=(1600, 1200), zoom=1.15, bg="white", ssaa=True,
             pl.enable_anti_aliasing("ssaa")
         except Exception:
             pass
+
+
+def render_array(specs, size=(1600, 1200), zoom=1.15, bg="white", ssaa=True,
+                 orthographic=False, view="face", roll=0.0, ssao=True,
+                 crop=True):
+    """Render and return an (H, W, 3) uint8 RGB array.
+
+    specs: list of dicts. Each may carry {"sym","xyz"} for ball&stick/surface
+    (options: ball, stick, bond_scale, carbon, opacity, surface, surf_color,
+    surf_opacity, style('none')) and/or {"cartoon": load_protein(...)} for a
+    secondary-structure ribbon (cartoon_color: 'ss'|'chain'|'rainbow'|hex)."""
+    if pv is None:  # pragma: no cover
+        raise RuntimeError(f"pyvista unavailable: {_IMPORT_ERROR}")
+    pl = pv.Plotter(off_screen=True, window_size=size, lighting="none")
+    pl.set_background(bg)
+    allxyz = [x for sp in specs for x in [_draw_spec(pl, sp)] if len(x)]
+    allxyz = np.vstack(allxyz)
+    _finish(pl, allxyz, view, roll, zoom, ssao, ssaa, orthographic)
     img = pl.screenshot(return_img=True)
     pl.close()
     if img.ndim == 3 and img.shape[2] == 4:
@@ -347,40 +471,104 @@ def render(specs, out_path, **kw):
     return out_path
 
 
-def turntable(specs, out_mp4, size=(960, 960), n=120, zoom=1.25, fps=30,
-              bg="white", view="3q"):
-    """Rotating-structure movie for the SI."""
+def _even(v):
+    v = int(round(v))
+    return v + (v & 1)
+
+
+def _write_mp4(frames, out_mp4, fps):
     import imageio.v2 as imageio
+    os.makedirs(os.path.dirname(os.path.abspath(out_mp4)) or ".", exist_ok=True)
+    h, w = frames[0].shape[:2]
+    tw, th = _even(w), _even(h)
+    fr = [f[:th, :tw] if (f.shape[0] >= th and f.shape[1] >= tw) else f
+          for f in frames]
+    imageio.mimsave(out_mp4, fr, fps=fps, quality=9, codec="libx264",
+                    macro_block_size=1,
+                    output_params=["-pix_fmt", "yuv420p", "-crf", "18"])
+    return out_mp4
+
+
+def turntable(specs, out_mp4, size=(960, 960), n=140, zoom=1.25, fps=30,
+              bg="white", view="3q", rock=False):
+    """Rotating-structure movie (full 360 by default)."""
     if pv is None:  # pragma: no cover
         raise RuntimeError("pyvista unavailable")
-    frames = []
     pl = pv.Plotter(off_screen=True, window_size=size, lighting="none")
     pl.set_background(bg)
-    allxyz = []
-    for sp in specs:
-        sym, xyz = sp["sym"], np.asarray(sp["xyz"], float)
-        allxyz.append(xyz)
-        if sp.get("surface"):
-            _add_surface(pl, sym, xyz, color=sp.get("surf_color", "#c9d3e0"),
-                         opacity=sp.get("surf_opacity", 0.42))
-        _add_ball_stick(pl, sym, xyz, ball=sp.get("ball", 0.30),
-                        stick=sp.get("stick", 0.105), carbon=sp.get("carbon"),
-                        bond_scale=sp.get("bond_scale", 1.15))
-    _light_rig(pl)
-    try:
-        pl.enable_ssao(radius=2.0, bias=0.5, kernel_size=64, blur=True)
-    except Exception:
-        pass
-    pl.camera_position = list(_auto_view(np.vstack(allxyz), view=view))
-    pl.camera.zoom(zoom)
+    allxyz = np.vstack([_draw_spec(pl, sp) for sp in specs])
+    _finish(pl, allxyz, view, 0.0, zoom, True, False, False)
     try:
         pl.enable_anti_aliasing("msaa")
     except Exception:
         pass
+    step = 360.0 / n
+    frames = []
     for i in range(n):
-        pl.camera.azimuth = 360.0 / n
-        frames.append(pl.screenshot(return_img=True))
+        ang = (step * (1 if not rock else np.sin(2*np.pi*i/n) * 0.6))
+        pl.camera.Azimuth(ang)          # incremental VTK rotation
+        pl.render()
+        frames.append(np.asarray(pl.screenshot(return_img=True))[..., :3])
     pl.close()
-    imageio.mimsave(out_mp4, frames, fps=fps, quality=8,
-                    macro_block_size=8)
-    return out_mp4
+    return _write_mp4(frames, out_mp4, fps)
+
+
+def assembly_movie(scene_specs, mobile_idx, out_mp4, size=(960, 960),
+                   approach=14.0, n_in=70, n_hold=18, n_spin=110, fps=30,
+                   zoom=1.2, bg="white", view="3q", along=None):
+    """Animate one spec (mobile_idx) sliding into its bound pose, then a spin.
+
+    scene_specs[mobile_idx] must have {"sym","xyz"} at the BOUND geometry.
+    The mobile fragment starts `approach` A away along `along` (default: the
+    vector from the rest-of-scene centroid to the fragment centroid) and eases in.
+    """
+    if pv is None:  # pragma: no cover
+        raise RuntimeError("pyvista unavailable")
+    mob = scene_specs[mobile_idx]
+    mob_xyz = np.asarray(mob["xyz"], float)
+    rest = [np.asarray(s["xyz"], float) for k, s in enumerate(scene_specs)
+            if k != mobile_idx and s.get("sym") is not None and len(s["sym"])]
+    rest += [seg["ca"] for k, s in enumerate(scene_specs) if k != mobile_idx
+             and s.get("cartoon") for seg in s["cartoon"]["segments"]]
+    rest_c = np.vstack(rest).mean(0) if rest else mob_xyz.mean(0) - 1
+    if along is None:
+        along = mob_xyz.mean(0) - rest_c
+    along = np.asarray(along, float)
+    along /= (np.linalg.norm(along) + 1e-9)
+
+    full = np.vstack(rest + [mob_xyz]) if rest else mob_xyz
+    frames = []
+    # camera frame fixed for the whole in-slide
+    cam0 = _auto_view(full, view=view)
+
+    def scene(dvec, spin_deg=0.0):
+        pl = pv.Plotter(off_screen=True, window_size=size, lighting="none")
+        pl.set_background(bg)
+        for k, sp in enumerate(scene_specs):
+            _draw_spec(pl, sp, offset=dvec if k == mobile_idx else None)
+        _light_rig(pl)
+        try:
+            pl.enable_ssao(radius=2.0, bias=0.5, kernel_size=64, blur=True)
+        except Exception:
+            pass
+        pl.camera_position = list(cam0)
+        pl.camera.zoom(zoom)
+        if spin_deg:
+            pl.camera.Azimuth(spin_deg)
+        try:
+            pl.enable_anti_aliasing("msaa")
+        except Exception:
+            pass
+        im = np.asarray(pl.screenshot(return_img=True))[..., :3]
+        pl.close()
+        return im
+
+    for i in range(n_in):
+        t = i / (n_in - 1)
+        ease = t * t * (3 - 2 * t)               # smoothstep
+        d = along * approach * (1 - ease)
+        frames.append(scene(d))
+    frames += [frames[-1]] * n_hold
+    for i in range(n_spin):
+        frames.append(scene(np.zeros(3), spin_deg=360.0 * i / n_spin))
+    return _write_mp4(frames, out_mp4, fps)

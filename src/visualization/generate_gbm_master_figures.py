@@ -341,23 +341,30 @@ def make_fig6_shap(base_dir, fig_dir):
     plt.close()
     print(f"Generated Figure 6: {out_p}")
 
-def _mol_ax(ax, specs, title=None, subtitle=None, **rkw):
+try:
+    import _pymol
+except Exception:
+    _pymol = None
+
+
+def _pm_panel(ax, png, title=None, subtitle=None):
+    import matplotlib.image as mpimg
     ax.set_xticks([]); ax.set_yticks([])
     for s in ax.spines.values():
         s.set_visible(False)
-    if _mol3d is None:
-        ax.text(0.5, 0.5, "3D renderer unavailable", ha="center", va="center",
-                transform=ax.transAxes); return
-    ax.imshow(_mol3d.render_array(specs, **rkw))
+    if png and os.path.exists(png):
+        ax.imshow(mpimg.imread(png))
+    else:
+        ax.text(0.5, 0.5, "render unavailable", ha="center", va="center", transform=ax.transAxes)
     if title:
-        ax.set_title(title, fontsize=9.5, fontweight="bold", pad=6)
+        ax.set_title(title, fontsize=9.5, fontweight="bold", pad=5)
     if subtitle:
-        ax.text(0.5, -0.04, subtitle, ha="center", va="top", fontsize=8.0,
+        ax.text(0.5, -0.03, subtitle, ha="center", va="top", fontsize=8.0,
                 color=_pubstyle.MUTED, transform=ax.transAxes)
 
 
 def make_fig9_3d_spatial(base_dir, fig_dir):
-    """Figure 9 - real 3D renders of the MXene adsorption modes (GFN2-xTB geometries)."""
+    """Figure 9 - PyMOL ray-traced renders of the MXene adsorption modes."""
     df = pd.read_csv(os.path.join(base_dir, "data", "processed",
                      "dataset_drug_mxene_pristine.csv")).set_index("name")
     ads = df["delta_Eint_SP_kcal_mol"]
@@ -365,35 +372,35 @@ def make_fig9_3d_spatial(base_dir, fig_dir):
     top_vina = v4z.idxmin()
     strong_ads = ads.idxmin()
     calc = os.path.join(base_dir, "calculations", "gbm")
+    C = os.path.join(fig_dir, "_pm_cache"); os.makedirs(C, exist_ok=True)
+
+    jobs = [
+        (os.path.join(calc, "Ti3C2O2_pristine.xyz"), os.path.join(C, "g9_a.png"),
+         "(a)  Pristine Ti$_3$C$_2$O$_2$ MXene cluster", "GFN2-xTB optimised carrier model"),
+        (os.path.join(calc, top_vina, f"{top_vina}_Ti3C2O2_complex.xyz"), os.path.join(C, "g9_b.png"),
+         f"(b)  {top_vina} on Ti$_3$C$_2$O$_2$",
+         f"top Vina binder (4ZAU {v4z[top_vina]:.2f} kcal/mol) · $\\Delta E_{{int,SP}}$ = {ads[top_vina]:.2f} kcal/mol"),
+        (os.path.join(calc, strong_ads, f"{strong_ads}_Ti3C2O2_complex.xyz"), os.path.join(C, "g9_c.png"),
+         f"(c)  {strong_ads} on Ti$_3$C$_2$O$_2$",
+         f"strongest GFN2-xTB interaction · $\\Delta E_{{int,SP}}$ = {ads[strong_ads]:.2f} kcal/mol"),
+    ]
+    if _pymol and _pymol.AVAILABLE:
+        for i, (src, png, _, _) in enumerate(jobs):
+            try:
+                _pymol.complex_figure(src, png, size=(1400, 1150), carbon="grey55",
+                                      tilt=22, mode=("cpk" if i == 0 else "ball_stick"))
+            except Exception as exc:
+                print(f"[fig9 PyMOL {os.path.basename(src)}] {exc}")
 
     fig, axes = plt.subplots(1, 3, figsize=(11.4, 4.1))
     fig.subplots_adjust(wspace=0.05, top=0.85, bottom=0.15, left=0.02, right=0.98)
-
-    panels = [
-        (axes[0], os.path.join(calc, "Ti3C2O2_pristine.xyz"),
-         "(a)  Pristine Ti$_3$C$_2$O$_2$ MXene cluster", "3q",
-         "GFN2-xTB optimised carrier model"),
-        (axes[1], os.path.join(calc, top_vina, f"{top_vina}_Ti3C2O2_complex.xyz"),
-         f"(b)  {top_vina} on Ti$_3$C$_2$O$_2$", "3q",
-         f"top Vina binder (4ZAU {v4z[top_vina]:.2f} kcal/mol) · $\\Delta E_{{int,SP}}$ = {ads[top_vina]:.2f} kcal/mol"),
-        (axes[2], os.path.join(calc, strong_ads, f"{strong_ads}_Ti3C2O2_complex.xyz"),
-         f"(c)  {strong_ads} on Ti$_3$C$_2$O$_2$", "3q",
-         f"strongest GFN2-xTB interaction · $\\Delta E_{{int,SP}}$ = {ads[strong_ads]:.2f} kcal/mol"),
-    ]
-    for ax, path, title, view, sub in panels:
-        try:
-            s, x = _mol3d.load(path)
-            _mol_ax(ax, [{"sym": s, "xyz": x, "carbon": "#5b6470"}],
-                    title=title, subtitle=sub, view=view, zoom=1.35, size=(1400, 1200))
-        except Exception as exc:
-            ax.text(0.5, 0.5, f"[render failed: {exc}]", transform=ax.transAxes, ha="center")
-            ax.axis("off")
-
+    for ax, (_, png, title, sub) in zip(axes, jobs):
+        _pm_panel(ax, png, title, sub)
     fig.suptitle("Figure 9. Representative drug-carrier adsorption modes on 2D Ti$_3$C$_2$O$_2$ MXene (real GFN2-xTB geometries)",
                  fontsize=10.5, fontweight="bold", y=0.99)
     out_p = os.path.join(fig_dir, "fig9_gbm_3d_spatial_binding_modes.png")
     _pubstyle.save(fig, out_p, also_pdf=False)
-    print(f"Generated Figure 9 (real 3D): {out_p}")
+    print(f"Generated Figure 9 (PyMOL ray-traced): {out_p}")
 
 def make_fig7_correlation(base_dir, fig_dir):
     """Real Pearson inter-descriptor correlation heat-map."""
