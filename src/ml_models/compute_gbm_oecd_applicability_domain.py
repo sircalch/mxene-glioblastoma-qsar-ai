@@ -5,9 +5,17 @@ Calculates Hat Matrix Leverages (h_i) and Standardized Residuals for the 3 Gliob
 """
 
 import os
+import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "visualization"))
+try:
+    import _pubstyle
+    _pubstyle.apply()
+except Exception:
+    pass
 
 def compute_williams_domain():
     # Panels for the pristine and functionalized MXene systems were fit on

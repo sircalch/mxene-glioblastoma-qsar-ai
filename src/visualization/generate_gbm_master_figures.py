@@ -6,6 +6,7 @@ Nanosheets as Targeted Nanovehicles for Glioblastoma Therapeutics.
 """
 
 import os
+import sys
 import json
 import numpy as np
 import pandas as pd
@@ -14,12 +15,14 @@ import matplotlib.patches as patches
 import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import ExtraTreesRegressor
-from xgboost import XGBRegressor
 
-sns.set_theme(style="ticks")
-plt.rcParams['font.family'] = 'DejaVu Sans'
-plt.rcParams['font.size'] = 9.5
-plt.rcParams['axes.linewidth'] = 1.0
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import _pubstyle
+_pubstyle.apply()
+try:
+    import _mol3d
+except Exception:
+    _mol3d = None
 
 def get_dirs():
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -338,42 +341,85 @@ def make_fig6_shap(base_dir, fig_dir):
     plt.close()
     print(f"Generated Figure 6: {out_p}")
 
-def make_fig9_3d_spatial(base_dir, fig_dir):
-    fig, axes = plt.subplots(1, 3, figsize=(18, 5.5), dpi=300)
-    plt.subplots_adjust(top=0.82, wspace=0.25, bottom=0.15)
-    
-    vina = pd.read_csv(os.path.join(base_dir, "data", "processed", "dataset_drug_mxene_pristine.csv")).set_index("name")
-    ads = vina["delta_Eint_SP_kcal_mol"]
-    v4z = vina["vina_4ZAU_kcal_mol"]
-    top = v4z.nsmallest(2).index.tolist()
-    strong_ads = ads.nsmallest(1).index[0]
-    modes = [
-        (f"{top[0]} @ EGFR (PDB 4ZAU)", f"real Vina {v4z[top[0]]:.2f} kcal/mol", "#1565C0",
-         "ATP-binding cleft (docked pose)"),
-        (f"{top[1]} @ EGFR (PDB 4ZAU)", f"real Vina {v4z[top[1]]:.2f} kcal/mol", "#2E7D32",
-         "ATP-binding cleft (docked pose)"),
-        (f"{strong_ads} @ pristine Ti3C2O2 MXene", f"real GFN2-xTB Delta_E_int,SP = {ads[strong_ads]:.2f} kcal/mol", "#C2185B",
-         "flat physisorption on the oxygen termination"),
-    ]
-    
-    for ax_idx, (title, score, col, contacts) in enumerate(modes):
-        ax = axes[ax_idx]
-        ax.axis('off')
-        
-        rect = patches.FancyBboxPatch((0.05, 0.05), 0.90, 0.90, boxstyle="round,pad=0.03", 
-                                      facecolor='#FAFAFA', edgecolor=col, lw=2.5, transform=ax.transAxes)
-        ax.add_patch(rect)
-        
-        ax.text(0.5, 0.85, title, ha='center', va='center', fontsize=12, fontweight='bold', color=col, transform=ax.transAxes)
-        ax.text(0.5, 0.70, f"Affinity / Adsorption: {score}", ha='center', va='center', fontsize=11, fontweight='bold', color='#212121', transform=ax.transAxes)
-        ax.text(0.5, 0.45, f"{contacts}", ha='center', va='center', fontsize=10, color='#424242', transform=ax.transAxes)
-        ax.text(0.5, 0.20, "[Schematic summary card - not a rendered structure.\nValues are real; see Fig. 3 and the SI for the underlying data.]", ha='center', va='center', fontsize=8.5, style='italic', color='#757575', transform=ax.transAxes)
+def _mol_ax(ax, specs, title=None, subtitle=None, **rkw):
+    ax.set_xticks([]); ax.set_yticks([])
+    for s in ax.spines.values():
+        s.set_visible(False)
+    if _mol3d is None:
+        ax.text(0.5, 0.5, "3D renderer unavailable", ha="center", va="center",
+                transform=ax.transAxes); return
+    ax.imshow(_mol3d.render_array(specs, **rkw))
+    if title:
+        ax.set_title(title, fontsize=9.5, fontweight="bold", pad=6)
+    if subtitle:
+        ax.text(0.5, -0.04, subtitle, ha="center", va="top", fontsize=8.0,
+                color=_pubstyle.MUTED, transform=ax.transAxes)
 
-    plt.suptitle("Figure 9: Summary of Representative Binding / Adsorption Modes for Top Glioblastoma Therapeutics (schematic)", fontsize=13, fontweight='bold', y=0.96)
+
+def make_fig9_3d_spatial(base_dir, fig_dir):
+    """Figure 9 - real 3D renders of the MXene adsorption modes (GFN2-xTB geometries)."""
+    df = pd.read_csv(os.path.join(base_dir, "data", "processed",
+                     "dataset_drug_mxene_pristine.csv")).set_index("name")
+    ads = df["delta_Eint_SP_kcal_mol"]
+    v4z = df["vina_4ZAU_kcal_mol"]
+    top_vina = v4z.idxmin()
+    strong_ads = ads.idxmin()
+    calc = os.path.join(base_dir, "calculations", "gbm")
+
+    fig, axes = plt.subplots(1, 3, figsize=(11.4, 4.1))
+    fig.subplots_adjust(wspace=0.05, top=0.85, bottom=0.15, left=0.02, right=0.98)
+
+    panels = [
+        (axes[0], os.path.join(calc, "Ti3C2O2_pristine.xyz"),
+         "(a)  Pristine Ti$_3$C$_2$O$_2$ MXene cluster", "3q",
+         "GFN2-xTB optimised carrier model"),
+        (axes[1], os.path.join(calc, top_vina, f"{top_vina}_Ti3C2O2_complex.xyz"),
+         f"(b)  {top_vina} on Ti$_3$C$_2$O$_2$", "3q",
+         f"top Vina binder (4ZAU {v4z[top_vina]:.2f} kcal/mol) · $\\Delta E_{{int,SP}}$ = {ads[top_vina]:.2f} kcal/mol"),
+        (axes[2], os.path.join(calc, strong_ads, f"{strong_ads}_Ti3C2O2_complex.xyz"),
+         f"(c)  {strong_ads} on Ti$_3$C$_2$O$_2$", "3q",
+         f"strongest GFN2-xTB interaction · $\\Delta E_{{int,SP}}$ = {ads[strong_ads]:.2f} kcal/mol"),
+    ]
+    for ax, path, title, view, sub in panels:
+        try:
+            s, x = _mol3d.load(path)
+            _mol_ax(ax, [{"sym": s, "xyz": x, "carbon": "#5b6470"}],
+                    title=title, subtitle=sub, view=view, zoom=1.35, size=(1400, 1200))
+        except Exception as exc:
+            ax.text(0.5, 0.5, f"[render failed: {exc}]", transform=ax.transAxes, ha="center")
+            ax.axis("off")
+
+    fig.suptitle("Figure 9. Representative drug-carrier adsorption modes on 2D Ti$_3$C$_2$O$_2$ MXene (real GFN2-xTB geometries)",
+                 fontsize=10.5, fontweight="bold", y=0.99)
     out_p = os.path.join(fig_dir, "fig9_gbm_3d_spatial_binding_modes.png")
-    plt.savefig(out_p, bbox_inches='tight')
-    plt.close()
-    print(f"Generated Figure 9: {out_p}")
+    _pubstyle.save(fig, out_p, also_pdf=False)
+    print(f"Generated Figure 9 (real 3D): {out_p}")
+
+def make_fig7_correlation(base_dir, fig_dir):
+    """Real Pearson inter-descriptor correlation heat-map."""
+    csv_p = os.path.join(base_dir, "data", "processed", "gbm_isolated_descriptors.csv")
+    if not os.path.exists(csv_p):
+        return
+    df = pd.read_csv(csv_p)
+    cols = [c for c in ["MW", "LogP", "LogS", "WS_mg_mL", "HBA", "HBD", "PSA",
+                        "RBC", "NOR", "AromRings", "Polarizability_alpha",
+                        "Fraction_Csp3", "E_HOMO", "E_LUMO", "Gap_eV",
+                        "Hardness_eta", "Softness_S", "Electronegativity_chi",
+                        "Chemical_Potential_mu", "Electrophilicity_omega"]
+            if c in df.columns]
+    corr = df[cols].corr()
+    fig, ax = plt.subplots(figsize=(9.6, 8.0))
+    sns.heatmap(corr, annot=True, fmt=".2f", cmap="vlag", center=0, vmin=-1, vmax=1,
+                cbar_kws={"label": "Pearson correlation $r$", "shrink": 0.8},
+                ax=ax, annot_kws={"size": 6.0}, linewidths=0.4, linecolor="white",
+                square=True)
+    ax.set_title(f"Pearson inter-descriptor correlation ({len(cols)} descriptors, "
+                 f"{len(df)} GBM therapeutics)")
+    ax.tick_params(labelsize=6.5)
+    out_p = os.path.join(fig_dir, "fig7_gbm_descriptor_correlation_matrix.png")
+    _pubstyle.save(fig, out_p, also_pdf=False)
+    print(f"Generated Figure 7: {out_p}")
+
 
 def generate_master_suite():
     base_dir, fig_dir = get_dirs()
@@ -384,8 +430,9 @@ def generate_master_suite():
     make_fig4_residues(base_dir, fig_dir)
     make_fig5_parity(base_dir, fig_dir)
     make_fig6_shap(base_dir, fig_dir)
+    make_fig7_correlation(base_dir, fig_dir)
     make_fig9_3d_spatial(base_dir, fig_dir)
-    print("Master 9-Figure Suite for Article 2 generated successfully at 300+ DPI!")
+    print("Master figure suite for Article 2 (GBM) generated successfully.")
 
 if __name__ == "__main__":
     generate_master_suite()

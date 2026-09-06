@@ -5,15 +5,15 @@ at publication-grade 300+ DPI.
 """
 
 import os
+import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-sns.set_theme(style="ticks")
-plt.rcParams['font.family'] = 'DejaVu Sans'
-plt.rcParams['font.size'] = 9.5
-plt.rcParams['axes.linewidth'] = 1.0
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import _pubstyle
+_pubstyle.apply()
 
 def generate_figure1_workflow(base_dir):
     fig, ax = plt.subplots(figsize=(14, 7), dpi=300)
@@ -119,4 +119,10 @@ def generate_all_figures():
     generate_figure7_correlation(base_dir)
 
 if __name__ == "__main__":
-    generate_all_figures()
+    raise SystemExit(
+        "DEPRECATED: this wrapper's local generate_figure1_workflow / "
+        "generate_figure2_quantum_cdft are stale and fabricated (PDB 4UV7, "
+        "DFTB3-D4, Angiopep-2 as done, hardcoded HOMO/LUMO for a fictitious "
+        "Ti3C2(OH)2-Angiopep2 system, invented DeltaE_ads/MAPE ranges). "
+        "Canonical figures: generate_gbm_master_figures.generate_master_suite()."
+    )
