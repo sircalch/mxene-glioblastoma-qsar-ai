@@ -38,21 +38,32 @@ def make_graphical_abstract(base_dir, fig_dir):
     
     # 3 Main Pillars
     panels = [
-        ("A. 2D Titanium Carbide MXene\n(pristine Ti3C2O2 cluster)\n- Real GFN2-xTB adsorption\n- Angiopep-2 / LRP-1 route: future work\n- (no real data for functionalized carrier)", 0.04, 0.12, 0.28, 0.70, "#E3F2FD", "#1565C0"),
-        ("B. Physical Docking (AutoDock Vina)\nHuman EGFR Kinase (PDB 4ZAU, 2.80 Å; 2J6M control)\n- 35 CNS/GBM Therapeutics Screened\n- Real Vina -4.0 to -8.9 kcal/mol (exploratory)\n- Contacts: Asp392, His394, Arg427, Thr391", 0.36, 0.12, 0.28, 0.70, "#E8F5E9", "#2E7D32"),
-        ("C. Explainable AI & OECD QSAR\nLeak-free nested 5x5 Ridge CV\n- Q2_CV = 0.65 (isolated), 0.10 (pristine)\n- Top feature: MolWt / MolMR\n- 100% inside Williams Domain (h*)", 0.68, 0.12, 0.28, 0.70, "#FFF3E0", "#E65100")
+        ("A. 2D Titanium Carbide MXene\n\n"
+         "Pristine Ti3C2O2 cluster\n"
+         "Real GFN2-xTB adsorption\n"
+         "Angiopep-2 / LRP-1 route:\nfuture work\n"
+         "(no real data for the\nfunctionalized carrier)", 0.03, 0.12, 0.29, 0.70, "#E3F2FD", "#1565C0"),
+        ("B. Physical Docking\n(AutoDock Vina v1.2.7)\n\n"
+         "Human EGFR kinase\n(PDB 4ZAU, 2.80 A;\n2J6M control)\n"
+         "35 CNS/GBM therapeutics\n"
+         "Real Vina -4.0 to -8.9\nkcal/mol (exploratory)", 0.355, 0.12, 0.29, 0.70, "#E8F5E9", "#2E7D32"),
+        ("C. Explainable AI & OECD QSAR\n\n"
+         "Leak-free nested 5x5\nRidge CV\n"
+         "Q2_CV = 0.65 (isolated),\n0.10 (pristine MXene)\n"
+         "Top feature: MolWt / MolMR\n"
+         "All compounds inside the\nWilliams domain", 0.68, 0.12, 0.29, 0.70, "#FFF3E0", "#E65100"),
     ]
-    
+
     for text, x, y, w, h, bg_c, border_c in panels:
-        rect = patches.FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02", 
+        rect = patches.FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02",
                                       facecolor=bg_c, edgecolor=border_c, lw=2.0, transform=ax.transAxes)
         ax.add_patch(rect)
-        ax.text(x + w/2, y + h/2, text, ha='center', va='center', fontsize=10.5, fontweight='bold', color='#1A237E', transform=ax.transAxes)
-        
+        ax.text(x + w/2, y + h/2, text, ha='center', va='center', fontsize=8.5, fontweight='bold', color='#1A237E', transform=ax.transAxes)
+
     # Flow Arrows
     arrow_props = dict(facecolor='#0D47A1', edgecolor='#0D47A1', width=3.0, headwidth=10, shrink=0.05)
-    ax.annotate('', xy=(0.35, 0.47), xytext=(0.325, 0.47), xycoords='axes fraction', arrowprops=arrow_props)
-    ax.annotate('', xy=(0.67, 0.47), xytext=(0.645, 0.47), xycoords='axes fraction', arrowprops=arrow_props)
+    ax.annotate('', xy=(0.352, 0.47), xytext=(0.322, 0.47), xycoords='axes fraction', arrowprops=arrow_props)
+    ax.annotate('', xy=(0.678, 0.47), xytext=(0.648, 0.47), xycoords='axes fraction', arrowprops=arrow_props)
     
     out_p = os.path.join(fig_dir, "fig1_graphical_abstract.png")
     plt.savefig(out_p, bbox_inches='tight')
@@ -66,16 +77,16 @@ def make_fig1_workflow(base_dir, fig_dir):
     boxes = [
         ("1. 2D Titanium Carbide MXene\n(pristine Ti3C2O2 cluster)", 0.05, 0.55, 0.25, 0.35, "#E3F2FD", "#1565C0"),
         ("2. Blood-Brain Barrier (BBB)\nLRP-1 transcytosis route\n(proposed; not modelled here)", 0.38, 0.55, 0.25, 0.35, "#E8F5E9", "#2E7D32"),
-        ("3. Glioblastoma Molecular Target\nHuman EGFR Kinase\n(PDB 4ZAU, 2.80 A; 2J6M control)", 0.70, 0.55, 0.25, 0.35, "#FCE4EC", "#AD1457"),
-        ("4. Quantum CDFT Reactivity\nReal GFN2-xTB Interaction Energies (Pristine)\n(Delta_E_int,SP = -0.9 to -15.5 kcal/mol)", 0.05, 0.10, 0.25, 0.35, "#FFF8E1", "#F57F17"),
-        ("5. 100% Real Physical Docking\nAutoDock Vina v1.2.7 (Catalytic Pocket)\n(35 GBM Clinical Drugs Screened)", 0.38, 0.10, 0.25, 0.35, "#EDE7F6", "#4A148C"),
-        ("6. Explainable AI & OECD QSAR\nLeak-free nested Ridge CV\n(Q2_CV up to 0.65, Williams Domain)", 0.70, 0.10, 0.25, 0.35, "#E0F2F1", "#00695C"),
+        ("3. Glioblastoma molecular target\nHuman EGFR kinase\n(PDB 4ZAU, 2.80 A; 2J6M control)", 0.70, 0.55, 0.25, 0.35, "#FCE4EC", "#AD1457"),
+        ("4. Quantum tight-binding (GFN2-xTB)\nReal interaction energies (pristine)\n+ CDFT indices\n(Delta_E_int,SP -0.9 to -15.5 kcal/mol)", 0.04, 0.10, 0.27, 0.35, "#FFF8E1", "#F57F17"),
+        ("5. Real physical docking\nAutoDock Vina v1.2.7\n(catalytic pocket; exploratory)\n(35 GBM clinical drugs)", 0.375, 0.10, 0.25, 0.35, "#EDE7F6", "#4A148C"),
+        ("6. Explainable AI & OECD QSAR\nLeak-free nested Ridge CV\n(Q2_CV up to 0.65; Williams domain)", 0.685, 0.10, 0.27, 0.35, "#E0F2F1", "#00695C"),
     ]
     
     for title, x, y, w, h, bg_c, border_c in boxes:
         rect = patches.Rectangle((x, y), w, h, facecolor=bg_c, edgecolor=border_c, lw=2.0, transform=ax.transAxes, zorder=2)
         ax.add_patch(rect)
-        ax.text(x + w/2, y + h/2, title, ha='center', va='center', fontsize=10.5, fontweight='bold', color='#1A237E', transform=ax.transAxes, zorder=3)
+        ax.text(x + w/2, y + h/2, title, ha='center', va='center', fontsize=9.0, fontweight='bold', color='#1A237E', transform=ax.transAxes, zorder=3)
         
     arrow_props = dict(facecolor='#37474F', edgecolor='#37474F', width=2.5, headwidth=8, shrink=0.05)
     ax.annotate('', xy=(0.37, 0.72), xytext=(0.31, 0.72), xycoords='axes fraction', arrowprops=arrow_props)
@@ -338,9 +349,9 @@ def make_fig9_3d_spatial(base_dir, fig_dir):
     strong_ads = ads.nsmallest(1).index[0]
     modes = [
         (f"{top[0]} @ EGFR (PDB 4ZAU)", f"real Vina {v4z[top[0]]:.2f} kcal/mol", "#1565C0",
-         "ATP-cleft contacts: Asp392, His394, Arg427, Thr391"),
+         "ATP-binding cleft (docked pose)"),
         (f"{top[1]} @ EGFR (PDB 4ZAU)", f"real Vina {v4z[top[1]]:.2f} kcal/mol", "#2E7D32",
-         "ATP-cleft contacts: Asp392, His394, Arg427, Thr391"),
+         "ATP-binding cleft (docked pose)"),
         (f"{strong_ads} @ pristine Ti3C2O2 MXene", f"real GFN2-xTB Delta_E_int,SP = {ads[strong_ads]:.2f} kcal/mol", "#C2185B",
          "flat physisorption on the oxygen termination"),
     ]
@@ -355,10 +366,10 @@ def make_fig9_3d_spatial(base_dir, fig_dir):
         
         ax.text(0.5, 0.85, title, ha='center', va='center', fontsize=12, fontweight='bold', color=col, transform=ax.transAxes)
         ax.text(0.5, 0.70, f"Affinity / Adsorption: {score}", ha='center', va='center', fontsize=11, fontweight='bold', color='#212121', transform=ax.transAxes)
-        ax.text(0.5, 0.45, f"Spatial Interaction Mode:\n{contacts}", ha='center', va='center', fontsize=10, color='#424242', transform=ax.transAxes)
-        ax.text(0.5, 0.20, "[Schematic binding-mode rendering; AutoDock Vina pose on PDB 4ZAU]", ha='center', va='center', fontsize=8.5, style='italic', color='#757575', transform=ax.transAxes)
-        
-    plt.suptitle("Figure 9: Atomistic 3D Spatial Binding Modes & Interfacial Geometries for Top Glioblastoma Therapeutics", fontsize=13, fontweight='bold', y=0.96)
+        ax.text(0.5, 0.45, f"{contacts}", ha='center', va='center', fontsize=10, color='#424242', transform=ax.transAxes)
+        ax.text(0.5, 0.20, "[Schematic summary card - not a rendered structure.\nValues are real; see Fig. 3 and the SI for the underlying data.]", ha='center', va='center', fontsize=8.5, style='italic', color='#757575', transform=ax.transAxes)
+
+    plt.suptitle("Figure 9: Summary of Representative Binding / Adsorption Modes for Top Glioblastoma Therapeutics (schematic)", fontsize=13, fontweight='bold', y=0.96)
     out_p = os.path.join(fig_dir, "fig9_gbm_3d_spatial_binding_modes.png")
     plt.savefig(out_p, bbox_inches='tight')
     plt.close()
