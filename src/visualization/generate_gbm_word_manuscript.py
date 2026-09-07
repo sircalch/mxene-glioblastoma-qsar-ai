@@ -319,7 +319,7 @@ def generate_gbm_word_manuscript():
     add_image_if_exists(doc, os.path.join(fig_dir, "fig9_gbm_3d_spatial_binding_modes.png"),
                         "Figure 9: Representative binding modes (schematic): (a-b) top-ranked inhibitors in the EGFR ATP cleft (PDB 4ZAU); (c) a drug on the pristine Ti3C2O2 MXene surface with its real GFN2-xTB Delta_E_int,SP.")
 
-    add_heading_styled(doc, "3.5 Interfacial charge redistribution", level=2)
+    add_heading_styled(doc, "3.6 Interfacial charge redistribution", level=2)
     doc.add_paragraph(
         "The charge-density difference Delta_rho = rho(complex) - rho(carrier) - rho(drug) was computed from the real GFN2-xTB "
         "densities of the strongest-adsorbing complex (Larotrectinib / Ti3C2O2), all fragments at the bound geometry on a common grid "
@@ -346,15 +346,20 @@ def generate_gbm_word_manuscript():
     )
     
     # 7. Statements & References
-    add_heading_styled(doc, "Acknowledgements & Data Availability", level=1)
+    add_heading_styled(doc, "Data Availability", level=1)
     doc.add_paragraph(
-        "This work was supported by the Universidad Estatal de Sonora and Universidad de Sonora. "
-        "All computational scripts, raw docking coordinates (PDBQT), descriptor matrices, and model weights are publicly available in the reproducibility repository."
+        "All code, the curated dataset, the real GFN2-xTB and AutoDock Vina outputs, the leak-free cross-validation predictions and the figure/manuscript "
+        "generators are in the public repository https://github.com/sircalch/mxene-glioblastoma-qsar-ai. run_entire_gbm_study.py reproduces every value and figure."
     )
-    
+
+    import _backmatter
+    _backmatter.append(doc, add_heading_styled,
+                       "GBM_MXene_Supporting_Information.docx",
+                       "curated dataset (N = 35), formal charges, OECD checklist and per-residue contact frequencies",
+                       already_has_conflict=True)
     add_heading_styled(doc, "Conflict of Interest", level=1)
-    doc.add_paragraph("The authors declare no competing financial or non-financial interests.")
-    
+    doc.add_paragraph("The authors declare no competing financial or non-financial interest.")
+
     add_heading_styled(doc, "References", level=1)
     from build_gbm_verified_references import GBM_VERIFIED_REFERENCES as VERIFIED_REFERENCES
     for idx, ref in enumerate(VERIFIED_REFERENCES, 1):
