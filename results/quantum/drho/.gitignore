@@ -1,0 +1,8 @@
+# regenerable byproducts of build_deltarho.py
+rho_complex.cub
+rho_carrier.cub
+rho_drug.cub
+*_deltarho.cub
+*.molden.input
+*_struct.pdb
+density.cub

@@ -318,7 +318,21 @@ def generate_gbm_word_manuscript():
     # 3D Spatial Figure 9
     add_image_if_exists(doc, os.path.join(fig_dir, "fig9_gbm_3d_spatial_binding_modes.png"),
                         "Figure 9: Representative binding modes (schematic): (a-b) top-ranked inhibitors in the EGFR ATP cleft (PDB 4ZAU); (c) a drug on the pristine Ti3C2O2 MXene surface with its real GFN2-xTB Delta_E_int,SP.")
-    
+
+    add_heading_styled(doc, "3.5 Interfacial charge redistribution", level=2)
+    doc.add_paragraph(
+        "The charge-density difference Delta_rho = rho(complex) - rho(carrier) - rho(drug) was computed from the real GFN2-xTB "
+        "densities of the strongest-adsorbing complex (Larotrectinib / Ti3C2O2), all fragments at the bound geometry on a common grid "
+        "(Figure 10). Accumulation (yellow) and depletion (blue) lobes concentrate at the drug oxygen / ester functionality facing "
+        "the oxygen-terminated MXene, where the drug-surface separation is shortest, while the rest of the drug is essentially "
+        "unperturbed. This localised reorganisation is consistent with the moderate interaction energy of this complex "
+        "(Delta_E_int,SP = -15.5 kcal/mol), the largest in the set. The Delta_rho cube and its build script are in results/quantum/drho/."
+    )
+    add_image_if_exists(doc, os.path.join(fig_dir, "fig10_gbm_charge_density_difference.png"),
+                        "Figure 10: Charge-density difference (real GFN2-xTB densities) for the Larotrectinib / Ti3C2O2 MXene complex. "
+                        "Isovalue +/-0.006 e bohr^-3; yellow = electron accumulation, blue = electron depletion. "
+                        "Delta_E_int,SP = -15.5 kcal/mol.")
+
     # 6. Section 4: Conclusions
     add_heading_styled(doc, "4. Conclusions", level=1)
     doc.add_paragraph(
