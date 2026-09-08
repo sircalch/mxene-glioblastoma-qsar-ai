@@ -52,8 +52,8 @@ def make_graphical_abstract(base_dir, fig_dir):
          "Real Vina -4.0 to -8.9\nkcal/mol (exploratory)", 0.355, 0.12, 0.29, 0.70, "#E8F5E9", "#2E7D32"),
         ("C. Explainable AI & OECD QSAR\n\n"
          "Leak-free nested 5x5\nRidge CV\n"
-         "Q2_CV = 0.65 (isolated),\n0.10 (pristine MXene)\n"
-         "Top feature: MolWt / MolMR\n"
+         "Q2_CV = -0.64 (EGFR docking),\n0.10 (pristine MXene)\n"
+         "not predictive; regime is\ndispersion physisorption\n"
          "All compounds inside the\nWilliams domain", 0.68, 0.12, 0.29, 0.70, "#FFF3E0", "#E65100"),
     ]
 
@@ -83,7 +83,7 @@ def make_fig1_workflow(base_dir, fig_dir):
         ("3. Glioblastoma molecular target\nHuman EGFR kinase\n(PDB 4ZAU, 2.80 A; 2J6M control)", 0.70, 0.55, 0.25, 0.35, "#FCE4EC", "#AD1457"),
         ("4. Quantum tight-binding (GFN2-xTB)\nReal interaction energies (pristine)\n+ CDFT indices\n(Delta_E_int,SP -0.9 to -15.5 kcal/mol)", 0.04, 0.10, 0.27, 0.35, "#FFF8E1", "#F57F17"),
         ("5. Real physical docking\nAutoDock Vina v1.2.7\n(catalytic pocket; exploratory)\n(35 GBM clinical drugs)", 0.375, 0.10, 0.25, 0.35, "#EDE7F6", "#4A148C"),
-        ("6. Explainable AI & OECD QSAR\nLeak-free nested Ridge CV\n(Q2_CV up to 0.65; Williams domain)", 0.685, 0.10, 0.27, 0.35, "#E0F2F1", "#00695C"),
+        ("6. Explainable AI & OECD QSAR\nLeak-free nested Ridge CV\n(Q2_CV -0.64 / 0.10; not predictive)", 0.685, 0.10, 0.27, 0.35, "#E0F2F1", "#00695C"),
     ]
     
     for title, x, y, w, h, bg_c, border_c in boxes:
@@ -247,8 +247,8 @@ def make_fig5_parity(base_dir, fig_dir):
     alpha_grid = np.array([0.001, 0.01, 0.1, 0.3, 1.0, 3.0, 10.0, 30.0, 100.0, 300.0, 1000.0])
 
     systems = [
-        ("Isolated GBM Drugs", os.path.join(base_dir, "data", "processed", "dataset_isolated_gbm_drugs.csv"),
-         ["MW", "LogP", "Polarizability_alpha", "Electrophilicity_omega"], "Real_Vina_Docking_Score_kcal_mol"),
+        ("EGFR docking (Vina, 4ZAU)", os.path.join(base_dir, "data", "processed", "dataset_drug_mxene_pristine.csv"),
+         ["MolWt", "MolMR", "E_HOMO_eV", "Omega_eV"], "vina_4ZAU_kcal_mol"),
         ("Ti3C2O2 Pristine (real xTB)", os.path.join(base_dir, "data", "processed", "dataset_drug_mxene_pristine.csv"),
          ["MolWt", "MolMR", "E_HOMO_eV", "Omega_eV"], "delta_Eint_SP_kcal_mol"),
     ]

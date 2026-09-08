@@ -7,6 +7,16 @@ docking scores and quantum electronic/CDFT descriptors for 3 systems:
 3. Drug + Functionalized Ti3C2(OH)2-Angiopep2 MXene
 """
 
+import sys
+raise SystemExit(
+    "DEPRECATED (2026-09-08): wrote a FABRICATED Delta_E_ads / Target_DeltaG_bind + "
+    "an XGBoost benchmark into dataset_drug_Ti3C2O2_pristine.csv / "
+    "dataset_drug_Ti3C2_functionalized.csv, which nothing reads. The real MXene "
+    "adsorption endpoint is dataset_drug_mxene_pristine.csv (delta_Eint_SP_kcal_mol); "
+    "the leak-free nested CV is in generate_gbm_master_figures.py and "
+    "compute_gbm_oecd_applicability_domain.py."
+)
+
 import os
 import json
 import numpy as np

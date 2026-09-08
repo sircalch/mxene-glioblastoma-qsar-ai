@@ -1,55 +1,50 @@
 """
 run_entire_gbm_study.py
-Master End-to-End Pipeline Runner for 100% Reproducibility of Article 2:
-Glioblastoma Therapeutics & 2D Ti3C2Tx MXene Nanocarriers.
+Master end-to-end pipeline for Article 2 (Glioblastoma / 2D Ti3C2Tx MXene).
+Reproduces every real number and figure in the manuscript from raw inputs.
 """
-
 import os
 import sys
 import time
 
-def run_step(step_num, title, script_rel_path):
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    script_path = os.path.join(base_dir, script_rel_path)
-    print(f"\n=======================================================")
-    print(f"  [Step {step_num}/8] {title}")
-    print(f"=======================================================")
+BASE = os.path.dirname(os.path.abspath(__file__))
+
+
+def run_step(n, total, title, rel_path, args=""):
+    script = os.path.join(BASE, rel_path)
+    print(f"\n{'='*70}\n  [Step {n}/{total}] {title}\n{'='*70}")
     t0 = time.time()
-    ret = os.system(f'python "{script_path}"')
-    t_elapsed = time.time() - t0
+    ret = os.system(f'python "{script}" {args}')
     if ret != 0:
-        print(f"[ERROR] Step {step_num}: {title} (Exit Code: {ret})")
+        print(f"[ERROR] Step {n}: {title} (exit {ret})")
         return False
-    print(f"[OK] Step {step_num} completed in {t_elapsed:.2f} seconds.")
+    print(f"[OK] Step {n} in {time.time()-t0:.1f}s")
     return True
 
+
 def main():
-    print("=" * 65)
-    print("  MXENE-GLIOBLASTOMA-QSAR-AI: MASTER REPRODUCIBILITY PIPELINE")
-    print("  Authors: Andrés Monreal Hernández et al.")
-    print("=" * 65)
-    
+    print("=" * 70)
+    print("  GLIOBLASTOMA / Ti3C2Tx MXene : MASTER REPRODUCIBILITY PIPELINE")
+    print("=" * 70)
     steps = [
-        (1, "GBM Drug Library Curation", "src/descriptors/curate_gbm_dataset.py"),
-        (2, "20-Descriptor RDKit & Quantum Calculation", "src/descriptors/compute_gbm_descriptors.py"),
-        (3, "Parallel Real AutoDock Vina Docking (PDB 4UV7)", "src/docking/run_gbm_real_docking.py"),
-        (4, "Residue-Level Contact Analysis", "src/docking/analyze_gbm_interactions.py"),
-        (5, "Machine Learning Training & SHAP XAI", "src/ml_models/train_gbm_qsar_models.py"),
-        (6, "OECD Applicability Domain (Williams Plot)", "src/ml_models/compute_gbm_oecd_applicability_domain.py"),
-        (7, "Publication-Grade Figures Suite (300+ DPI)", "src/visualization/generate_gbm_master_figures.py"),
-        (8, "Word Manuscript Compilation & Submission Packaging", "src/visualization/generate_gbm_word_manuscript.py")
+        ("Drug-library curation", "src/descriptors/curate_gbm_dataset.py"),
+        ("RDKit + GFN2-xTB descriptors", "src/descriptors/compute_gbm_descriptors.py"),
+        ("Real AutoDock Vina docking (EGFR, PDB 4ZAU)", "src/docking/run_gbm_real_docking.py"),
+        ("Residue-level contact analysis", "src/docking/analyze_gbm_interactions.py"),
+        ("GFN2-xTB adsorption on Ti3C2O2 (relaxed complexes)", "execute_gbm_energetics_rigorous.py"),
+        ("OECD applicability domain (Williams)", "src/ml_models/compute_gbm_oecd_applicability_domain.py"),
+        ("Master figure suite", "src/visualization/generate_gbm_master_figures.py"),
+        ("Word manuscript", "src/visualization/generate_gbm_word_manuscript.py"),
+        ("Supporting information", "src/visualization/generate_supporting_information.py"),
     ]
-    
-    for s_num, title, path in steps:
-        success = run_step(s_num, title, path)
-        if not success:
+    for i, (title, path) in enumerate(steps, 1):
+        if not run_step(i, len(steps), title, path):
             sys.exit(1)
-            
-    print("\n" + "=" * 65)
-    print(">>> FULL REPRODUCIBILITY PIPELINE EXECUTED SUCCESSFULLY! <<<")
-    print("  Manuscript Word File: manuscript/Beilstein_Manuscript_GBM_MXene_Monreal_Hernandez_et_al.docx")
-    print("  Submission ZIP File:  mxene-glioblastoma-qsar-ai-FINAL-SUBMISSION-READY.zip")
-    print("=" * 65)
+    print("\n" + "=" * 70)
+    print(">>> PIPELINE COMPLETE <<<")
+    print("  manuscript/Beilstein_Manuscript_GBM_MXene_Monreal_Hernandez_et_al.docx")
+    print("=" * 70)
+
 
 if __name__ == "__main__":
     main()

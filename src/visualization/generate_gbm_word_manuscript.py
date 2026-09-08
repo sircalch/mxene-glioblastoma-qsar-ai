@@ -138,8 +138,8 @@ def generate_gbm_word_manuscript():
         "oxygen-terminated Ti3C2O2 MXene cluster range from -0.9 to -15.5 kcal/mol. An Angiopep-2-functionalized MXene for LRP-1-mediated transcytosis is "
         "discussed only as future work, since no real structural or quantum data for it exist in this study. Docking against EGFR (exploratory; redocking "
         "heavy-atom RMSD 5.32 Å) gave Vina scores of -3.96 to -8.94 kcal/mol (mean -7.16), with recurrent contacts at Asp392, His394, Arg427 and Thr391. "
-        "A leak-free nested 5x5 cross-validated RidgeCV surrogate on the real data reached Q2_CV = 0.65 (isolated descriptors) and 0.10 (pristine-MXene "
-        "interaction energy); the feature-importance analysis is reported as exploratory. OECD Principle 3 applicability-domain analysis (Williams leverage) "
+        "A leak-free nested 5x5 cross-validated RidgeCV surrogate on four descriptors reached Q2_CV = -0.64 for the EGFR Vina docking score and 0.10 for the pristine-MXene "
+        "interaction energy - neither endpoint is predictive; the feature-importance analysis is reported as exploratory. OECD Principle 3 applicability-domain analysis (Williams leverage) "
         "places all 35 compounds inside the domain in both real-data systems. Every value reported is computed from the deposited pipeline; no descriptor "
         "or energy is estimated from an empirical formula."
     )
@@ -254,7 +254,7 @@ def generate_gbm_word_manuscript():
     add_heading_styled(doc, "2.3 Nano-QSAR surrogate model and feature importance", level=2)
     doc.add_paragraph(
         "A StandardScaler + RidgeCV surrogate evaluated by leak-free nested 5x5 cross-validation on the real observed data (isolated Vina scores; and the real "
-        "GFN2-xTB Delta_E_int,SP on the pristine Ti3C2O2 MXene) reached Q2_CV = 0.65 for the isolated-descriptor model and 0.10 for the pristine-MXene "
+        "GFN2-xTB Delta_E_int,SP on the pristine Ti3C2O2 MXene), both on the single 35-compound master table, reached Q2_CV = -0.64 for the EGFR docking score and 0.10 for the pristine-MXene "
         "interaction-energy model, with RMSE of 0.54 and 3.95 kcal/mol respectively (n = 35, four descriptors each: MolWt, MolMR, E_HOMO, omega). The "
         "pristine-MXene model is therefore only weakly predictive, and the exploratory ExtraTrees feature-importance ranking (Figure 6) - led by molecular "
         "weight and molar refractivity - is reported as a qualitative indication rather than a validated structure-property relationship [39,40]."
