@@ -177,45 +177,19 @@ def generate_gbm_word_manuscript():
                         "Figure 1: Multi-scale computational workflow: GFN2-xTB quantum-chemical adsorption on pristine Ti3C2O2, real AutoDock Vina docking (PDB 4ZAU / 2J6M), and a leak-free cross-validated explainable Nano-QSAR surrogate for 2D Ti3C2Tx MXene glioblastoma delivery.")
     
     # 4. Section 2: Computational and Experimental Methodology
-    add_heading_styled(doc, "2. Computational and Experimental Section", level=1)
-    doc.add_paragraph(
-        "2.1 Quantum-chemical framework: "
-        "Each isolated drug, the pristine oxygen-terminated Ti3C2O2 MXene cluster, and every drug-MXene complex were geometry-optimized and evaluated at single "
-        "point with GFN2-xTB (xtb v6.7.1) including the D4 dispersion correction [26,27]. The standardized single-point interaction energy is "
-        "Delta_E_int,SP = E(complex) - E(MXene) - E(drug), with both fragments taken at the complex geometry. Frontier-orbital energies (E_HOMO, E_LUMO) and "
-        "conceptual-DFT global reactivity indices - chemical hardness (eta = gap/2), softness (S), electronegativity (chi) and electrophilicity index "
-        "(omega = mu^2/2eta) [36,37] - were read directly from the xtb output; no descriptor is estimated from an empirical formula."
-    )
-    doc.add_paragraph(
-        "2.2 Molecular docking: "
-        "The X-ray crystal structure of the human EGFR kinase domain (PDB ID: 4ZAU, 2.80 Å) was used as the primary receptor, with 2J6M as a secondary control. "
-        "Receptor and ligands were protonated at pH 7.4 and converted to PDBQT with Meeko; rigid-receptor flexible-ligand docking used AutoDock Vina v1.2.7 [28,29] "
-        "over a 22 x 22 x 22 Å grid centred on the ATP pocket. Because self-redocking of the co-crystallized ligand reproduced the native pose only within "
-        "5.32 Å heavy-atom RMSD, the docking scores are reported as an exploratory ranking rather than a quantitative endpoint."
-    )
-    doc.add_paragraph(
-        "2.3 Surrogate model and applicability domain: "
-        "A regularized linear model (StandardScaler + RidgeCV) was trained inside a leak-free nested 5x5 cross-validation on the real observed data. Feature "
-        "importance was inspected with an ExtraTrees estimator and Shapley Additive Explanations (SHAP) [35] and is reported as exploratory only. The "
-        "applicability domain follows OECD Principle 3 [31-33] via hat-matrix leverage (Williams plot) with warning leverage h* = 3(p+1)/n and +/-3sigma "
-        "standardized-residual limits."
-    )
+    add_heading_styled(doc, "2. Results and Discussion", level=1)
     
-    # Quantum Figure 2
-    add_image_if_exists(doc, os.path.join(fig_dir, "fig2_gbm_quantum_cdft_architecture.png"),
-                        "Figure 2: Real Quantum CDFT Electronic Reactivity of the Isolated GBM Therapeutics (real GFN2-xTB single points, n=35): (a) Frontier Molecular Orbital (HOMO/LUMO) distribution; (b) Chemical hardness vs. electrophilicity index. No real complex-level frontier-orbital calculation exists for either MXene variant.")
-    
-    # 5. Section 3: Results and Discussion
-    add_heading_styled(doc, "3. Results and Discussion", level=1)
-    
-    add_heading_styled(doc, "3.1 Quantum Adsorption Energetics & MXene Surface Chemistry", level=2)
+    add_heading_styled(doc, "2.1 Quantum Adsorption Energetics & MXene Surface Chemistry", level=2)
     doc.add_paragraph(
         "Real GFN2-xTB single-point interaction energies (Delta_E_int,SP) across all 35 therapeutics on the pristine Ti3C2O2 cluster range from -0.9 kcal/mol "
         "for the most weakly interacting compounds to -15.5 kcal/mol for the most strongly stabilized (larotrectinib -15.5; temozolomide -13.4; lomustine "
         "-12.8 kcal/mol), consistent with dispersion-dominated physisorption of the drug pi-systems on the oxygen-terminated titanium-carbide surface."
     )
 
-    add_heading_styled(doc, "3.2 Molecular docking against the EGFR kinase domain", level=2)
+    add_image_if_exists(doc, os.path.join(fig_dir, "fig2_gbm_quantum_cdft_architecture.png"),
+                        "Figure 2: Real Quantum CDFT Electronic Reactivity of the Isolated GBM Therapeutics (real GFN2-xTB single points, n=35): (a) Frontier Molecular Orbital (HOMO/LUMO) distribution; (b) Chemical hardness vs. electrophilicity index. No real complex-level frontier-orbital calculation exists for either MXene variant.")
+
+    add_heading_styled(doc, "2.2 Molecular docking against the EGFR kinase domain", level=2)
     doc.add_paragraph(
         "AutoDock Vina v1.2.7 screening of the 35 therapeutics against EGFR (PDB 4ZAU) gave scores from -3.96 to -8.94 kcal/mol (mean -7.16 kcal/mol). "
         "The highest-ranked compounds were entrectinib (-8.94), sorafenib (-8.66), trametinib (-8.50), cobimetinib (-8.49) and cabozantinib (-8.29 kcal/mol). "
@@ -277,7 +251,7 @@ def generate_gbm_word_manuscript():
                 for r in row_cells[c_idx].paragraphs[0].runs:
                     r.font.size = Pt(8.5)
                     
-    add_heading_styled(doc, "3.3 Nano-QSAR surrogate model and feature importance", level=2)
+    add_heading_styled(doc, "2.3 Nano-QSAR surrogate model and feature importance", level=2)
     doc.add_paragraph(
         "A StandardScaler + RidgeCV surrogate evaluated by leak-free nested 5x5 cross-validation on the real observed data (isolated Vina scores; and the real "
         "GFN2-xTB Delta_E_int,SP on the pristine Ti3C2O2 MXene) reached Q2_CV = 0.65 for the isolated-descriptor model and 0.10 for the pristine-MXene "
@@ -297,7 +271,7 @@ def generate_gbm_word_manuscript():
     add_image_if_exists(doc, os.path.join(fig_dir, "fig7_gbm_descriptor_correlation_matrix.png"),
                         "Figure 7: Pearson inter-descriptor correlation heatmap (real descriptor matrix, 35 GBM therapeutics).")
     
-    add_heading_styled(doc, "3.4 Applicability domain (OECD Principle 3)", level=2)
+    add_heading_styled(doc, "2.4 Applicability domain (OECD Principle 3)", level=2)
     doc.add_paragraph(
         "The applicability domain was assessed by hat-matrix leverage on the real descriptor matrix (Williams plot) [31-33]. With the full descriptor set the "
         "warning leverage is h* = 1.80 for the isolated-drug system (20 descriptors) and h* = 0.77 for the pristine-MXene system (8 descriptors); all 35 "
@@ -308,18 +282,18 @@ def generate_gbm_word_manuscript():
     add_image_if_exists(doc, os.path.join(fig_dir, "fig8_gbm_williams_applicability_domain.png"),
                         "Figure 8: OECD Principle 3: Williams Plots Defining the Applicability Domain for GBM Therapeutics on Ti3C2Tx MXene Nanosheets (real data only; Isolated and Pristine-MXene systems).")
     
-    add_heading_styled(doc, "3.5 Representative binding modes", level=2)
+    add_heading_styled(doc, "2.5 Representative binding modes", level=2)
     doc.add_paragraph(
         "Inspection of the top-ranked docked poses on EGFR (PDB 4ZAU) shows the inhibitors occupying the ATP cleft with contacts to the residues in Figure 4 "
         "(Asp392, His394, Arg427, Thr391). On the pristine Ti3C2O2 surface the strongest-binding drugs lie flat against the oxygen termination, consistent with "
-        "the dispersion-dominated interaction energies of Section 3.1."
+        "the dispersion-dominated interaction energies of Section 2.1."
     )
 
     # 3D Spatial Figure 9
     add_image_if_exists(doc, os.path.join(fig_dir, "fig9_gbm_3d_spatial_binding_modes.png"),
                         "Figure 9: Representative binding modes (schematic): (a-b) top-ranked inhibitors in the EGFR ATP cleft (PDB 4ZAU); (c) a drug on the pristine Ti3C2O2 MXene surface with its real GFN2-xTB Delta_E_int,SP.")
 
-    add_heading_styled(doc, "3.6 Interfacial charge redistribution", level=2)
+    add_heading_styled(doc, "2.6 Interfacial charge redistribution", level=2)
     doc.add_paragraph(
         "The charge-density difference Delta_rho = rho(complex) - rho(carrier) - rho(drug) was computed from the real GFN2-xTB "
         "densities of the strongest-adsorbing complex (Larotrectinib / Ti3C2O2), all fragments at the bound geometry on a common grid "
@@ -333,8 +307,8 @@ def generate_gbm_word_manuscript():
                         "Isovalue +/-0.006 e bohr^-3; yellow = electron accumulation, blue = electron depletion. "
                         "Delta_E_int,SP = -15.5 kcal/mol.")
 
-    # 6. Section 4: Conclusions
-    add_heading_styled(doc, "4. Conclusions", level=1)
+    # 6. Section 3: Conclusions
+    add_heading_styled(doc, "3. Conclusions", level=1)
     doc.add_paragraph(
         "We report a quantum-informed, explainable Nano-QSAR analysis of 2D Ti3C2Tx MXene as a candidate delivery scaffold for glioblastoma therapeutics. "
         "Combining real GFN2-xTB single-point interaction energies, exploratory AutoDock Vina docking against the EGFR kinase domain (PDB 4ZAU), and a "
@@ -346,6 +320,34 @@ def generate_gbm_word_manuscript():
     )
     
     # 7. Statements & References
+    add_heading_styled(doc, "4. Experimental", level=1)
+    doc.add_paragraph(
+        "4.1 Quantum-chemical framework: "
+        "Each isolated drug, the pristine oxygen-terminated Ti3C2O2 MXene cluster, and every drug-MXene complex were geometry-optimized and evaluated at single "
+        "point with GFN2-xTB (xtb v6.7.1) including the D4 dispersion correction [26,27]. The standardized single-point interaction energy is "
+        "Delta_E_int,SP = E(complex) - E(MXene) - E(drug), with both fragments taken at the complex geometry. Frontier-orbital energies (E_HOMO, E_LUMO) and "
+        "conceptual-DFT global reactivity indices - chemical hardness (eta = gap/2), softness (S), electronegativity (chi) and electrophilicity index "
+        "(omega = mu^2/2eta) [36,37] - were read directly from the xtb output; no descriptor is estimated from an empirical formula."
+    )
+    doc.add_paragraph(
+        "4.2 Molecular docking: "
+        "The X-ray crystal structure of the human EGFR kinase domain (PDB ID: 4ZAU, 2.80 Å) was used as the primary receptor, with 2J6M as a secondary control. "
+        "Receptor and ligands were protonated at pH 7.4 and converted to PDBQT with Meeko; rigid-receptor flexible-ligand docking used AutoDock Vina v1.2.7 [28,29] "
+        "over a 22 x 22 x 22 Å grid centred on the ATP pocket. Because self-redocking of the co-crystallized ligand reproduced the native pose only within "
+        "5.32 Å heavy-atom RMSD, the docking scores are reported as an exploratory ranking rather than a quantitative endpoint."
+    )
+    doc.add_paragraph(
+        "4.3 Surrogate model and applicability domain: "
+        "A regularized linear model (StandardScaler + RidgeCV) was trained inside a leak-free nested 5x5 cross-validation on the real observed data. Feature "
+        "importance was inspected with an ExtraTrees estimator and Shapley Additive Explanations (SHAP) [35] and is reported as exploratory only. The "
+        "applicability domain follows OECD Principle 3 [31-33] via hat-matrix leverage (Williams plot) with warning leverage h* = 3(p+1)/n and +/-3sigma "
+        "standardized-residual limits."
+    )
+    
+    # Quantum Figure 2
+    
+    # 5. Section 3: Results and Discussion
+
     add_heading_styled(doc, "Data Availability", level=1)
     doc.add_paragraph(
         "All code, the curated dataset, the real GFN2-xTB and AutoDock Vina outputs, the leak-free cross-validation predictions and the figure/manuscript "
@@ -353,12 +355,12 @@ def generate_gbm_word_manuscript():
     )
 
     import _backmatter
+    add_heading_styled(doc, "Conflict of Interest", level=1)
+    doc.add_paragraph("The authors declare no competing financial or non-financial interest.")
     _backmatter.append(doc, add_heading_styled,
                        "GBM_MXene_Supporting_Information.docx",
                        "curated dataset (N = 35), formal charges, OECD checklist and per-residue contact frequencies",
                        already_has_conflict=True)
-    add_heading_styled(doc, "Conflict of Interest", level=1)
-    doc.add_paragraph("The authors declare no competing financial or non-financial interest.")
 
     add_heading_styled(doc, "References", level=1)
     from build_gbm_verified_references import GBM_VERIFIED_REFERENCES as VERIFIED_REFERENCES
