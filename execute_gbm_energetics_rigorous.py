@@ -81,6 +81,21 @@ def compute_min_distance(drug_xyz, mxene_xyz):
 df_main = pd.read_csv(proc / "dataset_drug_mxene_pristine.csv")
 candidates = ["Temozolomide", "Osimertinib", "Erlotinib", "Gefitinib", "Lapatinib", "Afatinib", "Cobimetinib", "Paxalisib"]
 
+# Reuse the deposited energetics audit unless a rebuild is explicitly requested
+# (GBM_ADS_REBUILD=1). A from-scratch sweep is ~30-60 min of xtb and every
+# orientation opt is a fresh calculation; the committed audit is canonical.
+import os as _os, sys as _sys
+_audit = proc / "adsorption_energetics_audit.csv"
+if _audit.exists() and not _os.environ.get("GBM_ADS_REBUILD"):
+    try:
+        _have = set(pd.read_csv(_audit)["name"])
+    except Exception:
+        _have = set()
+    if set(candidates).issubset(_have):
+        print(f"[REUSE] {_audit.name} already has all {len(candidates)} candidates; "
+              f"set GBM_ADS_REBUILD=1 to force a full xtb recompute.")
+        _sys.exit(0)
+
 # Load optimized MXene cluster
 m_lines = (calc / "Ti12C7O14_optimized.xyz").read_text().splitlines()
 n_mxene = int(m_lines[0])
@@ -146,12 +161,16 @@ for name in candidates:
             "--cycles", "40",
             "--norestart"
         ]
-        res = subprocess.run(cmd, cwd=str(mol_dir), stdout=open(out_f, "w"), timeout=60)
-        
-        # Check if xtbopt.xyz was created and copy it immediately to dedicated final file!
-        xtbopt = mol_dir / "xtbopt.xyz"
-        if xtbopt.exists():
-            xtbopt.rename(final_xyz)
+        if final_xyz.exists() and not _os.environ.get("GBM_ADS_REBUILD"):
+            pass  # resume: this orientation already relaxed in a previous run
+        else:
+            try:
+                res = subprocess.run(cmd, cwd=str(mol_dir), stdout=open(out_f, "w"), timeout=600)
+            except subprocess.TimeoutExpired:
+                print(f"  [TIMEOUT] {name} {deg}deg -- skipping this orientation", flush=True)
+            xtbopt = mol_dir / "xtbopt.xyz"
+            if xtbopt.exists():
+                xtbopt.rename(final_xyz)
             
         e_val, conv = parse_xtb_output(out_f)
         if e_val and conv and final_xyz.exists():

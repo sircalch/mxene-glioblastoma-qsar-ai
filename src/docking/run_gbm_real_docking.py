@@ -151,11 +151,12 @@ def dock_single_compound(row, vina_exe, receptor_pdbqt, lig_dir, poses_dir, cent
         "--exhaustiveness", "4",
         "--num_modes", "5",
         "--cpu", "2",
+        "--seed", "42",
         "--out", out_pose
     ]
     
     try:
-        res = subprocess.run(cmd, capture_output=True, text=True, timeout=90)
+        res = subprocess.run(cmd, capture_output=True, text=True, timeout=900)
         with open(log_file, 'w', encoding='utf-8') as f_log:
             f_log.write(res.stdout)
             
