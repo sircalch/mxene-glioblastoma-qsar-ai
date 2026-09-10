@@ -1,6 +1,7 @@
 # Explainable AI and Quantum Chemical Exploration of 2D Titanium Carbide MXene (Ti3C2Tx) Nanocarriers for Glioblastoma Therapeutics
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22187857.svg)](https://doi.org/10.5281/zenodo.22187857)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/sircalch/mxene-glioblastoma-qsar-ai/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-teal.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![AutoDock Vina](https://img.shields.io/badge/Docking-AutoDock%20Vina-orange.svg)](https://github.com/ccsb-scripps/AutoDock-Vina)
@@ -64,6 +65,23 @@ python run_entire_gbm_study.py
 
 ---
 
+## 🗓️ v2.0.0 (2026-09-10)
+
+- **Docking source unified**: `run_gbm_real_docking.py` now docks the human
+  EGFR kinase domain **PDB 4ZAU** (the primary receptor cited throughout the
+  manuscript; previously the script targeted 4UV7) with a fixed seed, and writes
+  `vina_4ZAU_kcal_mol` straight into `dataset_drug_mxene_pristine.csv`.
+  `analyze_gbm_interactions.py` reads 4ZAU to match the poses.
+- Seeded run: n = 33 dockable compounds, -3.8 to -9.2 kcal/mol, mean -7.1;
+  descriptor QSPR Q2_CV = 0.31 (EGFR docking, at best weakly predictive) / 0.10
+  (MXene interaction energy).
+- **Quantum step hardened**: `execute_gbm_energetics_rigorous.py` now catches
+  xtb timeouts, resumes per orientation, and honours a `GBM_ADS_REBUILD` guard.
+- `run_entire_gbm_study.py` verified end-to-end (9/9 steps); manuscript docking
+  statistics computed from the CSV.
+
+---
+
 ## 📜 Citation
 
 ```bibtex
@@ -72,6 +90,7 @@ python run_entire_gbm_study.py
   author={Monreal Hern{\'a}ndez, Andr{\'e}s and Franco Amaya, Sara Lizbeth and Mart{\'i}nez Osorio, Carlos Ivanhoe},
   journal={Beilstein Journal of Nanotechnology / Submitted},
   year={2026},
+  version={2.0.0},
   doi={10.5281/zenodo.22187857},
   url={https://github.com/sircalch/mxene-glioblastoma-qsar-ai}
 }
