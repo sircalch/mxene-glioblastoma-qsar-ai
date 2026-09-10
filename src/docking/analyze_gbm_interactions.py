@@ -1,7 +1,7 @@
 """
 analyze_gbm_interactions.py
 Analyzes residue-level physical atomic contacts (<3.8 A) between the 36 real docked 
-GBM therapeutics and the human EGFR kinase domain (PDB 4UV7).
+GBM therapeutics and the human EGFR kinase domain (PDB 4ZAU).
 """
 
 import os
@@ -49,7 +49,7 @@ def parse_pdbqt_top_pose(pdbqt_file):
 
 def analyze_contacts():
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    pdb_path = os.path.join(base_dir, "data", "raw", "4UV7.pdb")
+    pdb_path = os.path.join(base_dir, "data", "raw", "4ZAU.pdb")
     poses_dir = os.path.join(base_dir, "results", "docking", "real_poses")
     
     protein_atoms = parse_pdb_residues(pdb_path)

@@ -74,6 +74,37 @@ def add_image_if_exists(doc, img_path, caption_text, width=Inches(6.2)):
 def generate_gbm_word_manuscript():
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     fig_dir = os.path.join(base_dir, "figures")
+
+    # Docking / QSPR statistics computed from the single reproducible run
+    # (run_gbm_real_docking.py docks EGFR 4ZAU and writes vina_4ZAU_kcal_mol).
+    import numpy as _np
+    _mt = pd.read_csv(os.path.join(base_dir, "data", "processed", "dataset_drug_mxene_pristine.csv"))
+    _vv = _mt.dropna(subset=["vina_4ZAU_kcal_mol"])
+    VINA_MIN, VINA_MAX = _vv["vina_4ZAU_kcal_mol"].min(), _vv["vina_4ZAU_kcal_mol"].max()
+    VINA_MEAN, VINA_N = _vv["vina_4ZAU_kcal_mol"].mean(), len(_vv)
+    VINA_RANGE = f"{VINA_MAX:.2f} to {VINA_MIN:.2f}"
+    _top = _vv.nsmallest(5, "vina_4ZAU_kcal_mol")
+    VINA_TOP5 = ", ".join(f"{r['name']} ({r['vina_4ZAU_kcal_mol']:.2f})" for _, r in _top.iterrows())
+
+    def _q2cv(_target, _mask):
+        from sklearn.pipeline import Pipeline as _P
+        from sklearn.preprocessing import StandardScaler as _S
+        from sklearn.linear_model import RidgeCV as _R
+        from sklearn.model_selection import KFold as _K, cross_val_predict as _cvp
+        from sklearn.metrics import r2_score as _r2
+        _d = _mt.dropna(subset=["MolWt", "MolMR", "E_HOMO_eV", "Omega_eV", _target])
+        if _mask:
+            _d = _d[_d[_target] < 0]
+        _ag = _np.array([.001, .01, .1, .3, 1, 3, 10, 30, 100, 300, 1000])
+        _X, _y = _d[["MolWt", "MolMR", "E_HOMO_eV", "Omega_eV"]].values, _d[_target].values
+        _pipe = _P([("s", _S()), ("r", _R(alphas=_ag, cv=_K(5, shuffle=True, random_state=42)))])
+        return _r2(_y, _cvp(_pipe, _X, _y, cv=_K(5, shuffle=True, random_state=42)))
+    try:
+        Q2_VINA = _q2cv("vina_4ZAU_kcal_mol", False)
+        Q2_VINA_S = f"{Q2_VINA:.2f}".replace("-0.00", "0.00")
+    except Exception:
+        Q2_VINA_S = "n/a"
+
     doc = Document()
     
     for s in doc.sections:
@@ -137,9 +168,9 @@ def generate_gbm_word_manuscript():
         "surrogate, for a curated set of 35 clinical CNS and GBM therapeutics. Real GFN2-xTB single-point interaction energies of all 35 drugs on the pristine "
         "oxygen-terminated Ti3C2O2 MXene cluster range from -0.9 to -15.5 kcal/mol. An Angiopep-2-functionalized MXene for LRP-1-mediated transcytosis is "
         "discussed only as future work, since no real structural or quantum data for it exist in this study. Docking against EGFR (exploratory; redocking "
-        "heavy-atom RMSD 5.32 Å) gave Vina scores of -3.96 to -8.94 kcal/mol (mean -7.16), with recurrent contacts at Asp392, His394, Arg427 and Thr391. "
-        "A leak-free nested 5x5 cross-validated RidgeCV surrogate on four descriptors reached Q2_CV = -0.64 for the EGFR Vina docking score and 0.10 for the pristine-MXene "
-        "interaction energy - neither endpoint is predictive; the feature-importance analysis is reported as exploratory. OECD Principle 3 applicability-domain analysis (Williams leverage) "
+        f"heavy-atom RMSD 5.32 Å) gave Vina scores of {VINA_RANGE} kcal/mol (mean {VINA_MEAN:.2f}), with recurrent contacts at Asp392, His394, Arg427 and Thr391. "
+        f"A leak-free nested 5x5 cross-validated RidgeCV surrogate on four descriptors reached Q2_CV = {Q2_VINA_S} for the EGFR Vina docking score and 0.10 for the pristine-MXene "
+        f"interaction energy - the EGFR docking model is at best weakly predictive and the pristine-MXene model is not; the feature-importance analysis is reported as exploratory. OECD Principle 3 applicability-domain analysis (Williams leverage) "
         "places all 35 compounds inside the domain in both real-data systems. Every value reported is computed from the deposited pipeline; no descriptor "
         "or energy is estimated from an empirical formula."
     )
@@ -191,8 +222,8 @@ def generate_gbm_word_manuscript():
 
     add_heading_styled(doc, "2.2 Molecular docking against the EGFR kinase domain", level=2)
     doc.add_paragraph(
-        "AutoDock Vina v1.2.7 screening of the 35 therapeutics against EGFR (PDB 4ZAU) gave scores from -3.96 to -8.94 kcal/mol (mean -7.16 kcal/mol). "
-        "The highest-ranked compounds were entrectinib (-8.94), sorafenib (-8.66), trametinib (-8.50), cobimetinib (-8.49) and cabozantinib (-8.29 kcal/mol). "
+        f"AutoDock Vina v1.2.7 screening of the {VINA_N} therapeutics against EGFR (PDB 4ZAU) gave scores from {VINA_RANGE} kcal/mol (mean {VINA_MEAN:.2f} kcal/mol). "
+        f"The highest-ranked compounds were {VINA_TOP5} kcal/mol. "
         "Because self-redocking reproduced the native pose only within 5.32 Å RMSD, this ranking is treated as exploratory and is not used as a QSAR endpoint."
     )
 
@@ -254,9 +285,9 @@ def generate_gbm_word_manuscript():
     add_heading_styled(doc, "2.3 Nano-QSAR surrogate model and feature importance", level=2)
     doc.add_paragraph(
         "A StandardScaler + RidgeCV surrogate evaluated by leak-free nested 5x5 cross-validation on the real observed data (isolated Vina scores; and the real "
-        "GFN2-xTB Delta_E_int,SP on the pristine Ti3C2O2 MXene), both on the single 35-compound master table, reached Q2_CV = -0.64 for the EGFR docking score and 0.10 for the pristine-MXene "
-        "interaction-energy model, with RMSE of 0.54 and 3.95 kcal/mol respectively (n = 35, four descriptors each: MolWt, MolMR, E_HOMO, omega). The "
-        "pristine-MXene model is therefore only weakly predictive, and the exploratory ExtraTrees feature-importance ranking (Figure 6) - led by molecular "
+        f"GFN2-xTB Delta_E_int,SP on the pristine Ti3C2O2 MXene), both on the single {VINA_N}-compound master table, reached Q2_CV = {Q2_VINA_S} for the EGFR docking score and 0.10 for the pristine-MXene "
+        f"interaction-energy model (n = {VINA_N}, four descriptors each: MolWt, MolMR, E_HOMO, omega). The EGFR docking model is at best weakly "
+        "predictive and the pristine-MXene model is not, so the exploratory ExtraTrees feature-importance ranking (Figure 6) - led by molecular "
         "weight and molar refractivity - is reported as a qualitative indication rather than a validated structure-property relationship [39,40]."
     )
 

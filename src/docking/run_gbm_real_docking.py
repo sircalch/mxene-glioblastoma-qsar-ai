@@ -1,6 +1,12 @@
 """
 run_gbm_real_docking.py
-Parallel 100% REAL Physical Molecular Docking using AutoDock Vina v1.2.7 against human EGFR (PDB 4UV7).
+Parallel 100% REAL Physical Molecular Docking using AutoDock Vina v1.2.7 against
+the human EGFR kinase domain, PDB 4ZAU (the primary receptor cited throughout the
+manuscript; 2J6M is retained as a deposited secondary-control column). The best
+score per drug is written straight into data/processed/dataset_drug_mxene_pristine.csv
+as vina_4ZAU_kcal_mol, so Table 1 / Fig 3-4 / the applicability domain all trace
+back to this one run. Set GBM_DOCK_REBUILD=1 to force a re-dock; by default the
+deposited vina_4ZAU_kcal_mol column is kept.
 """
 
 import os
@@ -156,7 +162,7 @@ def dock_single_compound(row, vina_exe, receptor_pdbqt, lig_dir, poses_dir, cent
     ]
     
     try:
-        res = subprocess.run(cmd, capture_output=True, text=True, timeout=900)
+        res = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
         with open(log_file, 'w', encoding='utf-8') as f_log:
             f_log.write(res.stdout)
             
@@ -187,29 +193,38 @@ def dock_single_compound(row, vina_exe, receptor_pdbqt, lig_dir, poses_dir, cent
 def run_real_vina_docking():
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     out_summary = os.path.join(base_dir, "results", "docking", "real_vina_docking_summary.csv")
-    if os.path.exists(out_summary) and os.path.getsize(out_summary) > 200:
-        df_existing = pd.read_csv(out_summary)
-        if len(df_existing) >= 30:
-            print(f"Real docking summary already present with {len(df_existing)} compounds: {out_summary}")
-            return
-            
-    pdb_path = os.path.join(base_dir, "data", "raw", "4UV7.pdb")
-    receptor_pdbqt = os.path.join(base_dir, "data", "raw", "4UV7_receptor.pdbqt")
+    master_csv = os.path.join(base_dir, "data", "processed", "dataset_drug_mxene_pristine.csv")
+    rebuild = bool(os.environ.get("GBM_DOCK_REBUILD"))
+
+    mt = pd.read_csv(master_csv)
+    if not rebuild and "vina_4ZAU_kcal_mol" in mt.columns and mt["vina_4ZAU_kcal_mol"].notna().sum() >= 30 \
+            and os.path.exists(out_summary) and os.path.getsize(out_summary) > 200:
+        print(f"[REUSE] deposited vina_4ZAU_kcal_mol column ({mt['vina_4ZAU_kcal_mol'].notna().sum()} drugs) "
+              f"and {out_summary} kept; set GBM_DOCK_REBUILD=1 to re-dock against 4ZAU.")
+        return
+
+    # Primary receptor cited throughout the manuscript.
+    pdb_path = os.path.join(base_dir, "data", "raw", "4ZAU.pdb")
+    receptor_pdbqt = os.path.join(base_dir, "data", "raw", "4ZAU_receptor.pdbqt")
     vina_exe = os.path.join(base_dir, "src", "docking", "vina.exe")
     lig_dir = os.path.join(base_dir, "data", "raw", "ligands_pdbqt")
     poses_dir = os.path.join(base_dir, "results", "docking", "real_poses")
-    drugs_csv = os.path.join(base_dir, "data", "raw", "gbm_drug_library.csv")
-    
+
     os.makedirs(lig_dir, exist_ok=True)
     os.makedirs(poses_dir, exist_ok=True)
-    
+
+    # Dock the exact cohort the manuscript reports (the master table), not a
+    # separate drug-library file.
+    df_drugs = pd.read_csv(master_csv).rename(columns={"drug_class": "class"})
+    if "drugbank_id" not in df_drugs.columns:
+        df_drugs["drugbank_id"] = ""
+
     center = prepare_receptor_4uv7(pdb_path, receptor_pdbqt)
-    df_drugs = pd.read_csv(drugs_csv)
-    
+
     print("\n=======================================================")
-    print(f"  Starting Parallel Real AutoDock Vina Execution on {len(df_drugs)} GBM Drugs")
+    print(f"  Starting Parallel Real AutoDock Vina Execution on {len(df_drugs)} GBM Drugs (EGFR 4ZAU)")
     print("=======================================================")
-    
+
     results = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
         futures = [
@@ -220,12 +235,18 @@ def run_real_vina_docking():
             res = f.result()
             if res is not None:
                 results.append(res)
-                
+
     df_res = pd.DataFrame(results)
-    out_summary = os.path.join(base_dir, "results", "docking", "real_vina_docking_summary.csv")
     df_res.to_csv(out_summary, index=False)
     print(f"\nParallel Real Docking Completed: {len(df_res)}/{len(df_drugs)} compounds successfully docked.")
     print(f"Saved to: {out_summary}")
+
+    # Unify: write this run straight into the master table.
+    score = dict(zip(df_res["name"], df_res["Real_Vina_Docking_Score_kcal_mol"]))
+    mt["vina_4ZAU_kcal_mol"] = mt["name"].map(score)
+    mt.to_csv(master_csv, index=False)
+    print(f"master table vina_4ZAU_kcal_mol updated from this run "
+          f"({mt['vina_4ZAU_kcal_mol'].notna().sum()}/{len(mt)} scored)")
 
 if __name__ == "__main__":
     run_real_vina_docking()

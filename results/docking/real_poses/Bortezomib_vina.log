@@ -18,9 +18,9 @@ AutoDock Vina v1.2.7
 #################################################################
 
 Scoring function : vina
-Rigid receptor: c:\Users\Andre\Proyectos doctorado\mxene-glioblastoma-qsar-ai\data\raw\4UV7_receptor.pdbqt
-Ligand: c:\Users\Andre\Proyectos doctorado\mxene-glioblastoma-qsar-ai\data\raw\ligands_pdbqt\Bortezomib.pdbqt
-Grid center: X -14.6552 Y -1.20719 Z 33.3266
+Rigid receptor: C:\Users\Andre\Proyectos doctorado\nano-qsar-ai-papers\mxene-glioblastoma-qsar-ai\data\raw\4ZAU_receptor.pdbqt
+Ligand: C:\Users\Andre\Proyectos doctorado\nano-qsar-ai-papers\mxene-glioblastoma-qsar-ai\data\raw\ligands_pdbqt\Bortezomib.pdbqt
+Grid center: X -0.211486 Y -50.2873 Z 17.9765
 Grid size  : X 22 Y 22 Z 22
 Grid space : 0.375
 Exhaustiveness: 4
