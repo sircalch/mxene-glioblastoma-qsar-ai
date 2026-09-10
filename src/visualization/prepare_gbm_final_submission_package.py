@@ -31,7 +31,7 @@ def create_gbm_cover_letter(sub_dir):
         "Universidad Estatal de Sonora\n"
         "Hermosillo, Sonora, Mexico\n"
         "Email: andres.monreal@ues.mx | ORCID: 0009-0009-1207-8597\n"
-        "Date: August 30, 2026\n"
+        "Date: September 9, 2026\n"
     ).font.bold = True
     
     p_ed = doc.add_paragraph()
@@ -65,11 +65,15 @@ def create_gbm_cover_letter(sub_dir):
     
     doc.add_paragraph(
         "The study integrates GFN2-xTB quantum-chemical single-point interaction energies of 35 glioblastoma "
-        "therapeutics on a pristine oxygen-terminated Ti3C2O2 MXene cluster, physical AutoDock Vina docking "
-        "against the human EGFR kinase domain (PDB ID: 4ZAU, with 2J6M as a secondary control), and an "
-        "explainable leak-free cross-validated surrogate model. The Ti3C2-Angiopep-2 functionalized system is "
-        "discussed as future work because no real structural or quantum data for it exist; every figure and "
-        "table reports values computed from the deposited pipeline, with no empirical-formula estimates."
+        "therapeutics on a pristine oxygen-terminated Ti3C2O2 MXene cluster (Delta_E_int,SP = -0.9 to -15.5 "
+        "kcal/mol), a single reproducible AutoDock Vina docking run of the 33 dockable compounds against the "
+        "human EGFR kinase domain (PDB ID: 4ZAU, with 2J6M as a secondary control; scores -3.8 to -9.2 kcal/mol, "
+        "mean -7.1), and an explainable leak-free nested cross-validated surrogate model. Descriptor-based "
+        "prediction is at best weakly predictive (Q2_CV = 0.31 for the EGFR docking score, 0.10 for the "
+        "MXene interaction energy), so the feature-importance analysis is presented as exploratory. The "
+        "Ti3C2-Angiopep-2 functionalized system is discussed as future work because no real structural or "
+        "quantum data for it exist; every figure and table reports values computed from the deposited pipeline, "
+        "with no empirical-formula estimates."
     )
     
     doc.add_paragraph(
@@ -110,9 +114,10 @@ def create_gbm_cover_letter_md(sub_dir):
     for h in [
         "GFN2-xTB single-point interaction energies for all 35 therapeutics on a pristine Ti3C2O2 MXene cluster, "
         "Delta_E_int,SP = -0.9 to -15.5 kcal/mol; frontier-orbital and conceptual-DFT indices taken from the xtb output.",
-        "Physical AutoDock Vina v1.2.7 docking against the EGFR kinase domain (PDB 4ZAU; 2J6M as control).",
-        "Leak-free nested 5x5 cross-validated surrogate model on the real Delta_E_int,SP; performance is modest and "
-        "the feature-importance analysis is presented as exploratory.",
+        "A single reproducible AutoDock Vina v1.2.7 run of the 33 dockable compounds against the EGFR kinase "
+        "domain (PDB 4ZAU; 2J6M as control): -3.8 to -9.2 kcal/mol, mean -7.1.",
+        "Leak-free nested 5x5 cross-validated RidgeCV surrogate: Q2_CV = 0.31 (EGFR docking, at best weakly "
+        "predictive) and 0.10 (MXene interaction energy); the feature-importance analysis is presented as exploratory.",
         "OECD Principle 3 applicability domain by Williams leverage on the real descriptor matrix.",
         "The Ti3C2-Angiopep-2 functionalized carrier is proposed as future work; it has no real data in this study.",
         "Full open-source pipeline and data archive (Zenodo 10.5281/zenodo.22187857).",
