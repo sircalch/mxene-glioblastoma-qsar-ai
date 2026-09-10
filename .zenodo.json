@@ -1,0 +1,39 @@
+{
+  "title": "Explainable AI and Quantum Chemical Exploration of 2D Titanium Carbide MXene (Ti3C2Tx) Nanocarriers for Glioblastoma Therapeutics",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "publication_date": "2026-09-10",
+  "version": "2.0.0",
+  "description": "<p>Fully reproducible computational pipeline and data archive for the study of pristine oxygen-terminated Ti3C2O2 MXene as a delivery scaffold for glioblastoma therapeutics. Includes: GFN2-xTB single-point interaction energies for 35 drugs on the pristine MXene cluster, a rigorous relaxed-complex energetics subset, a single seeded AutoDock Vina v1.2.7 docking run of the 33 dockable compounds against the human EGFR kinase domain (PDB 4ZAU, 2J6M as secondary control) written directly into the master table, a leak-free nested 5x5 cross-validated RidgeCV surrogate with OECD Principle 3 applicability domain, and an end-to-end master script (run_entire_gbm_study.py). Every value in the manuscript is computed from this pipeline; no descriptor or energy is estimated from an empirical formula. v2.0.0 repoints docking from 4UV7 to the manuscript's 4ZAU receptor, seeds all stochastic steps, and hardens the quantum-chemistry step against timeouts.</p>",
+  "keywords": [
+    "nano-QSAR", "QSPR", "MXene", "Ti3C2Tx", "titanium carbide", "glioblastoma",
+    "blood-brain barrier", "EGFR kinase", "GFN2-xTB", "AutoDock Vina",
+    "molecular docking", "explainable AI", "SHAP", "OECD validation",
+    "2D nanomaterials", "drug delivery", "reproducible research"
+  ],
+  "creators": [
+    {
+      "name": "Monreal Hernández, Andrés",
+      "orcid": "0009-0009-1207-8597",
+      "affiliation": "Universidad Estatal de Sonora, Hermosillo, Sonora, Mexico"
+    },
+    {
+      "name": "Franco Amaya, Sara Lizbeth",
+      "orcid": "0009-0005-0272-0241",
+      "affiliation": "Doctorado en Nanotecnología, Universidad de Sonora, Hermosillo, Sonora, Mexico"
+    },
+    {
+      "name": "Martínez Osorio, Carlos Ivanhoe",
+      "orcid": "0009-0003-7872-4965",
+      "affiliation": "Doctorado en Ciencia de Materiales, Universidad de Sonora, Hermosillo, Sonora, Mexico"
+    }
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/sircalch/mxene-glioblastoma-qsar-ai",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
