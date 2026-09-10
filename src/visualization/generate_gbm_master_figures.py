@@ -31,47 +31,10 @@ def get_dirs():
     return base_dir, fig_dir
 
 def make_graphical_abstract(base_dir, fig_dir):
-    fig, ax = plt.subplots(figsize=(12, 6.5), dpi=300)
-    ax.axis('off')
-    
-    # Header Banner
-    ax.fill_between([0, 1], [0.88, 0.88], [1.0, 1.0], color='#0D47A1', transform=ax.transAxes)
-    ax.text(0.5, 0.94, "GRAPHICAL ABSTRACT: 2D MXENE NANOVEHICLES IN GLIOBLASTOMA", 
-            ha='center', va='center', fontsize=13, fontweight='bold', color='white', transform=ax.transAxes)
-    
-    # 3 Main Pillars
-    panels = [
-        ("A. 2D Titanium Carbide MXene\n\n"
-         "Pristine Ti3C2O2 cluster\n"
-         "Real GFN2-xTB adsorption\n"
-         "Angiopep-2 / LRP-1 route:\nfuture work\n"
-         "(no real data for the\nfunctionalized carrier)", 0.03, 0.12, 0.29, 0.70, "#E3F2FD", "#1565C0"),
-        ("B. Physical Docking\n(AutoDock Vina v1.2.7)\n\n"
-         "Human EGFR kinase\n(PDB 4ZAU, 2.80 A;\n2J6M control)\n"
-         "35 CNS/GBM therapeutics\n"
-         "Real Vina -4.0 to -8.9\nkcal/mol (exploratory)", 0.355, 0.12, 0.29, 0.70, "#E8F5E9", "#2E7D32"),
-        ("C. Explainable AI & OECD QSAR\n\n"
-         "Leak-free nested 5x5\nRidge CV\n"
-         "Q2_CV = -0.64 (EGFR docking),\n0.10 (pristine MXene)\n"
-         "not predictive; regime is\ndispersion physisorption\n"
-         "All compounds inside the\nWilliams domain", 0.68, 0.12, 0.29, 0.70, "#FFF3E0", "#E65100"),
-    ]
+    """Composed graphical abstract -> figures/fig1_graphical_abstract.png."""
+    import graphical_abstract
+    graphical_abstract.build()
 
-    for text, x, y, w, h, bg_c, border_c in panels:
-        rect = patches.FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02",
-                                      facecolor=bg_c, edgecolor=border_c, lw=2.0, transform=ax.transAxes)
-        ax.add_patch(rect)
-        ax.text(x + w/2, y + h/2, text, ha='center', va='center', fontsize=8.5, fontweight='bold', color='#1A237E', transform=ax.transAxes)
-
-    # Flow Arrows
-    arrow_props = dict(facecolor='#0D47A1', edgecolor='#0D47A1', width=3.0, headwidth=10, shrink=0.05)
-    ax.annotate('', xy=(0.352, 0.47), xytext=(0.322, 0.47), xycoords='axes fraction', arrowprops=arrow_props)
-    ax.annotate('', xy=(0.678, 0.47), xytext=(0.648, 0.47), xycoords='axes fraction', arrowprops=arrow_props)
-    
-    out_p = os.path.join(fig_dir, "fig1_graphical_abstract.png")
-    plt.savefig(out_p, bbox_inches='tight')
-    plt.close()
-    print(f"Generated Graphical Abstract: {out_p}")
 
 def make_fig1_workflow(base_dir, fig_dir):
     fig, ax = plt.subplots(figsize=(14, 7), dpi=300)
