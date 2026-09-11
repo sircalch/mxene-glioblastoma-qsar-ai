@@ -382,7 +382,8 @@ def generate_gbm_word_manuscript():
     add_heading_styled(doc, "Data Availability", level=1)
     doc.add_paragraph(
         "All code, the curated dataset, the real GFN2-xTB and AutoDock Vina outputs, the leak-free cross-validation predictions and the figure/manuscript "
-        "generators are in the public repository https://github.com/sircalch/mxene-glioblastoma-qsar-ai. run_entire_gbm_study.py reproduces every value and figure."
+        "generators are in the public repository https://github.com/sircalch/mxene-glioblastoma-qsar-ai and the Zenodo deposit 10.5281/zenodo.22187857. "
+        "run_entire_gbm_study.py reproduces every value and figure."
     )
 
     import _backmatter
