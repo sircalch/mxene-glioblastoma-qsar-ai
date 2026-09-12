@@ -5,6 +5,7 @@
   "license": "MIT",
   "publication_date": "2026-09-10",
   "version": "2.0.0",
+  "doi": "10.5281/zenodo.22187857",
   "description": "<p>Fully reproducible computational pipeline and data archive for the study of pristine oxygen-terminated Ti3C2O2 MXene as a delivery scaffold for glioblastoma therapeutics. Includes: GFN2-xTB single-point interaction energies for 35 drugs on the pristine MXene cluster, a rigorous relaxed-complex energetics subset, a single seeded AutoDock Vina v1.2.7 docking run of the 33 dockable compounds against the human EGFR kinase domain (PDB 4ZAU, 2J6M as secondary control) written directly into the master table, a leak-free nested 5x5 cross-validated RidgeCV surrogate with OECD Principle 3 applicability domain, and an end-to-end master script (run_entire_gbm_study.py). Every value in the manuscript is computed from this pipeline; no descriptor or energy is estimated from an empirical formula. v2.0.0 repoints docking from 4UV7 to the manuscript's 4ZAU receptor, seeds all stochastic steps, and hardens the quantum-chemistry step against timeouts.</p>",
   "keywords": [
     "nano-QSAR", "QSPR", "MXene", "Ti3C2Tx", "titanium carbide", "glioblastoma",
@@ -34,6 +35,11 @@
       "identifier": "https://github.com/sircalch/mxene-glioblastoma-qsar-ai",
       "relation": "isSupplementTo",
       "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.22187857",
+      "relation": "isIdenticalTo",
+      "scheme": "doi"
     }
   ]
 }
