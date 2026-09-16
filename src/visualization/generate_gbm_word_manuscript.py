@@ -235,15 +235,29 @@ def generate_gbm_word_manuscript():
                         "Figure 4: Residue-level contact frequencies on the EGFR kinase domain (real Vina poses, contact distance <= 3.8 Å): most frequent contacts are Thr790, Met793, Leu844, Ala743 and Val726.")
     
     # Embed Table 1: Descriptors Summary
-    # MW/LogP/PSA are real RDKit descriptors (always computed from SMILES).
-    # E_HOMO/omega previously came from gbm_isolated_descriptors.csv, whose
-    # E_HOMO was an empirical-formula placeholder ("-5.10 - 0.22*LogP - ...")
-    # never overwritten with real data; merged here with real GFN2-xTB
-    # frontier orbitals parsed from calculations/gbm/*/*_drug_sp.out.
-    desc_csv = os.path.join(base_dir, "data", "processed", "gbm_isolated_descriptors.csv")
+    # MW/class come from the ground-truth master table (real SMILES); LogP/PSA
+    # are computed fresh via RDKit from that same real SMILES. Previously MW/
+    # LogP/PSA/class came from gbm_isolated_descriptors.csv, whose SMILES
+    # disagree with the master table for 23/35 compounds (e.g. Procarbazine,
+    # Nimustine showed wrong MW) -- fixed alongside the Figure 7 fix for the
+    # same root-cause file. E_HOMO/omega come from real GFN2-xTB frontier
+    # orbitals parsed from calculations/gbm/*/*_drug_sp.out (unaffected by
+    # the bad-SMILES bug, kept as before).
+    master_csv = os.path.join(base_dir, "data", "processed", "dataset_drug_mxene_pristine.csv")
     homo_lumo_csv = os.path.join(base_dir, "data", "processed", "gbm_isolated_real_homo_lumo.csv")
-    if os.path.exists(desc_csv):
-        df_desc = pd.read_csv(desc_csv)
+    if os.path.exists(master_csv):
+        df_desc = pd.read_csv(master_csv)
+        df_desc = df_desc.rename(columns={"MolWt": "MW"})
+        try:
+            from rdkit import Chem
+            from rdkit.Chem import Descriptors, rdMolDescriptors
+            df_desc["LogP"] = df_desc["smiles"].apply(
+                lambda s: Descriptors.MolLogP(Chem.MolFromSmiles(s)))
+            df_desc["PSA"] = df_desc["smiles"].apply(
+                lambda s: rdMolDescriptors.CalcTPSA(Chem.MolFromSmiles(s)))
+        except ImportError:
+            df_desc["LogP"] = float("nan")
+            df_desc["PSA"] = float("nan")
         if os.path.exists(homo_lumo_csv):
             df_real = pd.read_csv(homo_lumo_csv)
             df_desc = df_desc.merge(df_real, on="name", how="inner")
