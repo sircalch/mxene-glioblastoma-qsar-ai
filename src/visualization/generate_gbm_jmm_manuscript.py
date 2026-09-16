@@ -77,7 +77,8 @@ def _build_condensed_context(original_abstract):
         f"{interaction_range} kcal/mol. Docking gave Vina scores of {vina_range} kcal/mol (mean {vina_mean}), "
         f"with the surrogate reaching Q2_CV = {q2_vina} for the docking score and {q2_mxene} for the "
         "MXene interaction energy -- at best weakly predictive, reported as exploratory. OECD Principle 3 "
-        "applicability-domain analysis places all 35 compounds inside the domain in both systems."
+        "applicability-domain analysis (Williams leverage, same four descriptors as the surrogate) places "
+        "33/35 compounds inside the domain for the pristine-MXene system and 32/33 for the EGFR docking system."
     )
 
 

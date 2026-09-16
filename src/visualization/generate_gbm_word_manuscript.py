@@ -168,10 +168,10 @@ def generate_gbm_word_manuscript():
         "surrogate, for a curated set of 35 clinical CNS and GBM therapeutics. Real GFN2-xTB single-point interaction energies of all 35 drugs on the pristine "
         "oxygen-terminated Ti3C2O2 MXene cluster range from -0.9 to -15.5 kcal/mol. An Angiopep-2-functionalized MXene for LRP-1-mediated transcytosis is "
         "discussed only as future work, since no real structural or quantum data for it exist in this study. Docking against EGFR (exploratory; redocking "
-        f"heavy-atom RMSD 5.32 Å) gave Vina scores of {VINA_RANGE} kcal/mol (mean {VINA_MEAN:.2f}), with recurrent contacts at Asp392, His394, Arg427 and Thr391. "
+        f"heavy-atom RMSD 5.32 Å) gave Vina scores of {VINA_RANGE} kcal/mol (mean {VINA_MEAN:.2f}), with recurrent contacts at Thr790, Met793, Leu844 and Ala743. "
         f"A leak-free nested 5x5 cross-validated RidgeCV surrogate on four descriptors reached Q2_CV = {Q2_VINA_S} for the EGFR Vina docking score and 0.10 for the pristine-MXene "
-        f"interaction energy - the EGFR docking model is at best weakly predictive and the pristine-MXene model is not; the feature-importance analysis is reported as exploratory. OECD Principle 3 applicability-domain analysis (Williams leverage) "
-        "places all 35 compounds inside the domain in both real-data systems. Every value reported is computed from the deposited pipeline; no descriptor "
+        f"interaction energy - the EGFR docking model is at best weakly predictive and the pristine-MXene model is not; the feature-importance analysis is reported as exploratory. OECD Principle 3 applicability-domain analysis (Williams leverage, on the same four descriptors as the surrogate model) "
+        "places 33/35 compounds inside the domain for the pristine-MXene system and 32/33 for the EGFR docking system. Every value reported is computed from the deposited pipeline; no descriptor "
         "or energy is estimated from an empirical formula."
     )
     
@@ -232,7 +232,7 @@ def generate_gbm_word_manuscript():
                         "Figure 3: Molecular docking statistical profiles on the EGFR kinase domain (PDB 4ZAU; exploratory, redocking RMSD 5.32 Å): (a) distribution of real Vina scores; (b) ranking of the top-10 compounds.")
 
     add_image_if_exists(doc, os.path.join(fig_dir, "fig4_gbm_residue_contact_frequency.png"),
-                        "Figure 4: Residue-level contact frequencies on the EGFR kinase domain (real Vina poses, contact distance <= 3.8 Å): most frequent contacts are Asp392, His394, Arg427, Thr391 and Arg390.")
+                        "Figure 4: Residue-level contact frequencies on the EGFR kinase domain (real Vina poses, contact distance <= 3.8 Å): most frequent contacts are Thr790, Met793, Leu844, Ala743 and Val726.")
     
     # Embed Table 1: Descriptors Summary
     # MW/LogP/PSA are real RDKit descriptors (always computed from SMILES).
@@ -304,19 +304,19 @@ def generate_gbm_word_manuscript():
     
     add_heading_styled(doc, "2.4 Applicability domain (OECD Principle 3)", level=2)
     doc.add_paragraph(
-        "The applicability domain was assessed by hat-matrix leverage on the real descriptor matrix (Williams plot) [31-33]. With the full descriptor set the "
-        "warning leverage is h* = 1.80 for the isolated-drug system (20 descriptors) and h* = 0.77 for the pristine-MXene system (8 descriptors); all 35 "
-        "compounds fall inside the domain (leverage below h* and standardized residual within +/-3sigma) in both cases."
+        "The applicability domain was assessed by hat-matrix leverage on the same four descriptors used by the surrogate model (MolWt, MolMR, E_HOMO_eV, "
+        "Omega_eV; Williams plot) [31-33]. The warning leverage is h* = 0.429 for the pristine-MXene system (n = 35) and h* = 0.455 for the EGFR docking "
+        "system (n = 33); 33/35 and 32/33 compounds, respectively, fall inside the domain (leverage below h* and standardized residual within +/-3sigma)."
     )
 
     # Williams Domain Figure 8
     add_image_if_exists(doc, os.path.join(fig_dir, "fig8_gbm_williams_applicability_domain.png"),
-                        "Figure 8: OECD Principle 3: Williams Plots Defining the Applicability Domain for GBM Therapeutics on Ti3C2Tx MXene Nanosheets (real data only; Isolated and Pristine-MXene systems).")
+                        "Figure 8: OECD Principle 3: Williams Plots Defining the Applicability Domain for GBM Therapeutics on Ti3C2Tx MXene Nanosheets (real data only; EGFR docking and Pristine-MXene systems, same four descriptors as the surrogate model).")
     
     add_heading_styled(doc, "2.5 Representative binding modes", level=2)
     doc.add_paragraph(
         "Inspection of the top-ranked docked poses on EGFR (PDB 4ZAU) shows the inhibitors occupying the ATP cleft with contacts to the residues in Figure 4 "
-        "(Asp392, His394, Arg427, Thr391). On the pristine Ti3C2O2 surface the strongest-binding drugs lie flat against the oxygen termination, consistent with "
+        "(Thr790, Met793, Leu844, Ala743). On the pristine Ti3C2O2 surface the strongest-binding drugs lie flat against the oxygen termination, consistent with "
         "the dispersion-dominated interaction energies of Section 2.1."
     )
 

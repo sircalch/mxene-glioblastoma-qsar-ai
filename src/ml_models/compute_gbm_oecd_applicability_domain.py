@@ -26,7 +26,12 @@ def compute_williams_domain():
     # delta_Eint_SP_kcal_mol for all 35 compounds.
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     _mt = os.path.join(base_dir, "data", "processed", "dataset_drug_mxene_pristine.csv")
-    _feat = ["MolWt", "MolMR", "E_HOMO_eV", "E_LUMO_eV", "Gap_eV", "Eta_eV", "Mu_eV", "Omega_eV"]
+    # Use the SAME four descriptors as the real deployed surrogate model
+    # (generate_gbm_master_figures.py / generate_supporting_information.py:
+    # MolWt, MolMR, E_HOMO_eV, Omega_eV) so the applicability-domain leverage
+    # reported here is consistent with the main text and the SI's OECD
+    # checklist, instead of the stale 8-descriptor set used previously.
+    _feat = ["MolWt", "MolMR", "E_HOMO_eV", "Omega_eV"]
     systems = [
         ("EGFR docking (Vina 4ZAU)", _mt, _feat, "vina_4ZAU_kcal_mol"),
         ("Drug + Ti3C2O2 Pristine MXene (real xTB)", _mt, _feat, "delta_Eint_SP_kcal_mol"),
@@ -64,25 +69,26 @@ def compute_williams_domain():
         residuals = y - y_pred
         s_res = np.std(residuals)
         std_residuals = residuals / (s_res * np.sqrt(np.maximum(1e-4, 1.0 - h_diag)))
-        
+        n_inside = int(np.sum((h_diag <= h_star) & (np.abs(std_residuals) <= 3.0)))
+
         ax = axes[ax_idx]
         ax.scatter(h_diag, std_residuals, color=colors[ax_idx], edgecolor='k', s=70, alpha=0.85, zorder=4)
-        
+
         # Boundaries
         ax.axhline(3.0, color='r', linestyle='--', lw=1.5, label='$\pm 3\sigma$ Outlier Boundary')
         ax.axhline(-3.0, color='r', linestyle='--', lw=1.5)
         ax.axhline(0.0, color='gray', linestyle=':', lw=1.0)
-        ax.axvline(h_star, color='darkorange', linestyle='--', lw=1.5, label=f'Warning Leverage $h^* = {h_star:.2f}$')
-        
-        ax.set_title(f"({chr(97+ax_idx)}) {sys_name}", fontsize=11.5, fontweight='bold', pad=10)
+        ax.axvline(h_star, color='darkorange', linestyle='--', lw=1.5, label=f'Warning Leverage $h^* = {h_star:.3f}$')
+
+        ax.set_title(f"({chr(97+ax_idx)}) {sys_name} -- {n_inside}/{n} inside domain", fontsize=11.5, fontweight='bold', pad=10)
         ax.set_xlabel("Hat Matrix Leverage ($h_i$)", fontsize=10.5)
         if ax_idx == 0:
             ax.set_ylabel("Standardized Residuals ($\delta_i$)", fontsize=10.5)
         ax.set_ylim(-4.0, 4.0)
         ax.grid(True, linestyle=':', alpha=0.6)
         ax.legend(loc='lower left', fontsize=8.5, frameon=True)
-        
-    plt.suptitle("OECD Principle 3: Williams Plots Defining the Applicability Domain for Glioblastoma Therapeutics on 2D MXene (real data only)", fontsize=12, fontweight='bold', y=0.98)
+
+    plt.suptitle("Figure 8: OECD Principle 3 -- Williams Plots Defining the Applicability Domain for Glioblastoma Therapeutics on 2D MXene (real data only, 4 descriptors: MolWt, MolMR, E_HOMO_eV, Omega_eV)", fontsize=11.5, fontweight='bold', y=0.98)
     out_fig = os.path.join(base_dir, "figures", "fig8_gbm_williams_applicability_domain.png")
     plt.savefig(out_fig, bbox_inches='tight')
     plt.close()

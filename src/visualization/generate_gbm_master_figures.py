@@ -46,7 +46,7 @@ def make_fig1_workflow(base_dir, fig_dir):
         ("3. Glioblastoma molecular target\nHuman EGFR kinase\n(PDB 4ZAU, 2.80 A; 2J6M control)", 0.70, 0.55, 0.25, 0.35, "#FCE4EC", "#AD1457"),
         ("4. Quantum tight-binding (GFN2-xTB)\nReal interaction energies (pristine)\n+ CDFT indices\n(Delta_E_int,SP -0.9 to -15.5 kcal/mol)", 0.04, 0.10, 0.27, 0.35, "#FFF8E1", "#F57F17"),
         ("5. Real physical docking\nAutoDock Vina v1.2.7\n(catalytic pocket; exploratory)\n(35 GBM clinical drugs)", 0.375, 0.10, 0.25, 0.35, "#EDE7F6", "#4A148C"),
-        ("6. Explainable AI & OECD QSAR\nLeak-free nested Ridge CV\n(Q2_CV -0.64 / 0.10; not predictive)", 0.685, 0.10, 0.27, 0.35, "#E0F2F1", "#00695C"),
+        ("6. Explainable AI & OECD QSAR\nLeak-free nested Ridge CV\n(Q2_CV 0.31 / 0.10; at best weakly predictive)", 0.685, 0.10, 0.27, 0.35, "#E0F2F1", "#00695C"),
     ]
     
     for title, x, y, w, h, bg_c, border_c in boxes:
@@ -366,24 +366,73 @@ def make_fig9_3d_spatial(base_dir, fig_dir):
     print(f"Generated Figure 9 (PyMOL ray-traced): {out_p}")
 
 def make_fig7_correlation(base_dir, fig_dir):
-    """Real Pearson inter-descriptor correlation heat-map."""
-    csv_p = os.path.join(base_dir, "data", "processed", "gbm_isolated_descriptors.csv")
-    if not os.path.exists(csv_p):
+    """Real Pearson inter-descriptor correlation heat-map.
+
+    gbm_isolated_descriptors.csv (built from data/raw/gbm_drug_library.csv,
+    N=37) includes Etoposide and Irinotecan, which are NOT part of the
+    35-compound master cohort (dataset_drug_mxene_pristine.csv) used
+    everywhere else in the manuscript, and its SMILES disagree with the
+    master table's ground-truth SMILES for 23 of the 35 shared compounds
+    (e.g. Dabrafenib and Buparlisib share an identical, wrong SMILES) --
+    two inconsistent compound-identity pipelines. To keep this figure
+    internally consistent with the rest of the paper, the physicochemical
+    descriptors below are recomputed directly from the master table's
+    SMILES/MolWt (ground truth) with RDKit, restricted to the 35-compound
+    master cohort, and the electronic/CDFT descriptors use the master
+    table's real GFN2-xTB values (not the empirical-formula placeholders
+    in gbm_isolated_descriptors.csv).
+    """
+    mt_p = os.path.join(base_dir, "data", "processed", "dataset_drug_mxene_pristine.csv")
+    if not os.path.exists(mt_p):
         return
-    df = pd.read_csv(csv_p)
-    cols = [c for c in ["MW", "LogP", "LogS", "WS_mg_mL", "HBA", "HBD", "PSA",
-                        "RBC", "NOR", "AromRings", "Polarizability_alpha",
-                        "Fraction_Csp3", "E_HOMO", "E_LUMO", "Gap_eV",
-                        "Hardness_eta", "Softness_S", "Electronegativity_chi",
-                        "Chemical_Potential_mu", "Electrophilicity_omega"]
-            if c in df.columns]
+    from rdkit import Chem
+    from rdkit.Chem import Descriptors, Lipinski, Crippen, rdMolDescriptors
+
+    mt = pd.read_csv(mt_p)
+    records = []
+    for _, row in mt.iterrows():
+        mol = Chem.MolFromSmiles(row["smiles"])
+        if mol is None:
+            continue
+        logp = Crippen.MolLogP(mol)
+        rbc = Lipinski.NumRotatableBonds(mol)
+        nor = Lipinski.RingCount(mol)
+        arom_rings = rdMolDescriptors.CalcNumAromaticRings(mol)
+        mw = row["MolWt"]
+        logs = 0.16 - 0.63 * logp - 0.0062 * mw + 0.066 * rbc - 0.74 * (arom_rings / (nor + 1e-5))
+        eta = row["Eta_eV"]
+        omega = row["Omega_eV"]
+        records.append({
+            "MW": mw,
+            "LogP": logp,
+            "LogS": logs,
+            "WS_mg_mL": (10 ** logs) * mw * 1000.0,
+            "HBA": Lipinski.NumHAcceptors(mol),
+            "HBD": Lipinski.NumHDonors(mol),
+            "PSA": Descriptors.TPSA(mol),
+            "RBC": rbc,
+            "NOR": nor,
+            "AromRings": arom_rings,
+            "Polarizability_alpha": rdMolDescriptors.CalcLabuteASA(mol),
+            "Fraction_Csp3": Descriptors.FractionCSP3(mol),
+            "E_HOMO": row["E_HOMO_eV"],
+            "E_LUMO": row["E_LUMO_eV"],
+            "Gap_eV": row["Gap_eV"],
+            "Hardness_eta": eta,
+            "Softness_S": 1.0 / (2.0 * eta) if eta > 1e-4 else 0.0,
+            "Electronegativity_chi": -row["Mu_eV"],
+            "Chemical_Potential_mu": row["Mu_eV"],
+            "Electrophilicity_omega": omega,
+        })
+    df = pd.DataFrame(records)
+    cols = list(df.columns)
     corr = df[cols].corr()
     fig, ax = plt.subplots(figsize=(9.6, 8.0))
     sns.heatmap(corr, annot=True, fmt=".2f", cmap="vlag", center=0, vmin=-1, vmax=1,
                 cbar_kws={"label": "Pearson correlation $r$", "shrink": 0.8},
                 ax=ax, annot_kws={"size": 6.0}, linewidths=0.4, linecolor="white",
                 square=True)
-    ax.set_title(f"Pearson inter-descriptor correlation ({len(cols)} descriptors, "
+    ax.set_title(f"Figure 7: Pearson inter-descriptor correlation ({len(cols)} descriptors, "
                  f"{len(df)} GBM therapeutics)")
     ax.tick_params(labelsize=6.5)
     out_p = os.path.join(fig_dir, "fig7_gbm_descriptor_correlation_matrix.png")
