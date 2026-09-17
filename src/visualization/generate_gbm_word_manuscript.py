@@ -104,6 +104,7 @@ def generate_gbm_word_manuscript():
         Q2_VINA_S = f"{Q2_VINA:.2f}".replace("-0.00", "0.00")
     except Exception:
         Q2_VINA_S = "n/a"
+    MXENE_N = len(_mt.dropna(subset=["MolWt", "MolMR", "E_HOMO_eV", "Omega_eV", "delta_Eint_SP_kcal_mol"]))
 
     doc = Document()
     
@@ -299,8 +300,9 @@ def generate_gbm_word_manuscript():
     add_heading_styled(doc, "2.3 Nano-QSAR surrogate model and feature importance", level=2)
     doc.add_paragraph(
         "A StandardScaler + RidgeCV surrogate evaluated by leak-free nested 5x5 cross-validation on the real observed data (isolated Vina scores; and the real "
-        f"GFN2-xTB Delta_E_int,SP on the pristine Ti3C2O2 MXene), both on the single {VINA_N}-compound master table, reached Q2_CV = {Q2_VINA_S} for the EGFR docking score and 0.10 for the pristine-MXene "
-        f"interaction-energy model (n = {VINA_N}, four descriptors each: MolWt, MolMR, E_HOMO, omega). The EGFR docking model is at best weakly "
+        f"GFN2-xTB Delta_E_int,SP on the pristine Ti3C2O2 MXene), both drawn from the single 35-compound master table, reached Q2_CV = {Q2_VINA_S} for the EGFR docking score "
+        f"(n = {VINA_N}, two compounds lacking a Vina score excluded) and 0.10 for the pristine-MXene "
+        f"interaction-energy model (n = {MXENE_N}, four descriptors each: MolWt, MolMR, E_HOMO, omega). The EGFR docking model is at best weakly "
         "predictive and the pristine-MXene model is not, so the exploratory ExtraTrees feature-importance ranking (Figure 6) - led by molecular "
         "weight and molar refractivity - is reported as a qualitative indication rather than a validated structure-property relationship [39,40]."
     )
