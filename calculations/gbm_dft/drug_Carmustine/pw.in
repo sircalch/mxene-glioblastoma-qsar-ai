@@ -1,0 +1,64 @@
+&CONTROL
+  calculation = 'relax'
+  prefix = 'd_Carmustine'
+  outdir = './tmp'
+  pseudo_dir = '/home/andres/pseudo/SSSP_1.3.0_PBE_efficiency'
+  forc_conv_thr = 2.0d-3
+  etot_conv_thr = 1.0d-4
+  nstep = 200
+/
+&SYSTEM
+  ibrav = 0
+  nat = 21
+  ntyp = 5
+  ecutwfc = 50
+  ecutrho = 400
+  occupations = 'smearing'
+  smearing = 'mv'
+  degauss = 0.01
+  vdw_corr = 'dft-d3'
+  nosym = .true.
+/
+&ELECTRONS
+  conv_thr = 1.0d-7
+  mixing_beta = 0.2
+  mixing_mode = 'local-TF'
+  mixing_ndim = 10
+  electron_maxstep = 300
+/
+&IONS
+  ion_dynamics = 'bfgs'
+/
+ATOMIC_SPECIES
+  C 12.011 C.pbe-n-kjpaw_psl.1.0.0.UPF
+  O 15.999 O.pbe-n-kjpaw_psl.0.1.UPF
+  N 14.007 N.pbe-n-radius_5.UPF
+  H 1.008 H.pbe-rrkjus_psl.1.0.0.UPF
+  Cl 35.45 cl_pbe_v1.4.uspp.F.UPF
+CELL_PARAMETERS angstrom
+  22.00000000 0.00000000 0.00000000
+  0.00000000 22.00000000 0.00000000
+  0.00000000 0.00000000 22.00000000
+ATOMIC_POSITIONS angstrom
+  O 9.208019 8.180987 10.805821
+  N 10.179402 8.882080 10.505871
+  N 9.924584 10.350459 10.662447
+  C 8.622891 10.809724 11.139428
+  C 8.428788 10.622859 12.642382
+  Cl 9.555896 11.618104 13.598105
+  C 10.918121 11.271345 10.344579
+  O 10.741741 12.489607 10.373448
+  N 12.133743 10.739828 9.966635
+  C 13.274628 11.606377 9.717514
+  C 13.906460 12.156880 10.994994
+  Cl 14.573967 10.833833 11.991429
+  H 7.845757 10.261620 10.593365
+  H 8.484578 11.866328 10.882057
+  H 7.415450 10.920987 12.927569
+  H 8.575457 9.583123 12.947247
+  H 12.350028 9.814368 10.313988
+  H 14.003183 11.022450 9.144775
+  H 12.944604 12.439655 9.087049
+  H 13.181031 12.697207 11.609573
+  H 14.731675 12.832180 10.751724
+K_POINTS gamma

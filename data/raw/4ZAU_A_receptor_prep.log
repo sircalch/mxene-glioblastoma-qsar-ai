@@ -1,0 +1,99 @@
+removed residues: ['A:GLU866']
+Template padding will be used.
+[32m gasteiger charges will be read from template file 
+ [0m
+[RDKit] ERROR:[10:38:53] Explicit valence for atom # 6 C, 5, is greater than permitted
+Traceback (most recent call last):
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\meeko\polymer.py", line 2534, in _pdb_to_residue_mols
+    pdbmol, _, missed_altloc, needed_altloc = _aux_altloc_mol_build(
+                                              ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\meeko\utils\rdkitutils.py", line 415, in _aux_altloc_mol_build
+    _ = Chem.SanitizeMol(pdbmol)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+rdkit.Chem.rdchem.AtomValenceException: Explicit valence for atom # 6 C, 5, is greater than permitted
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Scripts\mk_prepare_receptor.exe\__main__.py", line 7, in <module>
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\meeko\cli\mk_prepare_receptor.py", line 720, in main
+    polymer = Polymer.from_pdb_string(
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\meeko\polymer.py", line 1653, in from_pdb_string
+    tmp_raw_input_mols = cls._pdb_to_residue_mols(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\meeko\polymer.py", line 2541, in _pdb_to_residue_mols
+    raise RuntimeError(msg) 
+    ^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: unable to build rdkit mol for residue GLU corresponding to key A:866
+
+Template padding will be used.
+[32m gasteiger charges will be read from template file 
+ [0m
+
+Files written:
+C:\Users\Andre\Proyectos doctorado\nano-qsar-ai-papers\mxene-glioblastoma-qsar-ai\data\raw\4ZAU_A_receptor.pdbqt <-- static (i.e., rigid) receptor input file
+No template matched for residue_key='A:746'
+tried 6 templates for residue_key='A:746'excess_H_ok=False
+GLU        heavy_miss=2 heavy_excess=2 H_excess=[] bond_miss={0} bond_excess=set()
+NGLU       heavy_miss=2 heavy_excess=2 H_excess=[] bond_miss={0} bond_excess={4}
+CGLU       heavy_miss=3 heavy_excess=2 H_excess=[] bond_miss=set() bond_excess=set()
+GLH        heavy_miss=2 heavy_excess=2 H_excess=[] bond_miss={0} bond_excess=set()
+NGLH       heavy_miss=2 heavy_excess=2 H_excess=[] bond_miss={0} bond_excess={4}
+CGLH       heavy_miss=3 heavy_excess=2 H_excess=[] bond_miss=set() bond_excess=set()
+
+No template matched for residue_key='A:756'
+tried 3 templates for residue_key='A:756'excess_H_ok=False
+ASN        heavy_miss=3 heavy_excess=3 H_excess=[-1] bond_miss={0, 4} bond_excess=set()
+NASN       heavy_miss=3 heavy_excess=3 H_excess=[-1] bond_miss={0} bond_excess=set()
+CASN       heavy_miss=4 heavy_excess=3 H_excess=[-1] bond_miss={5} bond_excess=set()
+
+No template matched for residue_key='A:872'
+tried 6 templates for residue_key='A:872'excess_H_ok=False
+GLU        heavy_miss=2 heavy_excess=2 H_excess=[] bond_miss={0} bond_excess=set()
+NGLU       heavy_miss=2 heavy_excess=2 H_excess=[] bond_miss={0} bond_excess={4}
+CGLU       heavy_miss=3 heavy_excess=2 H_excess=[] bond_miss=set() bond_excess=set()
+GLH        heavy_miss=2 heavy_excess=2 H_excess=[] bond_miss={0} bond_excess=set()
+NGLH       heavy_miss=2 heavy_excess=2 H_excess=[] bond_miss={0} bond_excess={4}
+CGLH       heavy_miss=3 heavy_excess=2 H_excess=[] bond_miss=set() bond_excess=set()
+
+No template matched for residue_key='A:875'
+tried 6 templates for residue_key='A:875'excess_H_ok=False
+LYS        heavy_miss=1 heavy_excess=1 H_excess=[-1] bond_miss={4} bond_excess=set()
+NLYS       heavy_miss=1 heavy_excess=1 H_excess=[-1] bond_miss=set() bond_excess=set()
+CLYS       heavy_miss=2 heavy_excess=1 H_excess=[-1] bond_miss={5} bond_excess={1}
+LYN        heavy_miss=1 heavy_excess=1 H_excess=[-1, 18] bond_miss={4} bond_excess=set()
+NLYN       heavy_miss=1 heavy_excess=1 H_excess=[-1, 20] bond_miss=set() bond_excess=set()
+CLYN       heavy_miss=2 heavy_excess=1 H_excess=[-1, 19] bond_miss={5} bond_excess={1}
+
+matched with excess inter-residue bond(s): A:875
+No template matched for residue_key='A:984'
+tried 6 templates for residue_key='A:984'excess_H_ok=False
+ASP        heavy_miss=7 heavy_excess=7 H_excess=[-1, -1] bond_miss={0, 4} bond_excess=set()
+NASP       heavy_miss=7 heavy_excess=7 H_excess=[-1, -1] bond_miss={0} bond_excess=set()
+CASP       heavy_miss=8 heavy_excess=7 H_excess=[-1, -1] bond_miss={5} bond_excess=set()
+ASH        heavy_miss=7 heavy_excess=7 H_excess=[-1, -1] bond_miss={0, 4} bond_excess=set()
+CASH       heavy_miss=8 heavy_excess=7 H_excess=[-1, -1] bond_miss={5} bond_excess=set()
+NASH       heavy_miss=7 heavy_excess=7 H_excess=[-1, -1] bond_miss={0} bond_excess=set()
+
+No template matched for residue_key='A:1008'
+tried 6 templates for residue_key='A:1008'excess_H_ok=False
+ASP        heavy_miss=5 heavy_excess=5 H_excess=[-1, -1] bond_miss={0, 4} bond_excess=set()
+NASP       heavy_miss=5 heavy_excess=5 H_excess=[-1, -1] bond_miss={0} bond_excess=set()
+CASP       heavy_miss=6 heavy_excess=5 H_excess=[-1, -1] bond_miss={5} bond_excess=set()
+ASH        heavy_miss=5 heavy_excess=5 H_excess=[-1, -1] bond_miss={0, 4} bond_excess=set()
+CASH       heavy_miss=6 heavy_excess=5 H_excess=[-1, -1] bond_miss={5} bond_excess=set()
+NASH       heavy_miss=5 heavy_excess=5 H_excess=[-1, -1] bond_miss={0} bond_excess=set()
+
+No template matched for residue_key='A:1009'
+tried 6 templates for residue_key='A:1009'excess_H_ok=False
+ASP        heavy_miss=1 heavy_excess=1 H_excess=[-1] bond_miss={4} bond_excess=set()
+NASP       heavy_miss=1 heavy_excess=1 H_excess=[-1] bond_miss=set() bond_excess=set()
+CASP       heavy_miss=2 heavy_excess=1 H_excess=[-1] bond_miss={5} bond_excess={1}
+ASH        heavy_miss=1 heavy_excess=1 H_excess=[-1] bond_miss={4} bond_excess=set()
+CASH       heavy_miss=2 heavy_excess=1 H_excess=[-1] bond_miss={5} bond_excess={1}
+NASH       heavy_miss=1 heavy_excess=1 H_excess=[-1] bond_miss=set() bond_excess=set()
+
+- Template matching failed for: ['A:746', 'A:756', 'A:872', 'A:875', 'A:984', 'A:1008', 'A:1009'] Ignored due to allow_bad_res.

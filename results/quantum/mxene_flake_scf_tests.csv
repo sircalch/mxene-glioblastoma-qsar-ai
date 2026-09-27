@@ -1,0 +1,24 @@
+test,run,method,charge,uhf,etemp_K,extra,structure,scf_converged
+mxene_build/opt.out,opt,GFN2,0,0,1500,,Ti55C24O20 flake or smaller cut,False
+mxene_tests/acc/sp.out,sp,GFN2,0,0,3000,--acc 0.1,Ti55C24O20 flake or smaller cut,False
+mxene_tests/gfn1/sp.out,sp,GFN1,0,0,1500,,Ti55C24O20 flake or smaller cut,False
+mxene_tests/old.out,sp,GFN2,0,0,300,,earlier non-stoichiometric Ti12C7O14 cluster (discarded),True
+mxene_tests/pass/s.out,sp,GFN2,0,0,1500,,Ti55C24O20 flake or smaller cut,False
+mxene_tests/pass/s1.out,sp,GFN2,0,1,1500,,Ti55C24O20 flake or smaller cut,False
+mxene_tests/scan/f027_1500.out,sp,GFN2,0,0,1500,,Ti55C24O20 flake or smaller cut,False
+mxene_tests/scan/f027_300.out,sp,GFN2,0,0,300,,Ti55C24O20 flake or smaller cut,False
+mxene_tests/scan/f063_1500.out,sp,GFN2,0,0,1500,,Ti55C24O20 flake or smaller cut,False
+mxene_tests/scan/f063_300.out,sp,GFN2,0,0,300,,Ti55C24O20 flake or smaller cut,False
+mxene_tests/scan/q-2u0.out,sp,GFN2,-2,0,1000,,Ti55C24O20 flake or smaller cut,True
+mxene_tests/scan/q0u2.out,sp,GFN2,0,2,1000,,Ti55C24O20 flake or smaller cut,False
+mxene_tests/scan/q0u4.out,sp,GFN2,0,4,1000,,Ti55C24O20 flake or smaller cut,False
+mxene_tests/scan/q0u6.out,sp,GFN2,0,6,1000,,Ti55C24O20 flake or smaller cut,False
+mxene_tests/scan/q2u0.out,sp,GFN2,2,0,1000,,Ti55C24O20 flake or smaller cut,False
+mxene_tests/scan/q4u0.out,sp,GFN2,4,0,1000,,Ti55C24O20 flake or smaller cut,True
+mxene_tests/scan/rs/a.out,sp,GFN2,-2,0,1000,,Ti55C24O20 flake or smaller cut,True
+mxene_tests/scan/rs/b.out,sp,GFN2,0,0,1000,restarted from dianion charges,Ti55C24O20 flake or smaller cut,True
+mxene_tests/small/d1.out,sp,GFN2,0,0,3000,damped,Ti55C24O20 flake or smaller cut,False
+mxene_tests/small/d2.out,sp,GFN2,0,0,3000,damped gasteiger guess,Ti55C24O20 flake or smaller cut,False
+mxene_tests/small/d3.out,sp,GFN2,0,2,3000,damped,Ti55C24O20 flake or smaller cut,False
+mxene_tests/small/d4.out,sp,GFN1,0,0,3000,damped,Ti55C24O20 flake or smaller cut,False
+mxene_tests/small/sp.out,sp,GFN2,0,0,1500,,Ti55C24O20 flake or smaller cut,False

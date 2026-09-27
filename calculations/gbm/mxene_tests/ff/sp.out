@@ -1,0 +1,19 @@
+ERROR STOP 
+
+Error termination. Backtrace:
+#0  0xb72dbda4 in ???
+#1  0xf4473ad0 in ???
+#2  0xf4482999 in ???
+#3  0xf44612fd in __tmainCRTStartup
+	at crt/crtexe.c:267
+#4  0xf4461415 in mainCRTStartup
+	at crt/crtexe.c:188
+#5  0x4b49cd86 in ???
+#6  0x4bd8caeb in ???
+#7  0xffffffff in ???
+abnormal termination of xtb
+########################################################################
+[ERROR] Program stopped due to fatal error
+-2- Command line argument parsing failed
+-1- prog_main: No input file given, so there is nothing to do
+########################################################################

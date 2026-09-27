@@ -1,0 +1,43 @@
+receptor 1M17_A_receptor.pdbqt; box centre [22.014  0.253 52.794] (AQ4)
+[01/33] Temozolomide      -5.983 kcal/mol  (1 conformer(s))
+[02/33] Lomustine         -6.255 kcal/mol  (5 conformer(s))
+[03/33] Carmustine        -4.746 kcal/mol  (1 conformer(s))
+[04/33] Nimustine         -6.048 kcal/mol  (1 conformer(s))
+[05/33] Procarbazine      -6.470 kcal/mol  (1 conformer(s))
+[06/33] Osimertinib       -8.138 kcal/mol  (1 conformer(s))
+[07/33] Gefitinib         -8.099 kcal/mol  (4 conformer(s))
+[08/33] Erlotinib         -7.270 kcal/mol  (1 conformer(s))
+[09/33] Afatinib          -8.026 kcal/mol  (2 conformer(s))
+[10/33] Dacomitinib       -8.776 kcal/mol  (5 conformer(s))
+[11/33] Brigatinib        -8.640 kcal/mol  (5 conformer(s))
+[12/33] Regorafenib       -8.774 kcal/mol  (1 conformer(s))
+[13/33] Sorafenib         -8.523 kcal/mol  (1 conformer(s))
+[14/33] Sunitinib         -7.855 kcal/mol  (1 conformer(s))
+[15/33] Cabozantinib      -8.660 kcal/mol  (1 conformer(s))
+[16/33] Lenvatinib        -8.104 kcal/mol  (1 conformer(s))
+[17/33] Pazopanib         -8.528 kcal/mol  (1 conformer(s))
+[18/33] Axitinib          -8.563 kcal/mol  (1 conformer(s))
+[19/33] Cediranib         -8.115 kcal/mol  (2 conformer(s))
+[20/33] Abemaciclib       -9.650 kcal/mol  (5 conformer(s))
+[21/33] Palbociclib       -9.109 kcal/mol  (5 conformer(s))
+[22/33] Ribociclib        -8.448 kcal/mol  (5 conformer(s))
+[23/33] Cobimetinib       -9.009 kcal/mol  (5 conformer(s))
+[24/33] Trametinib        -8.554 kcal/mol  (5 conformer(s))
+[25/33] Selumetinib       -8.114 kcal/mol  (1 conformer(s))
+[26/33] Dabrafenib        -8.714 kcal/mol  (1 conformer(s))
+[27/33] Everolimus        -7.843 kcal/mol  (5 conformer(s))
+[28/33] Vorinostat        -6.625 kcal/mol  (1 conformer(s))
+Traceback (most recent call last):
+  File "C:\Users\Andre\Proyectos doctorado\nano-qsar-ai-papers\mxene-glioblastoma-qsar-ai\src\docking\run_vina_docking.py", line 80, in <module>
+    main(controls_only="--controls-only" in sys.argv)
+  File "C:\Users\Andre\Proyectos doctorado\nano-qsar-ai-papers\mxene-glioblastoma-qsar-ai\src\docking\run_vina_docking.py", line 70, in main
+    s, n_conf = vp.dock_ensemble(VINA, receptor, vp.ligand_pdbqts(r.name, r.smiles, LIGS),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\Proyectos doctorado\nano-qsar-ai-papers\mxene-glioblastoma-qsar-ai\src\docking\vina_protocol.py", line 235, in dock_ensemble
+    s = run_vina(vina, receptor, lig, center, box, poses / f"{stem}_c{k}_out.pdbqt",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\Proyectos doctorado\nano-qsar-ai-papers\mxene-glioblastoma-qsar-ai\src\docking\vina_protocol.py", line 219, in run_vina
+    subprocess.run(cmd, stdout=fh, stderr=subprocess.STDOUT, check=True, timeout=3600)
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['C:\\Users\\Andre\\Proyectos doctorado\\nano-qsar-ai-papers\\mxene-glioblastoma-qsar-ai\\src\\docking\\vina.exe', '--receptor', 'C:\\Users\\Andre\\Proyectos doctorado\\nano-qsar-ai-papers\\mxene-glioblastoma-qsar-ai\\data\\raw\\1M17_A_receptor.pdbqt', '--ligand', 'C:\\Users\\Andre\\Proyectos doctorado\\nano-qsar-ai-papers\\mxene-glioblastoma-qsar-ai\\data\\raw\\ligands_pdbqt\\Bortezomib_c0.pdbqt', '--center_x', '22.014', '--center_y', '0.253', '--center_z', '52.794', '--size_x', '22.0', '--size_y', '22.0', '--size_z', '22.0', '--exhaustiveness', '16', '--num_modes', '9', '--seed', '42', '--cpu', '4', '--out', 'C:\\Users\\Andre\\Proyectos doctorado\\nano-qsar-ai-papers\\mxene-glioblastoma-qsar-ai\\results\\docking\\real_poses\\Bortezomib_c0_out.pdbqt']' returned non-zero exit status 1.
