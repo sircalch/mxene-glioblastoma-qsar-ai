@@ -77,7 +77,7 @@ def results_docking(doc, d, c):
            f"mode {int(bs['mode'])} of the second ({f2(bs.rmsd_A)} Å), scored only "
            f"{f2(bx.vina_kcal_mol - tx.vina_kcal_mol)} and {f2(bs.vina_kcal_mol - ts.vina_kcal_mol)} kcal "
            f"mol^{{−1}} above the top poses (Fig. 2a, b; Table S4). All nine modes of each control fall within "
-           f"{f2(max(s['span_x'], s['span_s']))} kcal mol^{{−1}}, so the Vina score does not discriminate the "
+           f"{np.ceil(100 * max(s['span_x'], s['span_s'])) / 100:.2f} kcal mol^{{−1}}, so the Vina score does not discriminate the "
            "crystal-like pose from the alternatives in this pocket. The ranking of the cohort is therefore an "
            "exploratory measure of fit in the ATP site, not a set of predicted binding modes.", indent=True)
     k.para(doc,

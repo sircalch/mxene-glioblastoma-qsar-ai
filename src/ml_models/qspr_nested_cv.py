@@ -3,7 +3,7 @@ qspr_nested_cv.py - QSPR model of the AutoDock Vina score in EGFR (PDB 1M17)
 (protocol: qspr_core.py - ridge, nested 5x5 CV, 1,000 Y-permutations,
 leverage applicability domain).
 
-  target      : Vina score of the 33 drugs (results/docking/real_vina_docking_summary.csv)
+  target      : Vina score of the 32 docked drugs (results/docking/real_vina_docking_summary.csv)
   descriptors : fixed before any fit, RDKit on the PubChem structure -
                 MW, TPSA, Crippen logP, rotatable bonds
 
