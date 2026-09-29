@@ -16,9 +16,8 @@ audit paper (methods-pipeline-2d-nanocarriers/data/VERIFICATION_REPORT.md).
 | Procarbazine length | lowest of 8 MMFF conformers | 13.8 Å vs cell 12.12 Å (text identical) |
 | Lattice constant / metallic | own PBE-D3 primitive cell | 3.022 Å, DOS(E_F) 1.03 /eV/f.u. (replaces an unverified citation) |
 | References | Crossref (check_references.py) | 0 problems |
-| QSPR | full nested CV + 1,000 permutations re-run | PENDING at time of writing (run started 2026-09-29) |
+| QSPR | full nested CV + 1,000 permutations re-run | identical: the three output files were rewritten (14:25) and are byte-identical to the previous ones |
 
 ## Open before submission
-- QSPR rerun comparison (see above).
 - DFT campaign (Table 1, Fig. 5, S3, S6) not complete.
 - Branch `rebuild-2026-09` not pushed; availability statements true only after push.
