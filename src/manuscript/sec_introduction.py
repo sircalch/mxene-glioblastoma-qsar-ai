@@ -24,7 +24,8 @@ def introduction(doc, c):
            "terminations, was the first to be isolated " + c("naguib2011", "anasori2017") + ". Their strong "
            "near-infrared absorption and tunable surface chemistry have led to proposals for photothermal "
            "tumour therapy and drug loading " + c("lin2017", "huang2018_mxene") + ". O-terminated "
-           "Ti_{3}C_{2}O_{2} is metallic " + c("khazaei2013") + ". This matters for modelling, because the GFN "
+           "Ti_{3}C_{2}O_{2} is metallic (its PBE-D3 density of states at the Fermi level, computed here, is about "
+           "1 state eV^{−1} per formula unit; Online Resource 1). This matters for modelling, because the GFN "
            "tight-binding methods often used to screen drug–carrier pairs were parametrised mainly on "
            "molecular reference data " + c("grimme2017_gfn1", "bannwarth2019") + ", and their reliability for "
            "a metallic transition-metal carbide cannot be assumed.", indent=True)

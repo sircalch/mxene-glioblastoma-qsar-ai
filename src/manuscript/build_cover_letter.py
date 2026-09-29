@@ -33,7 +33,7 @@ def main():
            f"(≤ {f2(max(s['best_x'].rmsd_A, s['best_s'].rmsd_A))} Å) but is not ranked first "
            f"({f1(s['top_x'].rmsd_A)} and {f1(s['top_s'].rmsd_A)} Å), so the docking scores are reported as "
            "exploratory. Second, the GFN2-xTB and GFN1-xTB tight-binding methods fail for this metallic carrier: "
-           f"GFN2-xTB places the lattice minimum at {f2(t['g2_min'])} Å instead of 3.03 Å, GFN1-xTB has no "
+           f"GFN2-xTB places the lattice minimum at {f2(t['g2_min'])} Å instead of about 3.03 Å (PBE-D3), GFN1-xTB has no "
            f"minimum, and only {t['n_neutral_ok']} of {t['n_neutral']} attempts on neutral finite flakes "
            "converged. Adsorption was therefore computed with periodic density functional theory (PBE-D3). "
            + (f"{dft}. " if dft else "[DFT RESULT SENTENCE ADDED AUTOMATICALLY WHEN THE CAMPAIGN IS COMPLETE.] ") +

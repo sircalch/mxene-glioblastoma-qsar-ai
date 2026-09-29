@@ -112,7 +112,7 @@ def abstract(doc, d):
                f"(top poses {f1(s['top_x'].rmsd_A)} and {f1(s['top_s'].rmsd_A)} Å), so the docking scores are "
                "exploratory. The GFN2-xTB and GFN1-xTB tight-binding methods fail for this metallic carrier: "
                "neutral finite flakes do not converge, GFN2-xTB places the lattice minimum "
-               f"{100 * (3.03 - t['g2_min']) / 3.03:.0f}% below the known lattice constant, and GFN1-xTB has no "
+               f"{100 * (3.03 - t['g2_min']) / 3.03:.0f}% below the PBE-D3 lattice constant, and GFN1-xTB has no "
                "minimum. Adsorption of four alkylating agents was therefore computed with periodic density "
                "functional theory. " + (dft + ". " if dft else "") +
                "A ridge model of the docking score on four descriptors is weak "
@@ -158,7 +158,7 @@ def results(doc, d, c):
              "calculations, top view. **b** Energy per formula unit of the periodic slab against the in-plane "
              "lattice constant with GFN2-xTB and GFN1-xTB (tblite, Γ point, 1500 K), relative to the lowest "
              "value of each method; crosses mark lattice constants at which the SCF failed or gave unphysical "
-             "energies. The dotted line marks a = 3.03 Å")
+             "energies. The dotted line marks a = 3.03 Å, the lattice constant of the DFT slab (PBE-D3 optimum 3.022 Å)")
     dft = results_dft(doc, d, c, FIG / "Fig5.png", d["conv"])
     results_qspr(doc, d, c, FIG / "Fig6.png", table_no=2 if dft else 1)
     limitations(doc, c)

@@ -253,7 +253,7 @@ def fig4(d):
             if len(bad):
                 ax.scatter(bad.a_A, np.zeros(len(bad)) - 2, marker="x", color=col, s=16, lw=0.8)
         ax.axvline(3.03, color=S.INK, lw=0.8, ls=(0, (1, 2)))
-        ax.text(3.03, ax.get_ylim()[1] * 0.95, " DFT/exp.\n a = 3.03 Å", fontsize=6, va="top")
+        ax.text(3.03, ax.get_ylim()[1] * 0.95, " DFT slab\n a = 3.03 Å", fontsize=7, va="top")
         ax.set_xlabel("In-plane lattice constant a (Å)")
         ax.set_ylabel("E − E$_{min}$ (eV per formula unit)")
         ax.legend(handles=[Line2D([], [], color=S.DOCK, marker="o", ms=3.5, label="GFN2-xTB"),

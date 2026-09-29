@@ -5,7 +5,7 @@
 | Check | OK | Detail |
 |---|---|---|
 | Abstract 150–250 words | yes | 230 words |
-| Abstract has Context and Methods | yes |  |
+| Abstract structure fits the journal | yes | structured (Context/Methods) |
 | 4–6 keywords | yes | Keywords Glioblastoma · MXene · Ti3C2O2 · Density functional theory · Molecular docking · Temozolomide |
 | Figures cited in order | yes | [1, 2, 3, 4, 5, 6] |
 | Tables cited in order | yes | [1] |

@@ -9,6 +9,7 @@ Tables are numbered in the order of their first citation in the manuscript:
 S3 and S6 depend on the DFT campaign and are added when their result files exist.
 """
 import ast
+import json
 import re
 import sys
 from pathlib import Path
@@ -103,6 +104,14 @@ def main():
         note = (f" The GFN1-xTB values at {' and '.join(f'{a:.2f}' for a in wild.a_A)} Å "
                 f"({num(wild.E_eV_per_fu.min(), 0)} to {num(wild.E_eV_per_fu.max(), 0)} eV per f.u.) are unphysical, "
                 f"about {wild.E_eV_per_fu.mean() / ref:.1f} times the energy at the other lattice constants.")
+    pbe = json.loads((Q / "ti3c2o2_primitive_pbe_d3.json").read_text())
+    p_kbar = f"{pbe['residual_pressure_kbar']:.2f}".replace("-", "−")
+    rows.append(["PBE-D3", f"{pbe['a_A']:.3f}", "–", "reference optimum"])
+    note += (f" PBE-D3 reference (last row): variable-cell relaxation of the primitive 1×1 cell with the settings of "
+             f"the adsorption calculations, 12×12×1 k-points, residual in-plane pressure {p_kbar} kbar; "
+             f"the slab uses a = 3.03 Å, {100 * (3.03 - pbe['a_A']) / pbe['a_A']:.1f}% larger. A tetrahedron-method density of "
+             f"states on a 24×24×1 grid gives {pbe['DOS_at_EF_states_per_eV_per_cell']:.1f} states eV^{{−1}} per formula unit "
+             f"at the Fermi level: the material is metallic.")
     k.table(doc, ("S5", "Energy of the periodic 4×4 Ti_{3}C_{2}O_{2} slab per formula unit against the in-plane "
                         "lattice constant, GFN2-xTB and GFN1-xTB (tblite, Γ point, 1500 K)." + note),
             ["Method", "*a* (Å)", "*E* (eV per f.u.)", "Status"], rows, align="lccl", font=7.5)

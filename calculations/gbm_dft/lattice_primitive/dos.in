@@ -1,0 +1,6 @@
+&DOS
+  prefix = 'ti3c2o2_prim'
+  outdir = './tmp'
+  DeltaE = 0.02
+  fildos = 'dos.dat'
+/

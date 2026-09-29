@@ -1,0 +1,8 @@
+{
+  "a_A": 3.022,
+  "residual_pressure_kbar": -0.15,
+  "E_Fermi_eV": 0.543,
+  "DOS_at_EF_states_per_eV_per_cell": 1.025,
+  "metallic": true,
+  "method": "PBE-D3, SSSP 1.3 efficiency, 50/400 Ry, MV 0.01 Ry; vc-relax 2Dxy 12x12x1; DOS tetrahedra 24x24x1"
+}

@@ -1,0 +1,53 @@
+&CONTROL
+  calculation = 'vc-relax'
+  prefix = 'ti3c2o2_prim'
+  outdir = './tmp'
+  pseudo_dir = '/home/andres/pseudo/SSSP_1.3.0_PBE_efficiency'
+  forc_conv_thr = 2.0d-3
+  etot_conv_thr = 1.0d-4
+  nstep = 200
+/
+&SYSTEM
+  ibrav = 0
+  nat = 7
+  ntyp = 3
+  ecutwfc = 50
+  ecutrho = 400
+  occupations = 'smearing'
+  smearing = 'mv'
+  degauss = 0.01
+  vdw_corr = 'dft-d3'
+/
+&ELECTRONS
+  conv_thr = 1.0d-7
+  mixing_beta = 0.2
+  mixing_mode = 'local-TF'
+  mixing_ndim = 10
+  electron_maxstep = 300
+/
+&IONS
+  ion_dynamics = 'bfgs'
+/
+&CELL
+  cell_dynamics = 'bfgs'
+  cell_dofree = '2Dxy'
+  press_conv_thr = 0.2
+/
+ATOMIC_SPECIES
+  Ti 47.867 ti_pbe_v1.4.uspp.F.UPF
+  C 12.011 C.pbe-n-kjpaw_psl.1.0.0.UPF
+  O 15.999 O.pbe-n-kjpaw_psl.0.1.UPF
+CELL_PARAMETERS angstrom
+  3.03000000 0.00000000 0.00000000
+  1.51500000 2.62405697 0.00000000
+  0.00000000 0.00000000 26.60000000
+ATOMIC_POSITIONS angstrom
+  Ti 0.000000 0.000000 13.300000
+  C 1.515000 0.874686 14.450000
+  C 3.030000 1.749371 12.150000
+  Ti 3.030000 1.749371 15.630000
+  Ti 1.515000 0.874686 10.970000
+  O 0.000000 0.000000 16.600000
+  O 0.000000 0.000000 10.000000
+K_POINTS automatic
+  12 12 1 0 0 0

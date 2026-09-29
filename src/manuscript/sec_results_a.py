@@ -109,7 +109,7 @@ def results_tightbinding(doc, d, c):
            f"flakes (Ti_{{55}}C_{{24}}O_{{20}} and smaller cuts), {t['n_neutral_ok']} converged, and only as a single point "
            f"{note}; the geometry optimisation never converged (Table S2). Charged flakes converged, but they "
            "are not the physical system. In the periodic slab (Fig. 4b, Table S5), GFN2-xTB places the energy minimum "
-           f"at a = {f2(t['g2_min'])} Å, {100 * (3.03 - t['g2_min']) / 3.03:.0f}% below the lattice constant of Ti_{{3}}C_{{2}}O_{{2}} "
+           f"at a = {f2(t['g2_min'])} Å, {100 * (3.03 - t['g2_min']) / 3.03:.0f}% below the lattice constant of Ti_{{3}}C_{{2}}O_{{2}} used for the DFT slab "
            f"(3.03 Å), which lies {f1(t['g2_at_303'])} eV per formula unit above that minimum, and the energy "
            f"jumps by {f1(t['g2_jump'])} eV per formula unit between {f2(t['g2_jump_a'][0])} and "
            f"{f2(t['g2_jump_a'][1])} Å. GFN1-xTB did not converge at {t['g1_fail']} of the "

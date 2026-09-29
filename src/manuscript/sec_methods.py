@@ -56,7 +56,8 @@ def methods(doc, d, c):
            "SSSP 1.3 efficiency pseudopotentials " + c("prandini2018") + ", plane-wave cutoffs of 50 Ry "
            "(wavefunctions) and 400 Ry (density), and Marzari–Vanderbilt smearing of 0.01 Ry " +
            c("marzari1999") + ". The carrier is a 4×4 Ti_{3}C_{2}O_{2} slab (112 atoms) at the lattice "
-           "constant a = 3.03 Å " + c("khazaei2013") + ", with 20 Å of vacuum. Only the surface that meets the drug relaxed: the upper O "
+           "constant a = 3.03 Å, within 0.3% of the PBE-D3 optimum of the primitive cell computed with the same "
+           "settings (3.022 Å, 12×12×1 k-points; Online Resource 1), with 20 Å of vacuum. Only the surface that meets the drug relaxed: the upper O "
            "layer and the outer Ti layer below it (32 of the 112 atoms), together with the drug (BFGS, residual "
            "forces below 2 × 10^{−3} Ry bohr^{−1}). The Ti_{3}C_{2} core and the lower surface were held at the "
            "ideal lattice, at identical positions in the slab and in every complex, so that they cancel in the "
