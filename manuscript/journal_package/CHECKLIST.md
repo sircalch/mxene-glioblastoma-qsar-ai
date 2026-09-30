@@ -26,4 +26,4 @@
 - [ ] Upload: Manuscript.docx, ESM_1.pdf (type: Supplementary Material, caption 'Supporting Information'), Fig1–FigN.tif, Cover_Letter.docx.
 - [ ] Optional: suggest 2–3 independent reviewers with institutional e-mails.
 
-AI-use placeholder still present: **yes**
+AI-use placeholder still present: **no**
