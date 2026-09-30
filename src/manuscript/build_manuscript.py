@@ -224,9 +224,13 @@ def main():
     introduction(doc, c)
     methods(doc, d, c)
     k.heading(doc, "Use of AI tools", 2)
-    k.placeholder(doc, "[AUTHOR TO COMPLETE BEFORE SUBMISSION: statement on the use of AI tools in this work, as "
-                       "required by the journal (Springer policy: use of large language models beyond copy "
-                       "editing must be documented in the Methods).]")
+    ai_statement = BASE / "manuscript" / "ai_statement.txt"   # written or approved by the author
+    if ai_statement.exists():
+        k.para(doc, ai_statement.read_text(encoding="utf-8").strip(), indent=True)
+    else:
+        k.placeholder(doc, "[AUTHOR TO COMPLETE BEFORE SUBMISSION: statement on the use of AI tools in this work, as "
+                           "required by the journal (Springer policy: use of large language models beyond copy "
+                           "editing must be documented in the Methods).]")
     results(doc, d, c)
     conclusions(doc, d)
     k.references(doc, c.list())

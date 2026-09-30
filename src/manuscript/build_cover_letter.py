@@ -14,6 +14,9 @@ OUT = HERE.parents[1] / "manuscript" / "submission"
 ZENODO_V2 = "10.5281/zenodo.22700227"        # supporting files of the pre-rebuild version (2026-09-11)
 
 
+# status of the companion methods paper; submit it first, then build this letter
+METHODS_STATUS = "submitted to the Journal of Computational Biophysics and Chemistry"
+
 def main():
     d = load()
     s, t, q = docking_stats(d), scan_stats(d), d["q"]
@@ -42,7 +45,7 @@ def main():
     k.para(doc,
            "Related work. Supporting files of an earlier version of this study were deposited on Zenodo "
            f"(https://doi.org/{ZENODO_V2}); that version was superseded when the study was rebuilt from its raw "
-           "inputs, and the results reported here replace it. A methods paper by the author, in preparation, "
+           "inputs, and the results reported here replace it. A methods paper by the author, " + METHODS_STATUS + ", "
            "uses this study as one of four case studies of "
            "errors found and corrected during such rebuilds, and cites some of its summary numbers; the study, "
            "including its docking and DFT adsorption results, is reported in full only in this manuscript.")
