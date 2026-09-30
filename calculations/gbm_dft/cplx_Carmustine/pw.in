@@ -21,13 +21,16 @@
 /
 &ELECTRONS
   conv_thr = 1.0d-7
-  mixing_beta = 0.2
+  mixing_beta = 0.1
   mixing_mode = 'local-TF'
-  mixing_ndim = 10
+  mixing_ndim = 16
   electron_maxstep = 300
 /
 &IONS
   ion_dynamics = 'bfgs'
+  trust_radius_ini = 0.2
+  pot_extrapolation = 'second_order'
+  wfc_extrapolation = 'second_order'
 /
 ATOMIC_SPECIES
   Ti 47.867 ti_pbe_v1.4.uspp.F.UPF

@@ -6,7 +6,7 @@ Ti3C2O2 MXene.
 
 GFN2-xTB and GFN1-xTB were tested first and are not usable for this carrier:
 finite flakes do not reach SCF convergence, and in periodic form GFN2-xTB puts
-the lattice minimum near a = 2.70 A (experiment/DFT 3.03 A), with energy jumps
+the lattice minimum near a = 2.70 A (PBE-D3 optimum 3.022 A, lattice_primitive/), with energy jumps
 of tens of eV between neighbouring lattice constants. DFT is therefore used,
 for a subset of drugs that fits the 4x4 cell.
 
@@ -18,7 +18,9 @@ for a subset of drugs that fits the 4x4 cell.
               k-point error largely cancels in dE_ads); the isolated drug is
               relaxed at Gamma in a 22 A cubic box (no image interactions)
   scf       : local-TF mixing (beta 0.2, 10 vectors) - plain mixing sloshed for
-              the metallic slab; a relaxation interrupted for this reason
+              the metallic slab; complexes use beta 0.1, 16 vectors, BFGS trust radius
+              0.2 bohr and second-order extrapolation (their first SCF needed 111
+              iterations and the second did not converge in 57 with the slab settings); a relaxation interrupted for this reason
               continues from its last geometry (cplx_<drug>/restart_from.out)
   relax     : BFGS, forces < 2e-3 Ry/bohr; only the surface that meets the drug
               relaxes (top O layer and outer Ti layer); the Ti3C2 core and the
@@ -128,7 +130,11 @@ def place(del_, dxyz, sel, sxyz, cv):
     return sel + del_, np.vstack([sxyz, d])
 
 
-def pw_input(prefix, el, xyz, cv, kpts, fix_below=None, calc="relax", ecut=(50, 400)):
+def pw_input(prefix, el, xyz, cv, kpts, fix_below=None, calc="relax", ecut=(50, 400), robust=False):
+    """robust=True (complexes): slower mixing, more history, smaller first BFGS step and
+    wavefunction extrapolation. These change only the path to convergence, not the
+    converged energy, so the complexes stay consistent with the slab and drug references."""
+    beta, ndim = (0.1, 16) if robust else (0.2, 10)
     species = sorted(set(el), key=lambda e: ["Ti", "C", "O", "N", "H", "Cl"].index(e))
     lines = [
         "&CONTROL", f"  calculation = '{calc}'", f"  prefix = '{prefix}'", "  outdir = './tmp'",
@@ -137,9 +143,11 @@ def pw_input(prefix, el, xyz, cv, kpts, fix_below=None, calc="relax", ecut=(50, 
         "&SYSTEM", "  ibrav = 0", f"  nat = {len(el)}", f"  ntyp = {len(species)}",
         f"  ecutwfc = {ecut[0]}", f"  ecutrho = {ecut[1]}", "  occupations = 'smearing'", "  smearing = 'mv'",
         "  degauss = 0.01", "  vdw_corr = 'dft-d3'", "  nosym = .true.", "/",
-        "&ELECTRONS", "  conv_thr = 1.0d-7", "  mixing_beta = 0.2", "  mixing_mode = 'local-TF'",
-        "  mixing_ndim = 10", "  electron_maxstep = 300", "/",
-        "&IONS", "  ion_dynamics = 'bfgs'", "/",
+        "&ELECTRONS", "  conv_thr = 1.0d-7", f"  mixing_beta = {beta}", "  mixing_mode = 'local-TF'",
+        f"  mixing_ndim = {ndim}", "  electron_maxstep = 300", "/",
+        "&IONS", "  ion_dynamics = 'bfgs'"] + ([
+        "  trust_radius_ini = 0.2", "  pot_extrapolation = 'second_order'",
+        "  wfc_extrapolation = 'second_order'"] if robust else []) + ["/",
         "ATOMIC_SPECIES"] + [f"  {e} {MASS[e]} {PP[e]}" for e in species] + [
         "CELL_PARAMETERS angstrom"] + [f"  {v[0]:.8f} {v[1]:.8f} {v[2]:.8f}" for v in cv] + [
         "ATOMIC_POSITIONS angstrom"]
@@ -157,14 +165,16 @@ def cmd_inputs(write_runner=True):
     WORK.mkdir(parents=True, exist_ok=True)
     jobs = []
     (WORK / "slab").mkdir(exist_ok=True)
-    (WORK / "slab" / "pw.in").write_text(pw_input("slab", sel, sxyz, cv, "gamma", fix))
+    if not finished("slab"):                  # never rewrite the input of a finished job
+        (WORK / "slab" / "pw.in").write_text(pw_input("slab", sel, sxyz, cv, "gamma", fix), newline="\n")
     jobs.append("slab")
     for name in DRUGS:
         del_, dxyz = read_xyz(STARTS / f"{name}.xyz")
         d = WORK / f"drug_{name}"
         d.mkdir(exist_ok=True)
         dx = dxyz - dxyz.mean(0) + DBOX.sum(0) / 2
-        (d / "pw.in").write_text(pw_input(f"d_{name}", del_, dx, DBOX, "gamma"))
+        if not finished(f"drug_{name}"):
+            (d / "pw.in").write_text(pw_input(f"d_{name}", del_, dx, DBOX, "gamma"), newline="\n")
         el, xyz = place(del_, dxyz, sel, sxyz, cv)
         c = WORK / f"cplx_{name}"
         c.mkdir(exist_ok=True)
@@ -172,7 +182,8 @@ def cmd_inputs(write_runner=True):
             last = parse(c / "restart_from.out")
             assert last["el"] == el, "restart geometry does not match the complex"
             xyz = last["xyz"]
-        (c / "pw.in").write_text(pw_input(f"c_{name}", el, xyz, cv, "gamma", fix))
+        if not finished(f"cplx_{name}"):
+            (c / "pw.in").write_text(pw_input(f"c_{name}", el, xyz, cv, "gamma", fix, robust=True), newline="\n")
         (c / "meta.json").write_text(json.dumps({"n_slab": len(sel), "drug_elements": del_}))
         jobs += [f"drug_{name}", f"cplx_{name}"]
     if not write_runner:                # never rewrite run_all.sh while bash is executing it
@@ -273,12 +284,12 @@ def cmd_fragments():
             j = f"frag_{tag}_{name}"
             (WORK / j).mkdir(exist_ok=True)
             (WORK / j / "pw.in").write_text(pw_input(f"f{tag}_{name}", c["el"][idx], c["xyz"][idx], cv, "gamma",
-                                                     calc="scf"))
+                                                     calc="scf"), newline="\n")
             jobs.append(j)
         j = f"frag_drugbox_{name}"            # deformed drug alone: separates deformation from image interaction
         (WORK / j).mkdir(exist_ok=True)
         (WORK / j / "pw.in").write_text(pw_input(f"fdbox_{name}", c["el"][ns:], c["xyz"][ns:], DBOX, "gamma",
-                                                 calc="scf"))
+                                                 calc="scf"), newline="\n")
         jobs.append(j)
     runner("run_fragments.sh", jobs)
     print(f"{len(jobs)} fragment single points")
@@ -300,7 +311,7 @@ def cmd_checks(name="Temozolomide"):
             j = f"chk_{tag}_{part}"
             (WORK / j).mkdir(exist_ok=True)
             (WORK / j / "pw.in").write_text(pw_input(f"{tag}{part}", el, xyz, box,
-                                                     kp if part != "drug" else "gamma", calc="scf", ecut=ecut))
+                                                     kp if part != "drug" else "gamma", calc="scf", ecut=ecut), newline="\n")
             jobs.append(j)
     runner("run_checks.sh", jobs)
     print(f"{len(jobs)} check single points for {name}")
